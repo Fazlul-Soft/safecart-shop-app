@@ -1,0 +1,2 @@
+/Volumes/WorK/Work FIles/Flutter/Shawrav_Work/safecart-shop-app/android/app/.cxx/Debug/d6y50c61/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Volumes/WorK/Work FIles/Flutter/Shawrav_Work/safecart-shop-app/android/app/.cxx/Debug/d6y50c61/armeabi-v7a/CMakeFiles/rebuild_cache.dir

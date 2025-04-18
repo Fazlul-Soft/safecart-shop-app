@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/jashuvo/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/jashuvo/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Volumes/WorK/Work FIles/Flutter/Shawrav_Work/safecart-shop-app/android/app/.cxx/Debug/d6y50c61/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/jashuvo/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Volumes/WorK/Work FIles/Flutter/Shawrav_Work/safecart-shop-app/android/app/.cxx/Debug/d6y50c61/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
