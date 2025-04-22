@@ -1,0 +1,1 @@
+/Users/fazlulsawrav/Documents/GitHub/safecart-shop-app/build/app/intermediates/cxx/RelWithDebInfo/334h6p63/obj/arm64-v8a

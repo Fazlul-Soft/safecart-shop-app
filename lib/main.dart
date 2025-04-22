@@ -187,7 +187,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<RTLService>(builder: (context, rtlProvider, child) {
         return MaterialApp(
-          title: 'SafeCart',
+          title: 'Sombokchab',
           navigatorKey: navigatorKey,
           builder: (context, rtlchild) {
             return Directionality(
