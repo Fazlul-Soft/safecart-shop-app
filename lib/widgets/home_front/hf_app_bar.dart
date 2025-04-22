@@ -130,7 +130,7 @@ class _HFAppBarState extends State<HFAppBar> {
           ),
           Text(
             pProvider.profileInfo == null
-                ? (asProvider.getString('SafeCart'))
+                ? (asProvider.getString('Sombokchab'))
                 : pProvider.profileInfo!.userDetails.name
                     .toString()
                     .capitalize(),

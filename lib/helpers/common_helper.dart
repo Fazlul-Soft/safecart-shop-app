@@ -17,7 +17,8 @@ import 'empty_space_helper.dart';
 
 ConstantColors cc = ConstantColors();
 
-const String baseApi = 'https://safecart.bytesed.com/api/v1';
+// const String baseApi = 'https://safecart.bytesed.com/api/v1';
+const String baseApi = 'https://sombokchab.com/api/v1';
 String _globalToken = '';
 String imageLoadingAppIcon =
     'https://i.postimg.cc/85gKpbT5/shopcartappicon.png';
