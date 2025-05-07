@@ -15,7 +15,6 @@ import 'package:safecart/widgets/home_view/home_campaigns.dart';
 import 'package:safecart/widgets/home_view/menual_slider.dart';
 import 'package:safecart/widgets/home_view/menual_slider_two.dart';
 
-import '../helpers/common_helper.dart';
 import '../helpers/empty_space_helper.dart';
 import '../services/home_campaigns_service.dart';
 import '../services/home_categories_service.dart';

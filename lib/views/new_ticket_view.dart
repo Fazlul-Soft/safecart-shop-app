@@ -12,7 +12,7 @@ import '../widgets/common/field_title.dart';
 
 class NewTicketView extends StatelessWidget {
   static const routeName = 'add new ticket';
-  NewTicketView({Key? key}) : super(key: key);
+  NewTicketView({super.key});
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final _subjectFN = FocusNode();

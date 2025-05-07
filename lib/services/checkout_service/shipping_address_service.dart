@@ -15,7 +15,6 @@ import '../../../models/city_dropdown_model.dart';
 import '../../../models/shipping_addresses_model.dart';
 import '../../../models/state_model.dart';
 import '../../../models/country_model.dart' as cm;
-import '../country_state_service.dart';
 
 class ShippingAddressService with ChangeNotifier {
   List<Datum>? shippingAddressList;

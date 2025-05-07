@@ -1,0 +1,2 @@
+/Users/fazlulsawrav/Documents/GitHub/safecart-shop-app/android/app/.cxx/Debug/6j53n4p3/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/fazlulsawrav/Documents/GitHub/safecart-shop-app/android/app/.cxx/Debug/6j53n4p3/armeabi-v7a/CMakeFiles/rebuild_cache.dir

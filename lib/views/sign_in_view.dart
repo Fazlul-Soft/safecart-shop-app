@@ -132,13 +132,13 @@ class SignInView extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         FieldTitle(asProvider
-                                            .getString('Email/Username')),
+                                            .getString('Phone/Email')),
                                         TextFormField(
                                           controller: _emailUsernameController,
                                           textInputAction: TextInputAction.next,
                                           decoration: InputDecoration(
                                             hintText: asProvider.getString(
-                                                'Enter your email or username'),
+                                                'Enter your phone or email'),
                                             prefixIcon: Padding(
                                               padding: const EdgeInsets.all(12),
                                               child: SvgPicture.asset(
@@ -150,7 +150,7 @@ class SignInView extends StatelessWidget {
                                                 value.isEmpty ||
                                                 value.trim().isEmpty) {
                                               return asProvider.getString(
-                                                  'Enter your email or username');
+                                                  'Enter your phone or email');
                                             }
                                             return null;
                                           },

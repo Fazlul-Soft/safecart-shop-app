@@ -106,7 +106,7 @@ class DefaultThemes {
         backgroundColor: cc.pureWhite,
         elevation: 3,
         surfaceTintColor: cc.pureWhite,
-        systemOverlayStyle: SystemUiOverlayStyle(
+        systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.dark),
       );

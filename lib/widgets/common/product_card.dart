@@ -381,8 +381,8 @@ class ProductCard extends StatelessWidget {
                       child: SlideCountdownSeparated(
                         showZeroValue: true,
                         separator: ':',
-                        padding: EdgeInsets.all(8),
-                        separatorPadding: EdgeInsets.symmetric(horizontal: 2),
+                        padding: const EdgeInsets.all(8),
+                        separatorPadding: const EdgeInsets.symmetric(horizontal: 2),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: cc.pureWhite,

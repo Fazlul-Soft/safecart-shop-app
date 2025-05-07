@@ -10,7 +10,6 @@ import '../../widgets/common/product_card.dart';
 import '../../widgets/skelletons/product_card_skeleton.dart';
 import '../helpers/common_helper.dart';
 import '../services/product_details_service.dart';
-import '../services/search_product_service.dart';
 import '../utils/custom_preloader.dart';
 import 'product_details_view.dart';
 

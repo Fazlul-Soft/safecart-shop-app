@@ -9,8 +9,8 @@ import 'package:safecart/utils/responsive.dart';
 
 class TicketTileSkeleton extends StatelessWidget {
   const TicketTileSkeleton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

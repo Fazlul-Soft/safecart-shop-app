@@ -9,7 +9,7 @@ import '../../helpers/common_helper.dart';
 
 class ImageView extends StatelessWidget {
   String imageUrl;
-  ImageView(this.imageUrl, {Key? key}) : super(key: key);
+  ImageView(this.imageUrl, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -12,16 +12,25 @@ import '../utils/responsive.dart';
 import '../widgets/common/boxed_back_button.dart';
 import '../widgets/common/field_title.dart';
 import 'new_password_view.dart';
+import '../views/home_front_view.dart';
 
 class EnterOtpView extends StatelessWidget {
   static const routeName = 'enter_otp_view';
   String otp;
   bool fromRegister;
-  EnterOtpView(this.otp, {this.fromRegister = false, super.key});
+  final String phoneNumber;
   TextEditingController? controller = TextEditingController();
+  EnterOtpView(
+    this.otp, {
+    this.fromRegister = false,
+    required this.phoneNumber, // Marked as required
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
     return Scaffold(
       body: Stack(
         children: [
@@ -152,7 +161,7 @@ class EnterOtpView extends StatelessWidget {
                                                                         false)
                                                                 .sendOTP(
                                                                     context,
-                                                                    null);
+                                                                    otp);
                                                           },
                                                     text: asProvider.getString(
                                                         'Send again.'),
@@ -166,27 +175,6 @@ class EnterOtpView extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    // CustomCommonButton('Sent verification code', onPressed: () {
-                                    //   Navigator.of(context).pop();
-                                    //   Navigator.of(context).push(PageRouteBuilder(
-                                    //       pageBuilder: (context, animation, anotherAnimation) {
-                                    //     return NewPasswordView();
-                                    //   },
-                                    //       // transitionDuration:
-                                    //       //     const Duration(milliseconds: 300),
-                                    //       transitionsBuilder:
-                                    //           (context, animation, anotherAnimation, child) {
-                                    //     animation = CurvedAnimation(
-                                    //         curve: Curves.decelerate, parent: animation);
-                                    //     return Align(
-                                    //       child: FadeTransition(
-                                    //         opacity: animation,
-                                    //         // axisAlignment: 0.0,
-                                    //         child: child,
-                                    //       ),
-                                    //     );
-                                    //   }));
-                                    // }),
                                   ]),
                             )),
                           ],
@@ -205,7 +193,7 @@ class EnterOtpView extends StatelessWidget {
 
   Pinput otpPinput(BuildContext context) {
     final defaultPinTheme = PinTheme(
-      width: 70,
+      width: 56,
       height: 56,
       textStyle: TextStyle(
         fontSize: 17,
@@ -216,63 +204,138 @@ class EnterOtpView extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
     );
+
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
       border: Border.all(color: cc.primaryColor),
       borderRadius: BorderRadius.circular(8),
     );
+
     return Pinput(
+      length: 6,
       controller: controller,
-      separatorBuilder: (index) => EmptySpaceHelper.emptywidth(15),
+      separatorBuilder: (index) => EmptySpaceHelper.emptywidth(10),
       defaultPinTheme: defaultPinTheme,
       focusedPinTheme: focusedPinTheme,
       validator: (s) {
-        if (s != otp &&
-            s != Provider.of<OtpService>(context, listen: false).otpCode) {
-          controller!.clear();
-          snackBar(context, asProvider.getString('Wrong OTP Code'),
-              backgroundColor: cc.red,
-              buttonText: asProvider.getString('Resend code'), onTap: () {
-            controller!.clear();
-            Provider.of<OtpService>(context, listen: false)
-                .sendOTP(context, null);
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          });
-          return;
+        // Local validation only (synchronous)
+        final currentOtp =
+            Provider.of<OtpService>(context, listen: false).otpCode;
+        if (s != otp && s != currentOtp?.toString()) {
+          return 'Invalid OTP';
         }
-        if (fromRegister) {
-          Navigator.pop(context, true);
-          return;
+        return null;
+      },
+      onCompleted: (pin) async {
+        final otpService = Provider.of<OtpService>(context, listen: false);
+        final args =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => Center(child: CircularProgressIndicator()),
+        );
+
+        try {
+          final verified =
+              await otpService.verifyPhone(context, phoneNumber, pin);
+          Navigator.of(context).pop(); // Dismiss loader
+
+          if (verified) {
+            if (fromRegister) {
+              Navigator.of(context)
+                  .pop(true); // Return to signUp with verification success
+            } else {
+              // For password reset flow
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => NewPasswordView()),
+              );
+            }
+          } else {
+            controller?.clear();
+          }
+        } catch (e) {
+          Navigator.of(context).pop(); // Dismiss loader
+          showToast('Verification error: ${e.toString()}', cc.red);
         }
-        Navigator.pop(context, true);
-        Provider.of<ResetPasswordService>(context, listen: false)
-            .setObscurePasswordOne(true);
-        Provider.of<ResetPasswordService>(context, listen: false)
-            .setObscurePasswordTwo(true);
-        Navigator.of(context).push(PageRouteBuilder(
-            pageBuilder: (context, animation, anotherAnimation) {
-          return NewPasswordView();
-        },
-            // transitionDuration:
-            //     const Duration(milliseconds: 300),
-            transitionsBuilder: (context, animation, anotherAnimation, child) {
-          animation =
-              CurvedAnimation(curve: Curves.decelerate, parent: animation);
-          return Align(
-            child: FadeTransition(
-              opacity: animation,
-              // axisAlignment: 0.0,
-              child: child,
-            ),
-          );
-        }));
-
-        // _scaffoldKey.currentState!.showSnackBar(snackBar);
-
-        return;
       },
       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
       showCursor: true,
-      onCompleted: (pin) => print(pin),
     );
   }
+
+  // Pinput otpPinput(BuildContext context) {
+  //   final defaultPinTheme = PinTheme(
+  //     width: 70,
+  //     height: 56,
+  //     textStyle: TextStyle(
+  //       fontSize: 17,
+  //       color: cc.greyParagraph,
+  //     ),
+  //     decoration: BoxDecoration(
+  //       border: Border.all(color: cc.greyBorder),
+  //       borderRadius: BorderRadius.circular(8),
+  //     ),
+  //   );
+  //   final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+  //     border: Border.all(color: cc.primaryColor),
+  //     borderRadius: BorderRadius.circular(8),
+  //   );
+  //   return Pinput(
+  //     controller: controller,
+  //     separatorBuilder: (index) => EmptySpaceHelper.emptywidth(15),
+  //     defaultPinTheme: defaultPinTheme,
+  //     focusedPinTheme: focusedPinTheme,
+  //     validator: (s) {
+  //       if (s != otp &&
+  //           s != Provider.of<OtpService>(context, listen: false).otpCode) {
+  //         controller!.clear();
+  //         snackBar(context, asProvider.getString('Wrong OTP Code'),
+  //             backgroundColor: cc.red,
+  //             buttonText: asProvider.getString('Resend code'), onTap: () {
+  //           controller!.clear();
+  //           Provider.of<OtpService>(context, listen: false)
+  //               .sendOTP(context, otp);
+  //           ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  //         });
+  //         return 'Invalid OTP';
+  //       }
+
+  //       if (fromRegister) {
+  //         Navigator.pop(context, true);
+  //         return null;
+  //       }
+  //       Navigator.pop(context, true);
+  //       Provider.of<ResetPasswordService>(context, listen: false)
+  //           .setObscurePasswordOne(true);
+  //       Provider.of<ResetPasswordService>(context, listen: false)
+  //           .setObscurePasswordTwo(true);
+  //       Navigator.of(context).push(PageRouteBuilder(
+  //           pageBuilder: (context, animation, anotherAnimation) {
+  //         return NewPasswordView();
+  //       },
+  //           // transitionDuration:
+  //           //     const Duration(milliseconds: 300),
+  //           transitionsBuilder: (context, animation, anotherAnimation, child) {
+  //         animation =
+  //             CurvedAnimation(curve: Curves.decelerate, parent: animation);
+  //         return Align(
+  //           child: FadeTransition(
+  //             opacity: animation,
+  //             // axisAlignment: 0.0,
+  //             child: child,
+  //           ),
+  //         );
+  //       }));
+
+  //       // _scaffoldKey.currentState!.showSnackBar(snackBar);
+
+  //       return null;
+  //     },
+  //     pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+  //     showCursor: true,
+  //     onCompleted: (pin) => print(pin),
+  //   );
+  // }
 }

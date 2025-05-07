@@ -104,7 +104,7 @@ class TicketListView extends StatelessWidget {
                                         .map(
                                           (e) => const TicketTileSkeleton(),
                                         )
-                                        .toList(),
+                                        ,
                                   ],
                                 );
                               }
@@ -183,7 +183,7 @@ class TicketListView extends StatelessWidget {
                         e.status,
                       ),
                     )
-                    .toList(),
+                    ,
               ],
             );
     });

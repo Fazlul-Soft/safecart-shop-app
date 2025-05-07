@@ -59,7 +59,7 @@ class ShippingAddressTile extends StatelessWidget {
                             TextButton(
                               style: ButtonStyle(
                                 foregroundColor:
-                                    MaterialStateProperty.all<Color>(
+                                    WidgetStateProperty.all<Color>(
                                         cc.primaryColor),
                               ),
                               onPressed: () {
@@ -72,7 +72,7 @@ class ShippingAddressTile extends StatelessWidget {
                               return TextButton(
                                 style: ButtonStyle(
                                   foregroundColor:
-                                      MaterialStateProperty.all<Color>(
+                                      WidgetStateProperty.all<Color>(
                                           cc.primaryColor),
                                 ),
                                 onPressed: saProvider.loadingDeleteAddress

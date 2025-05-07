@@ -12,7 +12,7 @@ import '../widgets/common/custom_common_button.dart';
 
 class ShippingAddressListView extends StatelessWidget {
   static const routeName = 'shipping_address_list_view';
-  ShippingAddressListView({Key? key}) : super(key: key);
+  ShippingAddressListView({super.key});
   ScrollController controller = ScrollController();
 
   @override

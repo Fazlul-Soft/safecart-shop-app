@@ -11,7 +11,7 @@ import '../widgets/skelletons/order_tile_skeleton.dart';
 
 class OrdersListView extends StatelessWidget {
   static const routeName = 'order_list_view';
-  OrdersListView({Key? key}) : super(key: key);
+  OrdersListView({super.key});
   ScrollController controller = ScrollController();
 
   @override

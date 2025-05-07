@@ -20,8 +20,8 @@ class OrderTile extends StatelessWidget {
     this.orderedDate,
     this.order,
     this.payment, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

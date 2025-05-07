@@ -2,18 +2,15 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/checkout_service/shipping_address_service.dart';
-import 'package:safecart/services/country_state_service.dart';
 import 'package:safecart/utils/city_dropdown.dart';
 import 'package:safecart/utils/country_dropdown.dart';
 import 'package:safecart/utils/state_dropdown.dart';
 
 import '../helpers/common_helper.dart';
 import '../helpers/empty_space_helper.dart';
-import '../utils/custom_preloader.dart';
 import '../utils/responsive.dart';
 import '../widgets/common/boxed_back_button.dart';
 import '../widgets/common/custom_common_button.dart';
-import '../widgets/common/custom_dropdown.dart';
 import '../widgets/common/field_title.dart';
 
 class AddNewShippingAddressView extends StatelessWidget {

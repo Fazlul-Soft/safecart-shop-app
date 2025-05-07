@@ -96,8 +96,8 @@ class AccountDelete {
                               },
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
+                              WidgetStateProperty.resolveWith((states) {
+                            if (states.contains(WidgetState.pressed)) {
                               return cc.blackColor;
                             }
                             return cc.red;

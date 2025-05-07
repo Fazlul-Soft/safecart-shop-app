@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:badges/badges.dart' as badge;
 import 'package:safecart/helpers/common_helper.dart';
 import 'package:safecart/helpers/navigation_helper.dart';
 import 'package:safecart/services/search_seatvice.dart';
 import 'package:safecart/views/product_search_view.dart';
 import 'package:safecart/widgets/home_front/custom_search_field.dart';
 
-import '../../helpers/empty_space_helper.dart';
 import '../../services/profile_info_service.dart';
 import '../../services/search_product_service.dart';
 

@@ -5,8 +5,7 @@ class FilterOption extends StatefulWidget {
   String hintText;
   String selectedOption;
   List<String> itemList;
-  FilterOption(this.hintText, this.selectedOption, this.itemList, {Key? key})
-      : super(key: key);
+  FilterOption(this.hintText, this.selectedOption, this.itemList, {super.key});
 
   @override
   State<FilterOption> createState() => _FilterOptionState();

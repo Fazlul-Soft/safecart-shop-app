@@ -17,7 +17,7 @@ import 'filter_rtl_padding.dart';
 
 class FilterBottomSheet extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const FilterBottomSheet(this.scaffoldKey, {Key? key}) : super(key: key);
+  const FilterBottomSheet(this.scaffoldKey, {super.key});
 
   @override
   Widget build(BuildContext context) {

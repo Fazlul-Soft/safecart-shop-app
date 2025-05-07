@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../../helpers/common_helper.dart';
 import '../../helpers/empty_space_helper.dart';
-import '../../services/country_state_service.dart';
 import '../../services/profile_info_service.dart';
 import '../../utils/responsive.dart';
 import '../../views/edit_profile_view.dart';

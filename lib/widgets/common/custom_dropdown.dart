@@ -10,8 +10,7 @@ class CustomDropdown extends StatelessWidget {
   String? value;
   void Function(dynamic)? onChanged;
   CustomDropdown(this.hintText, this.listData, this.onChanged,
-      {this.value, Key? key})
-      : super(key: key);
+      {this.value, super.key});
 
   @override
   Widget build(BuildContext context) {

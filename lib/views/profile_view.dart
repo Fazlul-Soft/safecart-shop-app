@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:safecart/services/country_state_service.dart';
 
 import '../../services/auth_service/sign_in_service.dart';
 import '../../views/shipping_address_list_view.dart';

@@ -17,7 +17,7 @@ import '../widgets/common/image_view.dart';
 class TicketChatView extends StatelessWidget {
   String title;
   final id;
-  TicketChatView(this.title, this.id, {Key? key}) : super(key: key);
+  TicketChatView(this.title, this.id, {super.key});
   Key textFieldKey = const Key('key');
   final TextEditingController _controller = TextEditingController();
 

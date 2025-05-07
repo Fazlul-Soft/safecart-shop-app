@@ -19,8 +19,8 @@ class TicketTile extends StatelessWidget {
     this.ticketId,
     this.priority,
     this.status, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

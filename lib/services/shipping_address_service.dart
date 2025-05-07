@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:safecart/helpers/common_helper.dart';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:safecart/services/profile_info_service.dart';
 
 import '../models/shipping_addresses_model.dart';
 

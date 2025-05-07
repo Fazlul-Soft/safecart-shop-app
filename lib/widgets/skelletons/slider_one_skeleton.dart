@@ -25,9 +25,9 @@ class SliderOneSkeleton extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           color: cc.sliderOneBackground,
         ),
-        child: Stack(
+        child: const Stack(
             // crossAxisAlignment: CrossAxisAlignment.end,
-            children: const []),
+            children: []),
       ),
     );
   }

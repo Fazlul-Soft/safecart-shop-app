@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:safecart/models/search_filter_data_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/common_helper.dart';
 
