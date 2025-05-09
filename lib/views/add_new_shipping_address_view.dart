@@ -216,19 +216,19 @@ class AddNewShippingAddressView extends StatelessWidget {
                                             },
                                           );
                                         }),
-                                        Consumer<ShippingAddressService>(
-                                            builder:
-                                                (context, saProvider, child) {
-                                          return CityDropdown(
-                                            selectedValue:
-                                                saProvider.selectedCity?.name,
-                                            stateId:
-                                                saProvider.selectedState?.id,
-                                            onChanged: (city) {
-                                              saProvider.setTownCity(city);
-                                            },
-                                          );
-                                        }),
+                                        // Consumer<ShippingAddressService>(
+                                        //     builder:
+                                        //         (context, saProvider, child) {
+                                        //   return CityDropdown(
+                                        //     selectedValue:
+                                        //         saProvider.selectedCity?.name,
+                                        //     stateId:
+                                        //         saProvider.selectedState?.id,
+                                        //     onChanged: (city) {
+                                        //       saProvider.setTownCity(city);
+                                        //     },
+                                        //   );
+                                        // }),
                                         FieldTitle(
                                             asProvider.getString('Zipcode')),
                                         TextFormField(

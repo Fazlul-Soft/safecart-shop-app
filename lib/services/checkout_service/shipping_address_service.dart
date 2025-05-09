@@ -279,7 +279,7 @@ class ShippingAddressService with ChangeNotifier {
         'email': email,
         'phone': phone,
         'state_id': (selectedState?.id ?? '').toString(),
-        'city': (selectedCity?.id ?? '').toString(),
+        'city': (selectedCity?.id ?? '').toString() ?? '',
         'zipcode': zipcode,
         'country_id': (selectedCountry?.id ?? '').toString(),
         'address': address,
