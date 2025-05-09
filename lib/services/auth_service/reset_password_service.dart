@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -86,7 +87,8 @@ class ResetPasswordService with ChangeNotifier {
     notifyListeners();
   }
 
-  setPhone(value) { // Changed from setEmail to setPhone
+  setPhone(value) {
+    // Changed from setEmail to setPhone
     phone = value;
     notifyListeners();
   }
@@ -94,26 +96,44 @@ class ResetPasswordService with ChangeNotifier {
   resetPassword(BuildContext context, password) async {
     final haveConnection = await checkConnection(context);
     if (!haveConnection) {
+      showToast(asProvider.getString('No internet connection'), cc.red);
+      return;
+    }
+    if (phone == null || phone!.isEmpty) {
+      showToast(asProvider.getString('Please enter phone number'), cc.red);
       return;
     }
     setLoadingResetPassword(true);
     try {
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('$baseApi/reset-password'));
+      var request =
+          http.MultipartRequest('POST', Uri.parse('$baseApi/reset-password'));
       request.fields.addAll({
-        'password': password,
-        'phone': phone.toString(), // Changed from email to phone
+        'password': password.trim(),
+        'phone': phone!.trim(),
       });
 
-      http.StreamedResponse response = await request.send();
+      final response = await request.send();
+      final responseData = await response.stream.bytesToString();
+      final jsonResponse = jsonDecode(responseData);
+       print('Reset password response: $jsonResponse');
+      // http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
-        showToast(asProvider.getString('Password reset successful'), cc.green);
+         showToast(asProvider.getString('Password reset successful'), cc.green);
+        // print(await response.stream.bytesToString());
         Navigator.pop(context);
       } else {
-        print(response.reasonPhrase);
-        showToast(asProvider.getString('Password reset failed'), cc.red);
+        // print(response.reasonPhrase);
+        // showToast(asProvider.getString('Password reset failed'), cc.red);
+
+        final errorMessage = jsonResponse['message'] ?? 
+                           asProvider.getString('Password reset failed');
+        showToast(errorMessage, cc.red);
+        
+        // Specific handling for phone not found
+        if (jsonResponse['message']?.contains('not found') ?? false) {
+          showToast(asProvider.getString('Phone number not registered'), cc.red);
+        }
       }
     } on TimeoutException {
       showToast(asProvider.getString('Request timeout'), cc.red);

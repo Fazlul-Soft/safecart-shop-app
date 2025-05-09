@@ -213,38 +213,54 @@ class ResetPasswordView extends StatelessWidget {
   final _phoneController = TextEditingController();
 
   trySendingOTP(BuildContext context) async {
-  final valid = _formKey.currentState!.validate();
-  if (!valid) {
-    return;
-  }
-  Provider.of<ResetPasswordService>(context, listen: false)
-      .setPhone(_phoneController.text);
-  Provider.of<OtpService>(context, listen: false)
-      .sendOTP(context, _phoneController.text)
-      .then((value) {
-    if (value != null) {
-      Navigator.of(context).pop();
-      Navigator.of(context).push(PageRouteBuilder(
-          pageBuilder: (context, animation, anotherAnimation) {
-        return EnterOtpView(
-          value,  // This is the otp
-          fromRegister: false,  // Set this appropriately
-          phoneNumber: _phoneController.text,  // Pass the phone number
-        );
-      },
-          transitionsBuilder: (context, animation, anotherAnimation, child) {
-        animation =
-            CurvedAnimation(curve: Curves.decelerate, parent: animation);
-        return Align(
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-        );
-      }));
+    final valid = _formKey.currentState!.validate();
+    if (!valid) {
+      return;
     }
-  });
-}
+
+    final phone = _phoneController.text.trim();
+
+    Provider.of<ResetPasswordService>(context, listen: false)
+        .setPhone(_phoneController.text);
+
+    final otp = await Provider.of<OtpService>(context, listen: false)
+        .sendOTP(context, phone);
+
+    if (otp != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (_) => EnterOtpView(
+                  otp,
+                  fromRegister: false,
+                  phoneNumber: phone,
+                )),
+      );
+    }
+    // Provider.of<OtpService>(context, listen: false)
+    //     .sendOTP(context, _phoneController.text)
+    //     .then((value) {
+    //   if (value != null) {
+    //     Navigator.of(context).pop();
+    //     Navigator.of(context).push(PageRouteBuilder(
+    //         pageBuilder: (context, animation, anotherAnimation) {
+    //       return EnterOtpView(
+    //         value, // This is the otp
+    //         fromRegister: false, // Set this appropriately
+    //         phoneNumber: _phoneController.text, // Pass the phone number
+    //       );
+    //     }, transitionsBuilder: (context, animation, anotherAnimation, child) {
+    //       // animation =
+    //       //     CurvedAnimation(curve: Curves.decelerate, parent: animation);
+    //       // return Align(
+    //       //   child: FadeTransition(
+    //       //     opacity: animation,
+    //       //     child: child,
+    //       //   ),
+    //       // );
+    //     }));
+    //   }
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {

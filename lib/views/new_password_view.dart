@@ -9,6 +9,8 @@ import '../utils/responsive.dart';
 import '../widgets/common/boxed_back_button.dart';
 import '../widgets/common/custom_common_button.dart';
 import '../widgets/common/field_title.dart';
+import 'dart:async';
+import 'dart:convert';
 
 class NewPasswordView extends StatelessWidget {
   static const routeName = 'new_password_view';
@@ -22,8 +24,15 @@ class NewPasswordView extends StatelessWidget {
     if (!valid) {
       return;
     }
-    Provider.of<ResetPasswordService>(context, listen: false)
+
+    // Provider.of<ResetPasswordService>(context, listen: false)
+    //     .resetPassword(context, _newPasswordController.text);
+    final success = Provider.of<ResetPasswordService>(context, listen: false)
         .resetPassword(context, _newPasswordController.text);
+
+    if (success) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
   }
 
   @override
