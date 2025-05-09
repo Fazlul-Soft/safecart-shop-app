@@ -12,6 +12,10 @@ class SaveSignInInfoService with ChangeNotifier {
     final spInstance = await SharedPreferences.getInstance();
     spInstance.setString('username_email', usernameEmail);
     spInstance.setString('password', password);
+
+    this.emailUsername = usernameEmail;
+    this.password = password;
+    notifyListeners();
   }
 
   saveToken(token) async {
@@ -26,16 +30,38 @@ class SaveSignInInfoService with ChangeNotifier {
     setToken('');
   }
 
-  getSaveinfos(BuildContext context) async {
+  clearCredentials() async {
+    final spInstance = await SharedPreferences.getInstance();
+    await spInstance.remove('username_email');
+    await spInstance.remove('password');
+    emailUsername = null;
+    password = null;
+    notifyListeners();
+  }
+
+  Future<void> getSaveinfos(BuildContext context) async {
     final spInstance = await SharedPreferences.getInstance();
     emailUsername = spInstance.getString('username_email');
     password = spInstance.getString('password');
     final token = spInstance.getString('token');
-    print('the token is: $token');
+
     if (password != null && password!.isNotEmpty) {
       Provider.of<SignInService>(context, listen: false)
           .setRememberPassword(true);
     }
     setToken(token ?? '');
+    notifyListeners();
   }
+  // getSaveinfos(BuildContext context) async {
+  //   final spInstance = await SharedPreferences.getInstance();
+  //   emailUsername = spInstance.getString('username_email');
+  //   password = spInstance.getString('password');
+  //   final token = spInstance.getString('token');
+  //   print('the token is: $token');
+  //   if (password != null && password!.isNotEmpty) {
+  //     Provider.of<SignInService>(context, listen: false)
+  //         .setRememberPassword(true);
+  //   }
+  //   setToken(token ?? '');
+  // }
 }

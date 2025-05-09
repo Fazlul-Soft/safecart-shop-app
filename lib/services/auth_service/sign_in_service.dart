@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:safecart/services/auth_service/otp_service.dart';
 import 'package:safecart/services/auth_service/save_sign_in_info_service.dart';
 import 'package:safecart/services/profile_info_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/common_helper.dart';
 import '../../views/enter_otp_view.dart';
@@ -32,6 +33,24 @@ class SignInService with ChangeNotifier {
   setRememberPassword(value) {
     rememberPassword = value ?? !rememberPassword;
     notifyListeners();
+    if (value != null) {
+      _saveRememberMePreference(value);
+    }
+  }
+
+  Future<void> _saveRememberMePreference(bool value) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool('remember_me', value);
+  }
+
+  Future<bool> _loadRememberMePreference() async {
+    final sp = await SharedPreferences.getInstance();
+    return sp.getBool('remember_me') ?? false;
+  }
+
+  Future<void> initializeRememberMe() async {
+    rememberPassword = await _loadRememberMePreference();
+    notifyListeners();
   }
 
   Future<void> signIn(
@@ -41,6 +60,13 @@ class SignInService with ChangeNotifier {
 
     setLoadingSignIn(true);
 
+    if (rememberPassword) {
+      Provider.of<SaveSignInInfoService>(context, listen: false)
+          .saveSignInInfo(identifier, password);
+    } else {
+      Provider.of<SaveSignInInfoService>(context, listen: false)
+          .clearCredentials();
+    }
     try {
       var request = http.MultipartRequest('POST', Uri.parse('$baseApi/login'));
 
