@@ -17,6 +17,7 @@ import 'package:safecart/services/payment_gateway_service.dart';
 
 import '../../../helpers/common_helper.dart';
 import 'shipping_address_service.dart';
+import '../../views/aba_web_view_screen.dart';
 
 class CheckoutService with ChangeNotifier {
   bool differentSL = false;
@@ -482,6 +483,53 @@ class CheckoutService with ChangeNotifier {
         setLoadingPlaceOrder(false);
         return;
       }
+      if (paymentGateway.selectedGateway?.name == "abapayway") {
+        final data = jsonDecode(resData);
+        if (response.statusCode == 200 && data['success'] == true) {
+          cartData.emptyCart();
+          orderId = data['order_id'];
+          totalOrderAmount = data['total_amount'] is String
+              ? double.parse(data['total_amount'])
+              : data['total_amount'].toDouble();
+
+          try {
+            // Get the payment HTML from your backend
+            final redirectResponse = await http.post(
+              Uri.parse('$baseApi/abapayway/redirect'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $getToken',
+              },
+              body: json.encode({'order_id': orderId, 'amount': totalOrderAmount}),
+            );
+
+            if (redirectResponse.statusCode == 200) {
+              final responseData = json.decode(redirectResponse.body);
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AbaWebViewScreen(
+                    htmlContent: responseData['html'],
+                    // title: 'ABA PayWay Payment',
+                    orderId: orderId.toString(),
+                    // Pass your existing IPN URL
+                    // ipnUrl: '$baseApi/aba-payway-ipn',
+                  ),
+                ),
+              );
+            } else {
+              throw Exception('Failed to get payment page');
+            }
+          } catch (e) {
+            showToast('Payment Error: ${e.toString()}', Colors.red);
+            debugPrint('ABA PayWay error: ${e.toString()}');
+          } finally {
+            setLoadingPlaceOrder(false);
+          }
+          return;
+        }
+      }
       final data = jsonDecode(resData);
       if (response.statusCode == 200 && data['success'] == true) {
         print(data);
@@ -497,6 +545,8 @@ class CheckoutService with ChangeNotifier {
         updatePaymentBody['order_secret_id'] = orderSecretKey;
         updatePaymentBody['hash_two'] = hashTwo;
         orderId = data['order_id'];
+        //abapayway
+        updatePaymentBody['gateway'] = paymentGateway.selectedGateway?.name;
         totalOrderAmount = data['total_amount'] is String
             ? double.parse(data['total_amount'])
             : data['total_amount'].toDouble();

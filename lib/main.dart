@@ -73,6 +73,7 @@ import 'services/search_product_service.dart';
 import 'services/submit_review_service.dart';
 import 'views/product_details_view.dart';
 import 'widgets/common/web_view.dart';
+import '../views/order_confirmation_screen.dart';
 
 //
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -250,6 +251,7 @@ class MyApp extends StatelessWidget {
             ProductByCategoryView.routeName: (context) =>
                 ProductByCategoryView(),
             ChangePasswordView.routeName: (context) => ChangePasswordView(),
+            OrderConfirmationScreen.routeName: (context) => OrderConfirmationScreen(),
           },
         );
       }),
