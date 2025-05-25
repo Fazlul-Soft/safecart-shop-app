@@ -401,90 +401,90 @@ class ProductDetailsView extends StatelessWidget {
                                             ?.length ??
                                         0) >
                                     0)
-                                  FilterRtlPadding(
-                                      padding: 20,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            asProvider.getString('Tags') + ' :',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                          EmptySpaceHelper.emptywidth(5),
-                                          SizedBox(
-                                            width: screenWidth - 65,
-                                            height: 40,
-                                            child: ListView.separated(
-                                                padding: EdgeInsets.only(
-                                                    right: rtlProvider.langRtl
-                                                        ? 0
-                                                        : 20,
-                                                    left: rtlProvider.langRtl
-                                                        ? 20
-                                                        : 0),
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemBuilder: (context, index) {
-                                                  return Container(
-                                                    height: 40,
-                                                    alignment: Alignment.center,
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 10),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        border: Border.all(
-                                                            color: cc
-                                                                .greyBorder2)),
-                                                    child: Text(
-                                                        Provider.of<ProductDetailsService>(
-                                                                context,
-                                                                listen: false)
-                                                            .productDetails!
-                                                            .tag![index]
-                                                            .tagName,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium!
-                                                            .copyWith(
-                                                              color:
-                                                                  cc.greyHint,
-                                                            )),
-                                                  );
-                                                },
-                                                separatorBuilder:
-                                                    (context, index) =>
-                                                        const SizedBox(
-                                                          width: 8,
-                                                        ),
-                                                itemCount:
-                                                    Provider.of<ProductDetailsService>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .productDetails!
-                                                                .tag ==
-                                                            null
-                                                        ? 0
-                                                        : Provider.of<
-                                                                    ProductDetailsService>(
-                                                                context,
-                                                                listen: false)
-                                                            .productDetails!
-                                                            .tag!
-                                                            .length),
-                                          ),
-                                        ],
-                                      )),
-                                EmptySpaceHelper.emptyHight(15),
+                                //   FilterRtlPadding(
+                                //       padding: 20,
+                                //       child: Row(
+                                //         crossAxisAlignment:
+                                //             CrossAxisAlignment.center,
+                                //         children: [
+                                //           Text(
+                                //             asProvider.getString('Tags') + ' :',
+                                //             style: Theme.of(context)
+                                //                 .textTheme
+                                //                 .bodyLarge!
+                                //                 .copyWith(
+                                //                   fontWeight: FontWeight.bold,
+                                //                 ),
+                                //           ),
+                                //           EmptySpaceHelper.emptywidth(5),
+                                //           SizedBox(
+                                //             width: screenWidth - 65,
+                                //             height: 40,
+                                //             child: ListView.separated(
+                                //                 padding: EdgeInsets.only(
+                                //                     right: rtlProvider.langRtl
+                                //                         ? 0
+                                //                         : 20,
+                                //                     left: rtlProvider.langRtl
+                                //                         ? 20
+                                //                         : 0),
+                                //                 scrollDirection:
+                                //                     Axis.horizontal,
+                                //                 itemBuilder: (context, index) {
+                                //                   return Container(
+                                //                     height: 40,
+                                //                     alignment: Alignment.center,
+                                //                     padding: const EdgeInsets
+                                //                         .symmetric(
+                                //                         horizontal: 10),
+                                //                     decoration: BoxDecoration(
+                                //                         borderRadius:
+                                //                             BorderRadius
+                                //                                 .circular(10),
+                                //                         border: Border.all(
+                                //                             color: cc
+                                //                                 .greyBorder2)),
+                                //                     child: Text(
+                                //                         Provider.of<ProductDetailsService>(
+                                //                                 context,
+                                //                                 listen: false)
+                                //                             .productDetails!
+                                //                             .tag![index]
+                                //                             .tagName,
+                                //                         style: Theme.of(context)
+                                //                             .textTheme
+                                //                             .bodyMedium!
+                                //                             .copyWith(
+                                //                               color:
+                                //                                   cc.greyHint,
+                                //                             )),
+                                //                   );
+                                //                 },
+                                //                 separatorBuilder:
+                                //                     (context, index) =>
+                                //                         const SizedBox(
+                                //                           width: 8,
+                                //                         ),
+                                //                 itemCount:
+                                //                     Provider.of<ProductDetailsService>(
+                                //                                     context,
+                                //                                     listen:
+                                //                                         false)
+                                //                                 .productDetails!
+                                //                                 .tag ==
+                                //                             null
+                                //                         ? 0
+                                //                         : Provider.of<
+                                //                                     ProductDetailsService>(
+                                //                                 context,
+                                //                                 listen: false)
+                                //                             .productDetails!
+                                //                             .tag!
+                                //                             .length),
+                                //           ),
+                                //         ],
+                                //       )),
+                                // EmptySpaceHelper.emptyHight(15),
 
                                 //Description
 
