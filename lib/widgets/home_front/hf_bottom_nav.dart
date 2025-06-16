@@ -52,28 +52,84 @@ class HFBottomNav extends StatelessWidget {
               color: cc.greyHint,
             ),
             label: asProvider.getString('Products')),
+        // BottomNavigationBarItem(
+        //     activeIcon: SvgPicture.asset(
+        //       'assets/icons/cart.svg',
+        //       height: 27,
+        //       color: cc.primaryColor,
+        //     ),
+        //     icon:
+        //         Consumer<CartDataService>(builder: (context, cartData, child) {
+        //       return badge.Badge(
+        //         showBadge: cartData.cartList.isEmpty ? false : true,
+        //         badgeContent: Text(
+        //           cartData.totalQuantity().toString(),
+        //           style: TextStyle(color: cc.pureWhite),
+        //         ),
+        //         child: SvgPicture.asset(
+        //           'assets/icons/cart.svg',
+        //           height: 27,
+        //           color: cc.greyHint,
+        //         ),
+        //       );
+        //     }),
+        //     label: asProvider.getString('Cart')),
         BottomNavigationBarItem(
-            activeIcon: SvgPicture.asset(
-              'assets/icons/cart_fill.svg',
-              height: 27,
-              color: cc.primaryColor,
-            ),
-            icon:
-                Consumer<CartDataService>(builder: (context, cartData, child) {
-              return badge.Badge(
-                showBadge: cartData.cartList.isEmpty ? false : true,
-                badgeContent: Text(
-                  cartData.totalQuantity().toString(),
-                  style: TextStyle(color: cc.pureWhite),
-                ),
-                child: SvgPicture.asset(
-                  'assets/icons/cart.svg',
-                  height: 27,
-                  color: cc.greyHint,
-                ),
+          icon: Consumer<CartDataService>(
+            builder: (context, cartData, child) {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/cart.svg',
+                    height: 27,
+                    color: cc.greyHint,
+                  ),
+                  Positioned(
+                    top: 2,
+                    right: 8,
+                    child: Text(
+                      cartData.totalQuantity().toString(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: cc.primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
               );
-            }),
-            label: asProvider.getString('Cart')),
+            },
+          ),
+          activeIcon: Consumer<CartDataService>(
+            builder: (context, cartData, child) {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/cart.svg',
+                    height: 27,
+                    color: cc.primaryColor,
+                  ),
+                  Positioned(
+                    top: 2,
+                    right: 8,
+                    child: Text(
+                      cartData.totalQuantity().toString(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: cc.primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          label: asProvider.getString('Cart'),
+        ),
+
         BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
               'assets/icons/wishlist_fill.svg',
