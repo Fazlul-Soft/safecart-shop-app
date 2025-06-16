@@ -128,7 +128,7 @@ class ProfileView extends StatelessWidget {
                                       EmptySpaceHelper.emptyHight(10),
                                       profileItem(
                                         context,
-                                        asProvider.getString('Support Ticket'),
+                                        asProvider.getString('Support ticket'),
                                         'assets/icons/support_ticket.svg',
                                         onTap: () {
                                           Navigator.of(context).pushNamed(

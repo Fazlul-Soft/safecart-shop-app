@@ -25,7 +25,8 @@ class OrdersListView extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            height: screenHeight / 2.3,
+            height: 10,
+            // height: screenHeight / 2.3,
             width: double.infinity,
             // padding: EdgeInsets.only(top: screenHeight / 7),
             color: cc.primaryColor,
@@ -40,11 +41,13 @@ class OrdersListView extends StatelessWidget {
                 toolbarHeight: 60,
                 foregroundColor: cc.greyHint,
                 backgroundColor: Colors.transparent,
-                expandedHeight: screenHeight / 3.7,
+                // expandedHeight: screenHeight / 3.7,
+                expandedHeight: 10,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    height: screenHeight / 3.7,
+                    height: screenHeight / 2.7,
+                    // height: 10,
                     width: double.infinity,
                     // padding: EdgeInsets.only(top: screenHeight / 7),
                     color: cc.primaryColor,
@@ -82,8 +85,7 @@ class OrdersListView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
                         // constraints:
                         //     BoxConstraints(minHeight: screenHeight / 2.5),
                         decoration: BoxDecoration(
@@ -128,7 +130,8 @@ class OrdersListView extends StatelessWidget {
                                             .toList(),
                                       )
                                     : SizedBox(
-                                        height: screenHeight / 2.5,
+                                        height: screenHeight/1.3,
+                                        // height: screenHeight / 2.5,
                                         child: Center(
                                           child: Text(asProvider
                                               .getString('No order found.')),

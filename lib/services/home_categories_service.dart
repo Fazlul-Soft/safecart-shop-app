@@ -47,9 +47,9 @@ class HomeCategoriesService with ChangeNotifier {
     try {
       var request =
           http.MultipartRequest('GET', Uri.parse('$baseApi/category'));
-
+      print('API Request: $baseApi/category');
       http.StreamedResponse response = await request.send();
-
+      print('API Response Status: ${response.statusCode}');
       if (response.statusCode == 200) {
         final data = jsonDecode(await response.stream.bytesToString());
         categories = HomeCategoriesModel.fromJson(data).categories;

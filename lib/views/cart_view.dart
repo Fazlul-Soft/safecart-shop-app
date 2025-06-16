@@ -87,7 +87,7 @@ class CartView extends StatelessWidget {
                 )),
               if (cProvider.cartList.isNotEmpty)
                 Container(
-                  margin: const EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(bottom: 40),
                   padding: const EdgeInsets.all(20.0),
                   child: CustomCommonButton(
                     btText: asProvider.getString('Complete Your Purchase'),

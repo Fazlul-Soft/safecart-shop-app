@@ -110,12 +110,12 @@ class ProfileInfoService with ChangeNotifier {
     }
     if (selectedCountryName == null &&
         profileInfo?.userDetails.userCountry?.name == null) {
-      showToast(asProvider.getString('Please select a country'), cc.red);
+      // showToast(asProvider.getString('Please select a country'), cc.red);
       return;
     }
     if (selectedStateName == null &&
         profileInfo?.userDetails.userState?.name == null) {
-      showToast(asProvider.getString('Please select a state'), cc.red);
+      // showToast(asProvider.getString('Please select a state'), cc.red);
       return;
     }
     setLoadingProfileUpdate(true);

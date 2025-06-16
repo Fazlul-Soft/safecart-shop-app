@@ -23,7 +23,8 @@ class ShippingAddressListView extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            height: screenHeight / 2.3,
+            height: 10,
+            // height: screenHeight / 2.3,
             width: double.infinity,
             color: cc.primaryColor,
             alignment: Alignment.topCenter,
@@ -36,7 +37,8 @@ class ShippingAddressListView extends StatelessWidget {
                 toolbarHeight: 60,
                 foregroundColor: cc.greyHint,
                 backgroundColor: Colors.transparent,
-                expandedHeight: screenHeight / 3.7,
+                expandedHeight: 10,
+                // expandedHeight: screenHeight / 1.3,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(

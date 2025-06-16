@@ -53,7 +53,7 @@ class HomeView extends StatelessWidget {
             const Categories(),
             const AutoSlider(),
             const FeatureProducts(),
-            const ManualSlider(),
+            // const ManualSlider(),
             const CategoriesAndProducts(),
             const ManualSliderTwo(),
             EmptySpaceHelper.emptyHight(15),

@@ -31,7 +31,6 @@ class EditProfileView extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
   final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
@@ -40,7 +39,6 @@ class EditProfileView extends StatelessWidget {
     _nameController.text = pProvider.profileInfo!.userDetails.name;
     _emailController.text = pProvider.profileInfo!.userDetails.email;
     _phoneController.text = pProvider.profileInfo!.userDetails.phone ?? '';
-    _cityController.text = pProvider.profileInfo!.userDetails.city ?? '';
     _zipcodeController.text = pProvider.profileInfo!.userDetails.zipcode ?? '';
     _addressController.text = pProvider.profileInfo!.userDetails.address ?? '';
     pProvider.setLoadingProfileUpdate(false);
@@ -59,7 +57,6 @@ class EditProfileView extends StatelessWidget {
       name: _nameController.text,
       email: _emailController.text,
       phone: _phoneController.text,
-      city: _cityController.text,
       zipcode: _zipcodeController.text,
       address: _addressController.text,
     );

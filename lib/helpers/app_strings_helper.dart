@@ -202,7 +202,7 @@ class AppStringsHelper {
     "Seller's Products": '',
     'Related Products': '',
     'Shipping address': '',
-    'Support Ticket': '',
+    'Support ticket': '',
     'Edit profile': '',
     'Delete account': '',
     'Sign in/Sign up': '',
