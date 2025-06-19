@@ -178,7 +178,7 @@ class ProfileInfo extends StatelessWidget {
                       color: cc.pureWhite,
                     ),
                     label: Text(
-                      asProvider.getString('Edit profile'),
+                      asProvider.getString('Edit Profile'),
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: cc.pureWhite,
                           ),

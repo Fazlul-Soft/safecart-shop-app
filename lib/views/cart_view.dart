@@ -406,7 +406,7 @@ class CartView extends StatelessWidget {
                       Navigator.of(context).pushNamed(CheckoutView.routeName);
                       print('Process to checkout');
                     },
-                    color: cc.secondaryColor,
+                    color: cc.primaryColor,
                   ),
                 ),
             ],

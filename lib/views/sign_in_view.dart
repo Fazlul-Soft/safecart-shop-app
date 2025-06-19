@@ -757,7 +757,7 @@ class _SignInViewState extends State<SignInView> {
                                             controller: _passwordController,
                                             obscureText: siProvider.obscurePassword,
                                             decoration: InputDecoration(
-                                              hintText: asProvider.getString('Enter your Password'),
+                                              hintText: asProvider.getString('Enter your password'),
                                               prefixIcon: Padding(
                                                 padding: const EdgeInsets.all(12),
                                                 child: SvgPicture.asset('assets/icons/pass_prefix.svg'),
@@ -779,7 +779,7 @@ class _SignInViewState extends State<SignInView> {
                                                   value.isEmpty ||
                                                   value.trim().isEmpty ||
                                                   value.length < 6) {
-                                                return asProvider.getString('Password must be more then 6 character');
+                                                return asProvider.getString('Password must be more then 8 character');
                                               }
                                               return null;
                                             },
@@ -808,7 +808,7 @@ class _SignInViewState extends State<SignInView> {
                                               constraints: BoxConstraints(maxWidth: screenWidth / 4.5),
                                               child: FittedBox(
                                                 child: Text(
-                                                  asProvider.getString('Remember me'),
+                                                  asProvider.getString('Remember Me'),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .titleSmall!
@@ -842,7 +842,7 @@ class _SignInViewState extends State<SignInView> {
                                                             }));
                                                   },
                                                   child: Text(
-                                                    asProvider.getString('Forgot password?'),
+                                                    asProvider.getString('Forgot Password?'),
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .titleSmall!
@@ -908,7 +908,7 @@ class _SignInViewState extends State<SignInView> {
                                                             }
                                                           });
                                                         },
-                                                      text: asProvider.getString('Sign up'),
+                                                      text: asProvider.getString('Sign Up'),
                                                       style: TextStyle(color: cc.secondaryColor)),
                                                 ]),
                                           ),
@@ -928,12 +928,12 @@ class _SignInViewState extends State<SignInView> {
                                                     return;
                                                   }
                                                   socialProvider.googleSignInSignUp(
-                                                      context, 'Sign in failed');
+                                                      context, 'Sign In Failed');
                                                 },
                                                 icon: SvgPicture.asset('assets/icons/google.svg'),
                                                 label: socialProvider.loadingGoogleSignInSignUp
                                                     ? FittedBox(child: CustomPreloader())
-                                                    : Text(asProvider.getString('Sign in with Google'))),
+                                                    : Text(asProvider.getString('Sign In with Google'))),
                                           );
                                         }),
                                         EmptySpaceHelper.emptyHight(10),
@@ -949,12 +949,12 @@ class _SignInViewState extends State<SignInView> {
                                                     return;
                                                   }
                                                   socialProvider.facebookSignInSignUp(
-                                                      context, 'Sign in failed');
+                                                      context, 'Sign In Failed');
                                                 },
                                                 icon: SvgPicture.asset('assets/icons/facebook.svg'),
                                                 label: socialProvider.loadingFacebookSignInSignUp
                                                     ? FittedBox(child: CustomPreloader())
-                                                    : Text(asProvider.getString('Sign in with Facebook'))),
+                                                    : Text(asProvider.getString('Sign In with Facebook'))),
                                           );
                                         }),
                                         EmptySpaceHelper.emptyHight(20),

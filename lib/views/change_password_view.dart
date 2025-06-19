@@ -57,7 +57,7 @@ class ChangePasswordView extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 child: Center(
                   child: Text(
-                    asProvider.getString('Change password'),
+                    asProvider.getString('Change Password'),
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge!

@@ -302,7 +302,7 @@ class _SignUpViewState extends State<SignUpView> {
                                                 suProvider.obscurePasswordOne,
                                             decoration: InputDecoration(
                                               hintText: asProvider.getString(
-                                                  'Enter your Password'),
+                                                  'Enter your password'),
                                               prefixIcon: Padding(
                                                 padding:
                                                     const EdgeInsets.all(12),
@@ -440,7 +440,7 @@ class _SignUpViewState extends State<SignUpView> {
                                                                 },
                                                           text: asProvider
                                                               .getString(
-                                                                  'terms of service and Conditions'),
+                                                                  'terms of service and conditions'),
                                                           style: TextStyle(
                                                               color: cc
                                                                   .secondaryColor)),
@@ -554,7 +554,7 @@ class _SignUpViewState extends State<SignUpView> {
                                                   socialProvider
                                                       .googleSignInSignUp(
                                                           context,
-                                                          'Sign up failed');
+                                                          'Sign Up Failed');
                                                 },
                                                 icon: SvgPicture.asset(
                                                     'assets/icons/google.svg'),
@@ -565,7 +565,7 @@ class _SignUpViewState extends State<SignUpView> {
                                                             CustomPreloader(),
                                                       )
                                                     : Text(asProvider.getString(
-                                                        'Sign up with Google'))),
+                                                        'Sign Up with Google'))),
                                           );
                                         }),
                                         EmptySpaceHelper.emptyHight(10),
@@ -586,7 +586,7 @@ class _SignUpViewState extends State<SignUpView> {
                                                   socialProvider
                                                       .facebookSignInSignUp(
                                                           context,
-                                                          'Sign up failed');
+                                                          'Sign Up Failed');
                                                 },
                                                 icon: SvgPicture.asset(
                                                     'assets/icons/facebook.svg'),
@@ -597,7 +597,7 @@ class _SignUpViewState extends State<SignUpView> {
                                                             CustomPreloader(),
                                                       )
                                                     : Text(asProvider.getString(
-                                                        'Sign up with Facebook'))),
+                                                        'Sign Up with Facebook'))),
                                           );
                                         }),
                                         EmptySpaceHelper.emptyHight(30),

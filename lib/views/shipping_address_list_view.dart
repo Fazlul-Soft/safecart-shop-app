@@ -48,7 +48,7 @@ class ShippingAddressListView extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Center(
                       child: Text(
-                        asProvider.getString("Shipping address"),
+                        asProvider.getString("Shipping Address"),
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge!

@@ -54,7 +54,7 @@ class OrdersListView extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Center(
                       child: Text(
-                        asProvider.getString('My orders'),
+                        asProvider.getString('My Orders'),
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge!

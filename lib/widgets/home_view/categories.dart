@@ -71,7 +71,7 @@ class Categories extends StatelessWidget {
                 return cProvider.categories != null &&
                         cProvider.categories!.isNotEmpty
                     ? Container(
-                        constraints: const BoxConstraints(maxHeight: 600),
+                        constraints: const BoxConstraints(maxHeight: 510),
                         child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             physics: const BouncingScrollPhysics(),

@@ -19,6 +19,7 @@ import '../helpers/empty_space_helper.dart';
 import '../services/home_campaigns_service.dart';
 import '../services/home_categories_service.dart';
 import '../services/slider_service.dart';
+import '../widgets/home_view/categories_and_products_two.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});
@@ -51,12 +52,13 @@ class HomeView extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             const Categories(),
-            const AutoSlider(),
+            // const AutoSlider(),
             const FeatureProducts(),
             // const ManualSlider(),
-            const CategoriesAndProducts(),
-            const ManualSliderTwo(),
-            EmptySpaceHelper.emptyHight(15),
+            // const CategoriesAndProducts(),
+            // const ManualSliderTwo(),
+            // EmptySpaceHelper.emptyHight(15),
+            const CategoriesAndProductsTwo(),
             const HomeCampaignProducts(),
             const HomeCampaigns(),
             EmptySpaceHelper.emptyHight(screenHeight / 13),

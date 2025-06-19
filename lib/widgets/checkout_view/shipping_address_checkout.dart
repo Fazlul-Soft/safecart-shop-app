@@ -190,7 +190,7 @@ class SippingAddressCheckout extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      asProvider.getString('Shipping information'),
+                      asProvider.getString('Shipping Information'),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context)
@@ -335,7 +335,7 @@ class SippingAddressCheckout extends StatelessWidget {
                         },
                       ),
                       EmptySpaceHelper.emptyHight(10),
-                      FieldTitle(asProvider.getString('Order note')),
+                      FieldTitle(asProvider.getString('Order Note')),
                       TextFormField(
                         controller: _orderNoteController,
                         minLines: 3,

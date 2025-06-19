@@ -37,7 +37,7 @@ class SignOutService with ChangeNotifier {
       if (response.statusCode == 200) {
         print(data);
 
-        showToast(asProvider.getString('Sign out successful'), cc.primaryColor);
+        showToast(asProvider.getString('Sign Out Successful'), cc.primaryColor);
         Provider.of<SaveSignInInfoService>(context, listen: false).clearToken();
         Provider.of<ProfileInfoService>(context, listen: false).logout();
 
@@ -46,12 +46,12 @@ class SignOutService with ChangeNotifier {
         showToast(asProvider.getString(data['message']), cc.red);
         setLoadingSignOut(false);
       } else {
-        showToast(asProvider.getString('Sign in failed'), cc.red);
+        showToast(asProvider.getString('Sign In Failed'), cc.red);
         print(data);
         setLoadingSignOut(false);
       }
     } on TimeoutException {
-      showToast(asProvider.getString('Request timeout'), cc.red);
+      showToast(asProvider.getString('Request Timeout'), cc.red);
       setLoadingSignOut(false);
     } catch (err) {
       showToast(err.toString(), cc.red);

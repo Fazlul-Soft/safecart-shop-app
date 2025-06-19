@@ -69,7 +69,7 @@ class LogoutHelper {
                       builder: (context, soProvider, child) {
                     return CustomCommonButton(
                       width: 100,
-                      btText: asProvider.getString("Sign out"),
+                      btText: asProvider.getString("Sign Out"),
                       isLoading: soProvider.loadingSignOut,
                       onPressed: () async {
                         await soProvider.signOut(context);

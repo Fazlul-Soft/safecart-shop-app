@@ -62,7 +62,7 @@ class HomeAppDrawer extends StatelessWidget {
                         child: Column(children: [
                           profileItem(
                             context,
-                            asProvider.getString('My orders'),
+                            asProvider.getString('My Orders'),
                             'assets/icons/orders.svg',
                             onTap: () {
                               Navigator.of(context)
@@ -72,7 +72,7 @@ class HomeAppDrawer extends StatelessWidget {
                           EmptySpaceHelper.emptyHight(10),
                           profileItem(
                             context,
-                            asProvider.getString('Shipping address'),
+                            asProvider.getString('Shipping Address'),
                             'assets/icons/menu_shipping_address.svg',
                             onTap: () {
                               Navigator.of(context)
@@ -82,7 +82,7 @@ class HomeAppDrawer extends StatelessWidget {
                           EmptySpaceHelper.emptyHight(10),
                           profileItem(
                             context,
-                            asProvider.getString('Support ticket'),
+                            asProvider.getString('Support Ticket'),
                             'assets/icons/support_ticket.svg',
                             onTap: () {
                               Navigator.of(context)
@@ -92,7 +92,7 @@ class HomeAppDrawer extends StatelessWidget {
                           EmptySpaceHelper.emptyHight(10),
                           profileItem(
                             context,
-                            asProvider.getString('Edit profile'),
+                            asProvider.getString('Edit Profile'),
                             'assets/icons/edit_profile.svg',
                             onTap: () {
                               // final pProvider = Provider.of<ProfileInfoService>(
@@ -121,7 +121,7 @@ class HomeAppDrawer extends StatelessWidget {
                           EmptySpaceHelper.emptyHight(10),
                           profileItem(
                             context,
-                            asProvider.getString('Change password'),
+                            asProvider.getString('Change Password'),
                             'assets/icons/change_pass.svg',
                             onTap: () {
                               Navigator.of(context)
@@ -147,7 +147,7 @@ class HomeAppDrawer extends StatelessWidget {
                           EmptySpaceHelper.emptyHight(10),
                           profileItem(
                             context,
-                            asProvider.getString('Sign out'),
+                            asProvider.getString('Sign Out'),
                             'assets/icons/sign_out.svg',
                             divider: false,
                             onTap: () async {
@@ -210,7 +210,7 @@ class HomeAppDrawer extends StatelessWidget {
                                 ))),
                         const SizedBox(height: 20),
                         CustomCommonButton(
-                            btText: asProvider.getString('Sign in/Sign up'),
+                            btText: asProvider.getString('Sign In/Sign Up'),
                             isLoading: false,
                             onPressed: () async {
                               // final continueLogin =
