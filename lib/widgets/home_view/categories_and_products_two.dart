@@ -31,8 +31,11 @@ class _CategoriesAndProductsTwoState extends State<CategoriesAndProductsTwo> {
   @override
   void initState() {
     super.initState();
-    _startTimer();
-    _preloadSubcategories(); // Trigger preload
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _waitForCategoriesAndPreload();
+      _startTimer();
+    });
+    // _preloadSubcategories(); // Trigger preload
   }
 
   @override
@@ -53,6 +56,18 @@ class _CategoriesAndProductsTwoState extends State<CategoriesAndProductsTwo> {
         _startTimer();
       }
     });
+  }
+
+  Future<void> _waitForCategoriesAndPreload() async {
+    final hcProvider =
+        Provider.of<HomeCategoriesService>(context, listen: false);
+    int tries = 0;
+    while ((hcProvider.categories == null || hcProvider.categories!.isEmpty) &&
+        tries < 10) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      tries++;
+    }
+    await _preloadSubcategories();
   }
 
   Future<void> _preloadSubcategories() async {

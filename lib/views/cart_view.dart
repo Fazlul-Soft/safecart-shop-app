@@ -254,6 +254,7 @@ import '../widgets/cart_view/cart_tile.dart';
 import '../widgets/common/custom_common_button.dart';
 import 'checkout_view.dart';
 import 'product_details_view.dart';
+import '../widgets/product_details_view/related_products.dart';
 
 class CartView extends StatelessWidget {
   const CartView({super.key});
@@ -295,7 +296,7 @@ class CartView extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: cc.secondaryColor,
+                              color: cc.blackColor,
                             ),
                           ),
                         ],
@@ -321,12 +322,12 @@ class CartView extends StatelessWidget {
                         asProvider.getString('Clear cart'),
                         style: TextStyle(
                           decoration: TextDecoration.underline,
-                          decorationColor: cc.red,
+                          decorationColor: cc.blackColor,
                           decorationThickness: 2,
                         ),
                       ),
                       style: TextButton.styleFrom(
-                        foregroundColor: cc.red,
+                        foregroundColor: cc.blackColor,
                       ),
                     ),
                     TextButton(
@@ -339,16 +340,16 @@ class CartView extends StatelessWidget {
                             ? asProvider.getString('Deselect All')
                             : asProvider.getString('Select All'),
                         style: TextStyle(
-                          color: cc.blue,
+                          color: cc.blackColor,
                           decoration: TextDecoration.underline,
-                          decorationColor: cc.blue,
+                          decorationColor: cc.blackColor,
                           decorationThickness: 2,
                         ),
                       ),
                     ),
                   ],
                 ),
-              EmptySpaceHelper.emptywidth(10),
+              
               if (cProvider.cartList.isEmpty)
                 Expanded(
                     child: Column(
@@ -375,6 +376,34 @@ class CartView extends StatelessWidget {
                     ...cartTiles(cProvider, context),
                   ],
                 )),
+                //extra new
+                
+              if (Provider.of<ProductDetailsService>(context, listen: false)
+                  .relatedProduct
+                  .isNotEmpty)
+                EmptySpaceHelper.emptyHight(10),
+              if (Provider.of<ProductDetailsService>(context, listen: false)
+                  .relatedProduct
+                  .isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: 
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child:Text(
+                    asProvider.getString("Other Products"),
+                    style: const TextStyle(
+                        fontSize: 19, 
+                        fontWeight: FontWeight.w600, )
+                        ,
+                        // textAlign: TextAlign.left,
+                  ),
+                  ),
+                  
+                ),
+              EmptySpaceHelper.emptyHight(10),
+              const RelatedProducts(),
+              //extra new end
               if (cProvider.cartList.isNotEmpty)
                 Container(
                   margin: const EdgeInsets.only(bottom: 40),

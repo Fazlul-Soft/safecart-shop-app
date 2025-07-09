@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safecart/views/product_search_view.dart';
 import 'package:safecart/views/products_view.dart';
 import 'package:safecart/views/wishlist_view.dart';
 import 'package:safecart/widgets/home_front/hf_app_bar.dart';

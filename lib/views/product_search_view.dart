@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterzilla_fixed_grid/flutterzilla_fixed_grid.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'
-    as stgv;
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart' as stgv;
 import 'package:safecart/services/search_filter_data_service.dart';
 
 import '../helpers/empty_space_helper.dart';
@@ -11,7 +10,7 @@ import '../utils/custom_preloader.dart';
 import '../utils/responsive.dart';
 import '../widgets/common/custom_app_bar.dart';
 import '../widgets/common/product_card.dart';
-import '../widgets/search_view/filter_bottom_sheeet.dart';
+import '../widgets/search_view/filter_bottom_sheet.dart';
 import '../widgets/skelletons/product_card_skeleton.dart';
 import '../helpers/common_helper.dart';
 import '../services/product_details_service.dart';
@@ -147,46 +146,46 @@ class ProductSearchView extends StatelessWidget {
           return Column(
             children: [
               EmptySpaceHelper.emptyHight(10),
-              Consumer<SearchService>(builder: (context, sProvider, child) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextFormField(
-                    focusNode: searchBarFocusNode,
-                    initialValue: saProvider.selectedName,
-                    textAlign: TextAlign.justify,
-                    decoration: InputDecoration(
-                      hintText: asProvider.getString('Search your need here'),
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: SvgPicture.asset(
-                          'assets/icons/only_search.svg',
-                          color: cc.greyHint,
-                        ),
-                      ),
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          saProvider.fetchProducts(context);
-                          searchBarFocusNode.unfocus();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: cc.greyHint,
-                          ),
-                        ),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      saProvider.setFilterOptions(nameVal: value);
-                    },
-                    onFieldSubmitted: (value) {
-                      saProvider.fetchProducts(context);
-                      searchBarFocusNode.unfocus();
-                    },
-                  ),
-                );
-              }),
+              // Consumer<SearchService>(builder: (context, sProvider, child) {
+              //   return Padding(
+              //     padding: const EdgeInsets.symmetric(horizontal: 20),
+              //     child: TextFormField(
+              //       focusNode: searchBarFocusNode,
+              //       initialValue: saProvider.selectedName,
+              //       textAlign: TextAlign.justify,
+              //       decoration: InputDecoration(
+              //         hintText: asProvider.getString('Search your need here'),
+              //         prefixIcon: Padding(
+              //           padding: const EdgeInsets.all(12),
+              //           child: SvgPicture.asset(
+              //             'assets/icons/only_search.svg',
+              //             color: cc.greyHint,
+              //           ),
+              //         ),
+              //         suffixIcon: GestureDetector(
+              //           onTap: () {
+              //             saProvider.fetchProducts(context);
+              //             searchBarFocusNode.unfocus();
+              //           },
+              //           child: Padding(
+              //             padding: const EdgeInsets.all(12),
+              //             child: Icon(
+              //               Icons.arrow_forward_ios_rounded,
+              //               color: cc.greyHint,
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //       onChanged: (value) {
+              //         saProvider.setFilterOptions(nameVal: value);
+              //       },
+              //       onFieldSubmitted: (value) {
+              //         saProvider.fetchProducts(context);
+              //         searchBarFocusNode.unfocus();
+              //       },
+              //     ),
+              //   );
+              // }),
               Expanded(
                 child: FutureBuilder(
                     future: !saProvider.loading &&

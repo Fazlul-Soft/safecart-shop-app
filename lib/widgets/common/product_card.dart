@@ -274,7 +274,7 @@ class ProductCard extends StatelessWidget {
                                       .textTheme
                                       .bodySmall!
                                       .copyWith(
-                                          color: cc.secondaryColor,
+                                          color: cc.primaryColor,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14),
                                 ),
@@ -288,7 +288,7 @@ class ProductCard extends StatelessWidget {
                                         .textTheme
                                         .bodySmall!
                                         .copyWith(
-                                          color: cc.greyHint,
+                                          color: cc.red,
                                           fontSize: 12,
                                           decoration:
                                               TextDecoration.lineThrough,

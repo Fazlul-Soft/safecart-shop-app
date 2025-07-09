@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ConstantColors {
-  final Color primaryColor = const Color(0xff006044);
-  final Color secondaryColor = const Color(0xffFF805D);
+  // final Color primaryColor = const Color(0xff006044);
+  final Color primaryColor = const Color(0xFF41695A);
+
+  // final Color secondaryColor = const Color(0xffFF805D);
+  final Color secondaryColor = const Color(0xFFDFBA1F);
+  
   final Color red = Colors.red;
   final Color blue = const Color(0xff7286D3);
   final Color blackColor = const Color(0xff1D1835);

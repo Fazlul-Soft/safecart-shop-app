@@ -158,7 +158,7 @@ class WishlistTile extends StatelessWidget {
                                   .textTheme
                                   .bodySmall!
                                   .copyWith(
-                                      color: cc.secondaryColor,
+                                      color: cc.primaryColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                             ),
@@ -172,7 +172,7 @@ class WishlistTile extends StatelessWidget {
                                     .textTheme
                                     .bodySmall!
                                     .copyWith(
-                                      color: cc.greyHint,
+                                      color: cc.red,
                                       fontSize: 14,
                                       decoration: TextDecoration.lineThrough,
                                       decorationColor: cc.cardGreyHint,

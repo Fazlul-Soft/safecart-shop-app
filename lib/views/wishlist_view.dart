@@ -48,12 +48,12 @@ class WishlistView extends StatelessWidget {
                       asProvider.getString('Clear cart'),
                       style: TextStyle(
                         decoration: TextDecoration.underline,
-                        decorationColor: cc.red,
+                        decorationColor: cc.blackColor,
                         decorationThickness: 2,
                       ),
                     ),
                     style: TextButton.styleFrom(
-                      foregroundColor: cc.red,
+                      foregroundColor: cc.blackColor,
                     ),
                   ),
                 EmptySpaceHelper.emptywidth(10),

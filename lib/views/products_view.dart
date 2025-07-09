@@ -13,6 +13,9 @@ import '../services/product_details_service.dart';
 import '../utils/custom_preloader.dart';
 import 'product_details_view.dart';
 
+import '../services/search_filter_data_service.dart';
+import '../widgets/search_view/filter_bottom_sheet.dart';
+
 class ProductsView extends StatelessWidget {
   static const routeName = 'products_view';
   ProductsView({super.key});

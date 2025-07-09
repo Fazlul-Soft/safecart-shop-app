@@ -442,7 +442,7 @@ class CartTile extends StatelessWidget {
                           ? '${salePrice.toStringAsFixed(2)}${rtlProvider.currency}'
                           : '${rtlProvider.currency}${salePrice.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: cc.secondaryColor,
+                          color: cc.primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
                     ),
@@ -453,7 +453,7 @@ class CartTile extends StatelessWidget {
                             ? '${originalPrice!.toStringAsFixed(2)}${rtlProvider.currency}'
                             : '${rtlProvider.currency}${originalPrice!.toStringAsFixed(2)}',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: cc.greyHint,
+                              color: cc.red,
                               fontSize: 14,
                               decoration: TextDecoration.lineThrough,
                               decorationColor: cc.cardGreyHint,
