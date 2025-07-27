@@ -102,3 +102,4 @@ class AllProductsService with ChangeNotifier {
     }
   }
 }
+

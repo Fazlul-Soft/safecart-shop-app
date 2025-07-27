@@ -167,4 +167,3 @@ class _HFAppBarState extends State<HFAppBar> {
     return const SizedBox();
   }
 }
-

@@ -11,28 +11,86 @@ import '../../helpers/empty_space_helper.dart';
 import '../../services/profile_info_service.dart';
 import '../../utils/responsive.dart';
 import '../../views/edit_profile_view.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:file_picker/file_picker.dart';
 
 class ProfileInfo extends StatelessWidget {
   bool editing;
   ProfileInfo({this.editing = false, super.key});
 
-  Future<void> imageSelector(
-    BuildContext context,
-  ) async {
+  Future<void> imageSelector(BuildContext context) async {
     try {
+      // Request photo library permission
+      var status = await Permission.photos.status;
+      print('Initial photo permission status: $status');
+      if (!status.isGranted) {
+        status = await Permission.photos.request();
+        print('Photo permission request result: $status');
+      }
+      if (!status.isGranted) {
+        print('Photo library permission denied');
+        showToast(
+          asProvider.getString('Photo library permission denied'),
+          cc.red,
+        );
+        // Open app settings for user to grant permission
+        await openAppSettings();
+        return;
+      }
+
       FilePickerResult? file = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowMultiple: false,
         allowedExtensions: ['jpg', 'png', 'jpeg'],
       );
-      if (file?.files.first.path != null) {
-        Provider.of<ProfileInfoService>(context, listen: false)
-            .setSelectedImage(File(file?.files.first.path ?? ''));
+      if (file != null && file.files.first.path != null) {
+        String filePath = file.files.first.path!;
+        print('Selected file path: $filePath');
+        File imageFile = File(filePath);
+        if (await imageFile.exists()) {
+          print('File exists at path: $filePath');
+          print('File size: ${await imageFile.length()} bytes');
+          Provider.of<ProfileInfoService>(context, listen: false)
+              .setSelectedImage(imageFile);
+        } else {
+          print('File does not exist at path: $filePath');
+          showToast(
+            asProvider.getString('Selected file is invalid'),
+            cc.red,
+          );
+        }
+      } else {
+        print('No file selected or path is null');
+        showToast(
+          asProvider.getString('No file selected'),
+          cc.red,
+        );
       }
     } catch (error) {
-      print(error);
+      print('Error selecting image: $error');
+      showToast(
+        asProvider.getString('Error selecting image: $error'),
+        cc.red,
+      );
     }
   }
+  // Future<void> imageSelector(
+  //   BuildContext context,
+  // ) async {
+  //   try {
+  //     FilePickerResult? file = await FilePicker.platform.pickFiles(
+  //       type: FileType.custom,
+  //       allowMultiple: false,
+  //       allowedExtensions: ['jpg', 'png', 'jpeg'],
+  //     );
+  //     if (file?.files.first.path != null) {
+  //       Provider.of<ProfileInfoService>(context, listen: false)
+  //           .setSelectedImage(File(file?.files.first.path ?? ''));
+  //     }
+  //   } catch (error) {
+  //     print(error);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
