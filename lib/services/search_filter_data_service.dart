@@ -11,12 +11,13 @@ import '../helpers/common_helper.dart';
 class SearchFilterDataService with ChangeNotifier {
   SearchFilterDataModel? filterOprions;
 
-  dynamic selectedCategory;
+  dynamic selectedCategory = '';
   List selectedCategorySubList = [];
   List selectedSubcategoryChildList = [];
   dynamic selectedSubCategory = '';
   bool lodingCategoryProducts = false;
-  dynamic selectedChildCats = '[]';
+  // dynamic selectedChildCats = '[]';
+  dynamic selectedChildCats = '';
   double minPrice = 0;
   double maxPrice = 1000;
   double? selectedMinPrice;
@@ -29,6 +30,7 @@ class SearchFilterDataService with ChangeNotifier {
   dynamic selectedCategorieId = 1;
   bool loading = false;
   bool noSubcategory = false;
+
 
   setSelectedCategory(value) {
     if (selectedCategory == value || (value ?? '').isEmpty) {
@@ -153,13 +155,15 @@ class SearchFilterDataService with ChangeNotifier {
     selectedSubcategoryChildList = [];
     selectedSubCategory = '';
     selectedChildCats = '';
-    selectedMinPrice;
-    selectedMaxPrice;
+    selectedMinPrice = null;
+    selectedMaxPrice = null;
     selectedRating = 0;
     selectedColor = '';
     selectedSize = '';
     selectedBrand = '';
-    selectedTags;
+    selectedTags = null;
+
+    notifyListeners();
   }
 
   setFilterAccordingToSearch(
