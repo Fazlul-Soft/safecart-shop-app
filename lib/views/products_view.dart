@@ -151,6 +151,7 @@
 // }
 
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterzilla_fixed_grid/flutterzilla_fixed_grid.dart';
@@ -165,17 +166,30 @@ import '../widgets/search_view/filter_bottom_sheet.dart';
 import '../utils/responsive.dart';
 import '../services/product_details_service.dart';
 
-class ProductsView extends StatelessWidget {
+
+class ProductsView extends StatefulWidget {
   static const routeName = 'products_view';
-  ProductsView({super.key});
+  const ProductsView({Key? key}) : super(key: key);
+
+  @override
+  State<ProductsView> createState() => _ProductsViewState();
+}
+
+class _ProductsViewState extends State<ProductsView> {
   final ScrollController controller = ScrollController();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext context) {
-    controller.addListener(() => _scrollListener(context));
-    Provider.of<AllProductsService>(context, listen: false).resetProducts();
+  void initState() {
+    super.initState();
+    controller.addListener(_scrollListener);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AllProductsService>(context, listen: false).fetchProducts(context);
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       endDrawer: Container(
@@ -184,33 +198,23 @@ class ProductsView extends StatelessWidget {
         child: FilterBottomSheet(scaffoldKey),
       ),
       endDrawerEnableOpenDragGesture: false,
-      body: Consumer<AllProductsService>(
-        builder: (context, ap, child) {
-          return SizedBox(
-            height: screenHeight - 150,
-            child: FutureBuilder(
-              future: (!ap.loading && ap.allProducts == null)
-                  ? ap.fetchProducts(context)
-                  : null,
-              builder: (_, __) {
-                if (ap.loading && ap.allProducts == null) {
-                  return _buildLoading();
-                }
-                if (ap.allProducts != null && ap.allProducts!.isEmpty) {
-                  return Center(child: Text(asProvider.getString('No product found')));
-                }
-                return Column(
-                  children: [
-                    Expanded(child: _buildGrid(context, ap)),
-                    if (ap.nextLoading) SizedBox(height: 60, child: CustomPreloader()),
-                    EmptySpaceHelper.emptyHight(20),
-                  ],
-                );
-              },
-            ),
-          );
-        },
-      ),
+      body: Consumer<AllProductsService>(builder: (context, apProvider, child) {
+        if (apProvider.loading && apProvider.allProducts == null) {
+          return _buildLoading();
+        }
+        if (apProvider.allProducts != null && apProvider.allProducts!.isEmpty) {
+          return Center(child: Text(asProvider.getString('No product found')));
+        }
+
+        return Column(
+          children: [
+            Expanded(child: _buildGrid(apProvider)),
+            if (apProvider.nextLoading)
+              SizedBox(height: 60, child: CustomPreloader()),
+            EmptySpaceHelper.emptyHight(20),
+          ],
+        );
+      }),
     );
   }
 
@@ -220,17 +224,22 @@ class ProductsView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       child: GridView.builder(
         gridDelegate: const FlutterzillaFixedGridView(
-            crossAxisCount: 2, mainAxisSpacing: 15, crossAxisSpacing: 15, height: 200),
+          crossAxisCount: 2,
+          mainAxisSpacing: 15,
+          crossAxisSpacing: 15,
+          height: 200,
+        ),
         padding: EdgeInsets.zero,
         itemCount: 12,
         shrinkWrap: true,
+        clipBehavior: Clip.none,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (_, __) => ProductCardSkeleton(),
       ),
     );
   }
 
-  Widget _buildGrid(BuildContext context, AllProductsService ap) {
+  Widget _buildGrid(AllProductsService ap) {
     return StaggeredGridView.countBuilder(
       crossAxisCount: 2,
       controller: controller,
@@ -245,12 +254,16 @@ class ProductsView extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
-            Provider.of<ProductDetailsService>(context, listen: false).clearProductDetails();
-            Navigator.of(context).pushNamed('product_details_view', arguments: [e.title, e.prdId]);
+            Provider.of<ProductDetailsService>(context, listen: false)
+                .clearProductDetails();
+            Navigator.of(context).pushNamed(
+              'product_details_view',
+              arguments: [e.title, e.prdId],
+            );
           },
           child: ProductCard(
             e.prdId,
-            e.title ?? "",
+            e.title ?? '',
             e.imgUrl,
             e.discountPrice ?? e.price,
             e.discountPrice != null ? e.price : null,
@@ -259,9 +272,9 @@ class ProductsView extends StatelessWidget {
             discPercentage: e.campaignPercentage?.toStringAsFixed(2),
             cartable: e.isCartAble!,
             prodCatData: {
-              "category": e.categoryId,
-              "subcategory": e.subCategoryId,
-              "childcategory": e.childCategoryIds
+              'category': e.categoryId,
+              'subcategory': e.subCategoryId,
+              'childcategory': e.childCategoryIds,
             },
             rating: e.avgRatting,
             randomKey: e.randomKey,
@@ -274,9 +287,10 @@ class ProductsView extends StatelessWidget {
     );
   }
 
-  void _scrollListener(BuildContext context) {
+  void _scrollListener() {
     final ap = Provider.of<AllProductsService>(context, listen: false);
-    if (controller.offset >= controller.position.maxScrollExtent && !controller.position.outOfRange) {
+    if (controller.offset >= controller.position.maxScrollExtent &&
+        !controller.position.outOfRange) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       if (!ap.nextLoading && ap.nextPage != null) {
         ap.fetchNextPageProducts(context);
@@ -284,5 +298,11 @@ class ProductsView extends StatelessWidget {
         showToast(asProvider.getString('No more product found'), cc.blackColor);
       }
     }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
