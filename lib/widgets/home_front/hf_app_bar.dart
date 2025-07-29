@@ -171,13 +171,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/helpers/navigation_helper.dart';
 import 'package:safecart/services/profile_info_service.dart';
 import 'package:safecart/helpers/common_helper.dart';
-import 'package:safecart/services/profile_info_service.dart';
-import 'package:safecart/helpers/navigation_helper.dart';
 
 class HFAppBar extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -186,6 +184,7 @@ class HFAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<NavigationHelper>(builder: (_, nh, __) {
+      debugPrint('HFAppBar: currentIndex=${nh.currentIndex}, scaffoldKey=$scaffoldKey');
       return SliverAppBar(
         backgroundColor: nh.currentIndex == 4 ? cc.primaryColor : Colors.white,
         foregroundColor: nh.currentIndex == 4 ? cc.primaryColor : cc.blackColor,
@@ -199,7 +198,10 @@ class HFAppBar extends StatelessWidget {
         leading: nh.currentIndex == 4
             ? const SizedBox()
             : GestureDetector(
-                onTap: () => scaffoldKey.currentState?.openDrawer(),
+                onTap: () {
+                  debugPrint('Menu icon tapped');
+                  scaffoldKey.currentState?.openDrawer();
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: SvgPicture.asset('assets/icons/menu.svg'),
@@ -208,9 +210,20 @@ class HFAppBar extends StatelessWidget {
         actions: [
           if (nh.currentIndex == 1)
             GestureDetector(
-              onTap: () => scaffoldKey.currentState?.openEndDrawer(),
+              onTap: () {
+                debugPrint('Filter icon tapped, scaffoldKey=$scaffoldKey');
+                final state = scaffoldKey.currentState;
+                debugPrint('Scaffold state: $state');
+                if (state != null && state.hasEndDrawer) {
+                  state.openEndDrawer();
+                  debugPrint('EndDrawer opened');
+                } else {
+                  debugPrint('Failed to open EndDrawer: state=$state, hasEndDrawer=${state?.hasEndDrawer}');
+                }
+              },
               child: Container(
-                height: 40, width: 40,
+                height: 40,
+                width: 40,
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
