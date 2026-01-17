@@ -15,6 +15,13 @@ class BillingInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final odProvider = Provider.of<OrderDetailsService>(context, listen: false);
+
+    String orderNum = '-';
+    if (odProvider.orderDetailsModel?.order != null &&
+        odProvider.orderDetailsModel!.order.isNotEmpty) {
+      orderNum =
+          '#${odProvider.orderDetailsModel!.order[0].orderNumber ?? odProvider.orderDetailsModel?.orderTrack.orderId}';
+    }
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       // controller: _expandableController,
       // theme: const ExpandableThemeData(hasIcon: false),
@@ -37,8 +44,8 @@ class BillingInfo extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              infoRow(context, 'Sub-order Id',
-                  '#${odProvider.orderDetailsModel?.orderTrack.orderId}'),
+              infoRow(context, 'Order Id', orderNum),
+              // infoRow(context, 'Order Id','#${odProvider.orderDetailsModel?.orderTrack.orderId}'),
               EmptySpaceHelper.emptyHight(10),
               infoRow(context, 'Transaction Id',
                   '${odProvider.orderDetailsModel?.paymentDetails.transactionId ?? '-'}',

@@ -246,7 +246,7 @@ class HFAppBar extends StatelessWidget {
     } else if (idx == 2) {
       return Text("My Cart", style: Theme.of(ctx).textTheme.titleLarge!.copyWith(color: cc.blackColor));
     } else if (idx == 3) {
-      return Text("My Wishlist", style: Theme.of(ctx).textTheme.titleLarge!.copyWith(color: cc.blackColor));
+      return Text("Save for Later", style: Theme.of(ctx).textTheme.titleLarge!.copyWith(color: cc.blackColor));
     }
     return const SizedBox();
   }

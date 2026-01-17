@@ -95,12 +95,12 @@ class OrderDetailsTile extends StatelessWidget {
                     child: moneyRow(
                   context,
                   salePrice.toStringAsFixed(2),
-                  asProvider.getString('Price'),
+                  asProvider.getString('Unit Price'),
                 )),
                 EmptySpaceHelper.emptyHight(5),
                 FittedBox(
                     child: moneyRow(context, quantity.toString(),
-                        asProvider.getString('qty'),
+                        asProvider.getString('Qty'),
                         currency: '')),
                 EmptySpaceHelper.emptyHight(5),
                 FittedBox(

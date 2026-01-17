@@ -190,15 +190,8 @@ class _ProductsViewState extends State<ProductsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      endDrawer: Container(
-        width: screenWidth / 1.2,
-        color: Colors.white,
-        child: FilterBottomSheet(scaffoldKey),
-      ),
-      endDrawerEnableOpenDragGesture: false,
-      body: Consumer<AllProductsService>(builder: (context, apProvider, child) {
+   
+      return Consumer<AllProductsService>(builder: (context, apProvider, child){
         if (apProvider.loading && apProvider.allProducts == null) {
           return _buildLoading();
         }
@@ -214,8 +207,7 @@ class _ProductsViewState extends State<ProductsView> {
             EmptySpaceHelper.emptyHight(20),
           ],
         );
-      }),
-    );
+      });
   }
 
   Widget _buildLoading() {
@@ -247,6 +239,7 @@ class _ProductsViewState extends State<ProductsView> {
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
       padding: const EdgeInsets.symmetric(horizontal: 20),
+      physics: const AlwaysScrollableScrollPhysics(),
       staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
       itemBuilder: (_, index) {
         final e = ap.allProducts![index];

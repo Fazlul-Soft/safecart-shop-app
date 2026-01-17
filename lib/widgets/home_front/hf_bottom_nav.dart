@@ -132,7 +132,7 @@ class HFBottomNav extends StatelessWidget {
 
         BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
-              'assets/icons/wishlist_fill.svg',
+              'assets/icons/mm.svg',
               height: 27,
               color: cc.primaryColor,
             ),
@@ -145,13 +145,13 @@ class HFBottomNav extends StatelessWidget {
                   style: TextStyle(color: cc.pureWhite),
                 ),
                 child: SvgPicture.asset(
-                  'assets/icons/wishlist.svg',
+                  'assets/icons/mm.svg',
                   height: 27,
                   color: cc.greyHint,
                 ),
               );
             }),
-            label: asProvider.getString('Wishlist')),
+            label: asProvider.getString('Save')),
         BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
               'assets/icons/profile_fill.svg',
