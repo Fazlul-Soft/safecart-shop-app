@@ -322,12 +322,12 @@ class SippingAddressCheckout extends StatelessWidget {
                         },
                       ),
                       EmptySpaceHelper.emptyHight(10),
-                      FieldTitle(asProvider.getString('Zipcode')),
+                      FieldTitle(asProvider.getString('Postal Code')),
                       TextFormField(
                         controller: _zipcodeController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                          hintText: asProvider.getString('Enter zipcode'),
+                          hintText: asProvider.getString('Enter postal code'),
                         ),
                         onChanged: (value) {
                           saProvider.setZipCode(value);

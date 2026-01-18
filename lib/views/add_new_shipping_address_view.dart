@@ -1,6 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safecart/models/city_dropdown_model.dart';
+import 'package:safecart/models/country_model.dart' as cm;
+import 'package:safecart/models/state_model.dart';
 import 'package:safecart/services/checkout_service/shipping_address_service.dart';
 import 'package:safecart/utils/city_dropdown.dart';
 import 'package:safecart/utils/country_dropdown.dart';
@@ -13,49 +16,115 @@ import '../widgets/common/boxed_back_button.dart';
 import '../widgets/common/custom_common_button.dart';
 import '../widgets/common/field_title.dart';
 
-class AddNewShippingAddressView extends StatelessWidget {
+class AddNewShippingAddressView extends StatefulWidget {
   static const routeName = 'add_new_shipping_address_view';
-  AddNewShippingAddressView({super.key});
+  final dynamic addressDetails;
 
+  // AddNewShippingAddressView({super.key});
+  AddNewShippingAddressView({super.key, this.addressDetails});
+
+  @override
+  State<AddNewShippingAddressView> createState() =>
+      _AddNewShippingAddressViewState();
+}
+
+class _AddNewShippingAddressViewState extends State<AddNewShippingAddressView> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _zipcodeController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _cityController;
+  late TextEditingController _zipcodeController;
+  late TextEditingController _addressController;
 
-  tryAddingNewAddress(BuildContext context) {
-    final valid = _formKey.currentState!.validate();
-    if (!valid) {
-      return;
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with existing data if editing
+    _nameController = TextEditingController(
+        text: widget.addressDetails?.shippingAddressName ?? '');
+    _emailController =
+        TextEditingController(text: widget.addressDetails?.email ?? '');
+    _phoneController =
+        TextEditingController(text: widget.addressDetails?.phone ?? '');
+    _cityController =
+        TextEditingController(text: widget.addressDetails?.city ?? '');
+    _zipcodeController = TextEditingController(
+        text: widget.addressDetails?.zipCode?.toString() ?? '');
+    _addressController =
+        TextEditingController(text: widget.addressDetails?.address ?? '');
+    if (widget.addressDetails != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final saProvider =
+            Provider.of<ShippingAddressService>(context, listen: false);
+
+        // Mapping the data to the correct types
+        if (widget.addressDetails.country != null) {
+          saProvider.setCountry(cm.Country(
+            id: widget.addressDetails.country.id,
+            name: widget.addressDetails.country.name,
+          ));
+        }
+
+        if (widget.addressDetails.state != null) {
+          saProvider.setState(States(
+            id: widget.addressDetails.state.id,
+            name: widget.addressDetails.state.name,
+          ));
+        }
+
+        // Handle City (Note: your log showed city as null, so we check carefully)
+        if (widget.addressDetails.city != null) {
+          saProvider.setTownCity(City(
+            id: widget.addressDetails.city.id,
+            name: widget.addressDetails.city.name,
+          ));
+        }
+      });
     }
+  }
+
+  tryAddingOrUpdatingAddress(BuildContext context) {
+    final valid = _formKey.currentState!.validate();
+    if (!valid) return;
 
     final saProvider =
         Provider.of<ShippingAddressService>(context, listen: false);
-    debugPrint(saProvider.selectedCountry.toString());
+
     if (saProvider.selectedCountry == null) {
       showToast(asProvider.getString('You have to select a country'), cc.red);
       return;
     }
-    if (saProvider.selectedState == null) {
-      showToast(asProvider.getString('You have to select a state'), cc.red);
-      return;
-    }
 
-    saProvider.addShippingAddress(
-      context,
-      name: _nameController.text,
-      email: _emailController.text,
-      phone: _phoneController.text,
-      city: _cityController.text,
-      zipcode: _zipcodeController.text,
-      address: _addressController.text,
-    );
+    if (widget.addressDetails == null) {
+      // Logic for ADD NEW
+      saProvider.addShippingAddress(
+        context,
+        name: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        city: _cityController.text,
+        zipcode: _zipcodeController.text,
+        address: _addressController.text,
+      );
+    } else {
+      // Logic for UPDATE
+      saProvider.updateShippingAddress(
+        context,
+        id: widget.addressDetails.id,
+        name: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        city: _cityController.text,
+        zipcode: _zipcodeController.text,
+        address: _addressController.text,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isEdit = widget.addressDetails != null;
     return Scaffold(
       body: Stack(
         children: [
@@ -230,7 +299,7 @@ class AddNewShippingAddressView extends StatelessWidget {
                                           );
                                         }),
                                         FieldTitle(
-                                            asProvider.getString('Zipcode')),
+                                            asProvider.getString('Postal Code')),
                                         TextFormField(
                                           controller: _zipcodeController,
                                           style: getFieldStyle(context),
@@ -238,17 +307,17 @@ class AddNewShippingAddressView extends StatelessWidget {
                                           textInputAction: TextInputAction.next,
                                           decoration: InputDecoration(
                                             hintText: asProvider
-                                                .getString('Enter zipcode'),
+                                                .getString('Enter postal code'),
                                           ),
                                           validator: (value) {
                                             if (value == null ||
                                                 value.trim().isEmpty) {
                                               return asProvider
-                                                  .getString('Enter zipcode');
+                                                  .getString('Enter postal code');
                                             }
                                             if (value.trim().length <= 3) {
                                               return asProvider.getString(
-                                                  'Enter a valid zip code');
+                                                  'Enter a valid postal code');
                                             }
                                             return null;
                                           },
@@ -290,7 +359,8 @@ class AddNewShippingAddressView extends StatelessWidget {
                                               onPressed: () {
                                                 FocusScope.of(context)
                                                     .unfocus();
-                                                tryAddingNewAddress(context);
+                                                tryAddingOrUpdatingAddress(
+                                                    context);
                                               });
                                         })
                                       ]),

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/checkout_service/shipping_address_service.dart';
 import 'package:safecart/utils/custom_preloader.dart';
+import 'package:safecart/views/add_new_shipping_address_view.dart';
 
 import '../../helpers/common_helper.dart';
 
@@ -47,105 +48,146 @@ class ShippingAddressTile extends StatelessWidget {
             address,
             style: TextStyle(color: cc.greyParagraph),
           ),
-          trailing: GestureDetector(
-              onTap: (() {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text(asProvider.getString('Are you sure?')),
-                          content: Text(asProvider.getString(
-                              'This address will be deleted permanently.')),
-                          actions: [
-                            TextButton(
-                              style: ButtonStyle(
-                                foregroundColor:
-                                    WidgetStateProperty.all<Color>(
-                                        cc.primaryColor),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(asProvider.getString('No')),
-                            ),
-                            Consumer<ShippingAddressService>(
-                                builder: (context, saProvider, child) {
-                              return TextButton(
-                                style: ButtonStyle(
-                                  foregroundColor:
-                                      WidgetStateProperty.all<Color>(
-                                          cc.primaryColor),
+          trailing:
+              // Update the trailing section of your ShippingAddressTile
+              SizedBox(
+            width: 70, // Adjust width to fit both icons
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // EDIT ICON
+                GestureDetector(
+                  onTap: () {
+                    final saProvider = Provider.of<ShippingAddressService>(
+                        context,
+                        listen: false);
+
+                    // 1. Find the specific address object from the list
+                    final addressData = saProvider.shippingAddressList!
+                        .firstWhere((e) => e.id == id);
+
+                    // 2. Set the dropdown values in provider so they appear selected in the form
+                    saProvider.setCountry(addressData.country);
+                    saProvider.setState(addressData.state);
+                    saProvider.setTownCity(addressData.city);
+
+                    // 3. Navigate to the form
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddNewShippingAddressView(
+                          addressDetails: addressData),
+                    ));
+                  },
+                  child: Icon(Icons.edit_outlined,
+                      color: cc.primaryColor, size: 22),
+                ),
+                const SizedBox(width: 15),
+
+                // TRASH ICON (Your existing code)
+                GestureDetector(
+                  onTap: (() {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title:
+                                  Text(asProvider.getString('Are you sure?')),
+                              content: Text(asProvider.getString(
+                                  'This address will be deleted permanently.')),
+                              actions: [
+                                TextButton(
+                                  style: ButtonStyle(
+                                    foregroundColor:
+                                        WidgetStateProperty.all<Color>(
+                                            cc.primaryColor),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(asProvider.getString('No')),
                                 ),
-                                onPressed: saProvider.loadingDeleteAddress
-                                    ? () {}
-                                    : (() async {
-                                        // Provider.of<ShippingAddressesService>(
-                                        //         context,
-                                        //         listen: false)
-                                        //     .setAlertBoxLoading(true);
-                                        await saProvider.deleteSingleAddress(
-                                            context, id);
+                                Consumer<ShippingAddressService>(
+                                    builder: (context, saProvider, child) {
+                                  return TextButton(
+                                    style: ButtonStyle(
+                                      foregroundColor:
+                                          WidgetStateProperty.all<Color>(
+                                              cc.primaryColor),
+                                    ),
+                                    onPressed: saProvider.loadingDeleteAddress
+                                        ? () {}
+                                        : (() async {
+                                            // Provider.of<ShippingAddressesService>(
+                                            //         context,
+                                            //         listen: false)
+                                            //     .setAlertBoxLoading(true);
+                                            await saProvider
+                                                .deleteSingleAddress(
+                                                    context, id);
 
-                                        // Provider.of<ShippingAddressesService>(
-                                        //         context,
-                                        //         listen: false)
-                                        //     .setAlertBoxLoading(false);
-                                        Navigator.pop(context);
-                                      }),
-                                child: saProvider.loadingDeleteAddress
-                                    ? SizedBox(
-                                        height: 20,
-                                        width: 60,
-                                        child:
-                                            FittedBox(child: CustomPreloader()))
-                                    : Text(
-                                        asProvider.getString('Yes'),
-                                        style: TextStyle(color: cc.pink),
-                                      ),
-                              );
-                            }),
-                            // FlatButton(
-                            //     onPressed:
-                            //         Provider.of<ShippingAddressesService>(
-                            //                     context)
-                            //                 .alertBoxLoading
-                            //             ? () {}
-                            //             : (() async {
-                            //                 Provider.of<ShippingAddressesService>(
-                            //                         context,
-                            //                         listen: false)
-                            //                     .setAlertBoxLoading(true);
-                            //                 await Provider.of<
-                            //                             ShippingAddressesService>(
-                            //                         context,
-                            //                         listen: false)
-                            //                     .deleteSingleAddress(id);
+                                            // Provider.of<ShippingAddressesService>(
+                                            //         context,
+                                            //         listen: false)
+                                            //     .setAlertBoxLoading(false);
+                                            Navigator.pop(context);
+                                          }),
+                                    child: saProvider.loadingDeleteAddress
+                                        ? SizedBox(
+                                            height: 20,
+                                            width: 60,
+                                            child: FittedBox(
+                                                child: CustomPreloader()))
+                                        : Text(
+                                            asProvider.getString('Yes'),
+                                            style: TextStyle(color: cc.pink),
+                                          ),
+                                  );
+                                }),
+                                // FlatButton(
+                                //     onPressed:
+                                //         Provider.of<ShippingAddressesService>(
+                                //                     context)
+                                //                 .alertBoxLoading
+                                //             ? () {}
+                                //             : (() async {
+                                //                 Provider.of<ShippingAddressesService>(
+                                //                         context,
+                                //                         listen: false)
+                                //                     .setAlertBoxLoading(true);
+                                //                 await Provider.of<
+                                //                             ShippingAddressesService>(
+                                //                         context,
+                                //                         listen: false)
+                                //                     .deleteSingleAddress(id);
 
-                            //                 Provider.of<ShippingAddressesService>(
-                            //                         context,
-                            //                         listen: false)
-                            //                     .setAlertBoxLoading(false);
-                            //                 Navigator.pop(context);
-                            //               }),
-                            //     child: Provider.of<ShippingAddressesService>(
-                            //                 context)
-                            //             .alertBoxLoading
-                            //         ? SizedBox(
-                            //             height: 20,
-                            //             width: 40,
-                            //             child: loadingProgressBar(size: 15))
-                            //         : Text(
-                            //             'Yes',
-                            //             style: TextStyle(color: cc.pink),
-                            //           ))
-                          ],
-                        ));
-              }),
-              child: SvgPicture.asset(
-                'assets/icons/trash.svg',
-                height: 22,
-                width: 22,
-                color: cc.red,
-              )),
+                                //                 Provider.of<ShippingAddressesService>(
+                                //                         context,
+                                //                         listen: false)
+                                //                     .setAlertBoxLoading(false);
+                                //                 Navigator.pop(context);
+                                //               }),
+                                //     child: Provider.of<ShippingAddressesService>(
+                                //                 context)
+                                //             .alertBoxLoading
+                                //         ? SizedBox(
+                                //             height: 20,
+                                //             width: 40,
+                                //             child: loadingProgressBar(size: 15))
+                                //         : Text(
+                                //             'Yes',
+                                //             style: TextStyle(color: cc.pink),
+                                //           ))
+                              ],
+                            ));
+                  }),
+                  child: SvgPicture.asset(
+                    'assets/icons/trash.svg',
+                    height: 22,
+                    width: 22,
+                    color: cc.red,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ]),
     );

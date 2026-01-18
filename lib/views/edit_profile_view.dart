@@ -246,7 +246,7 @@ class EditProfileView extends StatelessWidget {
                                           },
                                         ),
                                         FieldTitle(
-                                            asProvider.getString('Zipcode')),
+                                            asProvider.getString('Postal Code')),
                                         TextFormField(
                                           style: getFieldStyle(context),
                                           controller: _zipcodeController,
@@ -254,17 +254,17 @@ class EditProfileView extends StatelessWidget {
                                           textInputAction: TextInputAction.next,
                                           decoration: InputDecoration(
                                             hintText: asProvider.getString(
-                                                'Enter your zipcode'),
+                                                'Enter your postal code'),
                                           ),
                                           validator: (value) {
                                             if (value == null ||
                                                 value.trim().isEmpty) {
                                               return asProvider.getString(
-                                                  'Enter your zipcode');
+                                                  'Enter your postal code');
                                             }
                                             if (value.trim().length <= 3) {
                                               return asProvider.getString(
-                                                  'Enter a valid zip code');
+                                                  'Enter a valid postal code');
                                             }
                                             return null;
                                           },

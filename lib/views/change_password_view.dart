@@ -9,13 +9,24 @@ import '../widgets/common/boxed_back_button.dart';
 import '../widgets/common/custom_common_button.dart';
 import '../widgets/common/field_title.dart';
 
-class ChangePasswordView extends StatelessWidget {
+class ChangePasswordView extends StatefulWidget {
   static const routeName = 'change_name_view';
   ChangePasswordView({super.key});
 
+  @override
+  State<ChangePasswordView> createState() => _ChangePasswordViewState();
+}
+
+class _ChangePasswordViewState extends State<ChangePasswordView> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _currentPassword = TextEditingController();
   final TextEditingController _newPassword = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
+
+  // Visibility states
+  bool _obscureCurrent = true;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
 
   tryChangePassword(BuildContext context) {
     FocusScope.of(context).unfocus();
@@ -52,7 +63,6 @@ class ChangePasswordView extends StatelessWidget {
               background: Container(
                 height: screenHeight / 3.7,
                 width: double.infinity,
-                // padding: EdgeInsets.only(top: screenHeight / 7),
                 color: cc.primaryColor,
                 alignment: Alignment.topCenter,
                 child: Center(
@@ -80,18 +90,6 @@ class ChangePasswordView extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                // EmptySpaceHelper.emptyHight(50),
-                // Row(
-                //   children: [
-                //     Padding(
-                //       padding: const EdgeInsets.symmetric(horizontal: 20),
-                //       child: BoxedBackButton(() {
-                //         Navigator.of(context).pop();
-                //       }),
-                //     ),
-                //   ],
-                // ),
-                // EmptySpaceHelper.emptyHight(screenHeight / 6),
                 Card(
                   elevation: 5,
                   margin:
@@ -114,10 +112,18 @@ class ChangePasswordView extends StatelessWidget {
                           FieldTitle(asProvider.getString('Current password')),
                           TextFormField(
                             controller: _currentPassword,
+                            obscureText: _obscureCurrent,
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                                 hintText: asProvider
-                                    .getString('Enter your current password')),
+                                    .getString('Enter your current password'),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_obscureCurrent
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
+                                  onPressed: () => setState(() =>
+                                      _obscureCurrent = !_obscureCurrent),
+                                )),
                             validator: (value) {
                               if (value == null ||
                                   value.trim().isEmpty ||
@@ -131,10 +137,18 @@ class ChangePasswordView extends StatelessWidget {
                           FieldTitle(asProvider.getString('New password')),
                           TextFormField(
                             controller: _newPassword,
+                            obscureText: _obscureNew,
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
-                                hintText:
-                                    asProvider.getString('Enter new password')),
+                                hintText: asProvider
+                                    .getString('Enter new password'),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_obscureNew
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
+                                  onPressed: () => setState(
+                                      () => _obscureNew = !_obscureNew),
+                                )),
                             validator: (value) {
                               if (value == null ||
                                   value.trim().isEmpty ||
@@ -148,9 +162,18 @@ class ChangePasswordView extends StatelessWidget {
                           FieldTitle(
                               asProvider.getString('Confirm new password')),
                           TextFormField(
+                            controller: _confirmPassword,
+                            obscureText: _obscureConfirm,
                             decoration: InputDecoration(
                                 hintText: asProvider
-                                    .getString('Re-enter new password')),
+                                    .getString('Re-enter new password'),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_obscureConfirm
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
+                                  onPressed: () => setState(() =>
+                                      _obscureConfirm = !_obscureConfirm),
+                                )),
                             validator: (value) {
                               if (_newPassword.text != value) {
                                 return asProvider

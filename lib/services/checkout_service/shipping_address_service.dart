@@ -51,7 +51,26 @@ class ShippingAddressService with ChangeNotifier {
   }
 
   setCountry(value) {
-    selectedCountry = value;
+    if (value is cm.Country?) {
+      selectedCountry = value;
+    } else {
+      // If the passed value is from a different model, map it manually
+      selectedCountry = cm.Country(
+        id: value.id,
+        name: value.name,
+      );
+    }
+    notifyListeners();
+  }
+
+  setState(value) {
+    // Apply same logic if States class also has duplicates
+    selectedState = value;
+    notifyListeners();
+  }
+
+  setTownCity(value) {
+    selectedCity = value;
     notifyListeners();
   }
 
@@ -67,16 +86,6 @@ class ShippingAddressService with ChangeNotifier {
 
   setOrderNote(value) {
     orderNote = value;
-    notifyListeners();
-  }
-
-  setTownCity(value) {
-    selectedCity = value;
-    notifyListeners();
-  }
-
-  setState(value) {
-    selectedState = value;
     notifyListeners();
   }
 
@@ -324,6 +333,67 @@ class ShippingAddressService with ChangeNotifier {
       showToast(asProvider.getString('Something went wrong'), cc.red);
       print(err);
       rethrow;
+    }
+  }
+
+  Future<void> updateShippingAddress(
+    BuildContext context, {
+    required int id, // The ID of the address to update
+    required String name,
+    required String email,
+    required String city,
+    required String phone,
+    required String zipcode,
+    required String address,
+  }) async {
+    final haveConnection = await checkConnection(context);
+    if (!haveConnection) return;
+
+    setLoadingNewAddress(true);
+
+    final profileInfo = Provider.of<ProfileInfoService>(context, listen: false);
+
+    try {
+      var headers = {'Authorization': 'Bearer $getToken'};
+
+      // Usually, Laravel/APIs use POST with a hidden _method field or a PUT request for updates
+      // Assuming your API uses POST to a specific update route:
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('$baseApi/user/update-shipping-address/$id'));
+
+      request.fields.addAll({
+        'name': profileInfo.profileInfo?.userDetails.name ?? '',
+        'email': email,
+        'phone': phone,
+        'state_id': (selectedState?.id ?? '').toString(),
+        'city': (selectedCity?.id ?? '').toString(),
+        'zip_code': zipcode,
+        'country_id': (selectedCountry?.id ?? '').toString(),
+        'address': address,
+        'shipping_address_name': name,
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      var resData = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        await fetchShippingAddress(context); // Refresh the list
+        showToast(
+            asProvider.getString('Address updated successfully.'), cc.green);
+        Navigator.of(context).pop(); // Go back to the list view
+      } else {
+        showToast(asProvider.getString('Failed to update Address.'), cc.red);
+        debugPrint("Error: $resData");
+      }
+    } on TimeoutException {
+      showToast(asProvider.getString('Request timeout'), cc.red);
+    } catch (err) {
+      showToast(asProvider.getString('Something went wrong'), cc.red);
+      debugPrint("Update Error: $err");
+    } finally {
+      setLoadingNewAddress(false);
     }
   }
 

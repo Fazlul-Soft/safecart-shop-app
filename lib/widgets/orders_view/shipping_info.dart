@@ -44,7 +44,7 @@ class ShippingInfo extends StatelessWidget {
               EmptySpaceHelper.emptyHight(10),
               infoRow(context, 'Country', address?.country?.name ?? '-'),
               EmptySpaceHelper.emptyHight(10),
-              infoRow(context, 'State', address?.state?.name ?? '-'),
+              infoRow(context, 'Province', address?.state?.name ?? '-'),
               EmptySpaceHelper.emptyHight(10),
               infoRow(context, 'City', address?.cityInfo?.name ?? '-'),
               EmptySpaceHelper.emptyHight(10),
