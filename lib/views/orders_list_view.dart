@@ -85,7 +85,8 @@ class OrdersListView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 40),
                         // constraints:
                         //     BoxConstraints(minHeight: screenHeight / 2.5),
                         decoration: BoxDecoration(
@@ -113,24 +114,34 @@ class OrdersListView extends StatelessWidget {
                                         olProvider
                                             .orderListModel!.data.isNotEmpty
                                     ? Column(
+                                        // Update this section in your OrdersListView
                                         children: olProvider
                                             .orderListModel!.data
                                             .map((e) => OrderTile(
                                                   e.paymentMeta?.totalAmount ??
-                                                      0,
-                                                  '#${e.id ?? ''}',
-                                                  e.createdAt ?? DateTime.now(),
-                                                  e.orderTrack ??
-                                                      asProvider
-                                                          .getString('None'),
-                                                  e.paymentStatus ??
-                                                      asProvider
-                                                          .getString('None'),
+                                                      0, // 1. Amount
+                                                  '#${e.orderNumber ?? ''}', // 2. Display Number
+                                                  e.createdAt ?? DateTime.now(), // 3. Date
+                                                  e.orderTrack ?? asProvider.getString('None'), // 4. Track
+                                                  '${e.id ?? ''}', // 6. ACTUAL ID
+                                                  e.orderNumber ?? asProvider.getString('None'), // 7. Order Number
+                                                  e.paymentStatus ?? asProvider.getString('None'), // 5. Payment
                                                 ))
                                             .toList(),
+                                        // children: olProvider
+                                        //     .orderListModel!.data
+                                        //     .map((e) => OrderTile(
+                                        //           e.paymentMeta?.totalAmount ??
+                                        //               0,
+                                        //           '#${e.orderNumber ?? ''}',
+                                        //           e.createdAt ?? DateTime.now(),
+                                        //           e.orderTrack ?? asProvider.getString('None'),
+                                        //           e.paymentStatus ?? asProvider.getString('None'),
+                                        //         ))
+                                        //     .toList(),
                                       )
                                     : SizedBox(
-                                        height: screenHeight/1.3,
+                                        height: screenHeight / 1.3,
                                         // height: screenHeight / 2.5,
                                         child: Center(
                                           child: Text(asProvider

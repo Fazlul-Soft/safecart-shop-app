@@ -101,6 +101,7 @@ class PaymentStatusView extends StatelessWidget {
                                             builder: (BuildContext context) =>
                                                 OrderDetailsView(
                                                     orderId!.toString(),
+                                                    displayTracking: '#$orderId',
                                                     goHome: true),
                                           ));
                                         },
@@ -129,6 +130,7 @@ class PaymentStatusView extends StatelessWidget {
                         Navigator.of(context).push(MaterialPageRoute<void>(
                           builder: (BuildContext context) => OrderDetailsView(
                               orderId!.toString(),
+                              displayTracking: '#$orderId',
                               goHome: true),
                         ));
                       })

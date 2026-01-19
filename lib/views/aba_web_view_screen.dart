@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import '../helpers/common_helper.dart'; // Make sure you have this import for showToast
 import '../views/order_confirmation_screen.dart';
 
-
 class AbaWebViewScreen extends StatefulWidget {
   final String htmlContent;
   final String orderId;
@@ -13,7 +12,7 @@ class AbaWebViewScreen extends StatefulWidget {
   const AbaWebViewScreen({
     required this.htmlContent,
     required this.orderId,
-    Key? key,
+    Key? key, required String title,
   }) : super(key: key);
 
   @override
@@ -35,7 +34,9 @@ class _AbaWebViewScreenState extends State<AbaWebViewScreen> {
             setState(() => _isLoading = false);
             // Simply close when payment completes
             if (url.contains('success')) {
-              Navigator.pop(context); // Return to previous screen
+              // Navigator.pop(context); // Return to previous screen
+              Navigator.pushNamedAndRemoveUntil(
+                  context, OrderConfirmationScreen.routeName, (route) => false);
             }
           },
         ),

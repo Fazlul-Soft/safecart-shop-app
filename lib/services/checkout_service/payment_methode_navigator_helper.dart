@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safecart/services/aba_payway_handler.dart';
 import 'package:safecart/services/payment/pagali_payment.dart';
 import 'package:safecart/services/payment/toyyibpay_payment.dart';
+import 'package:safecart/views/aba_web_view_screen.dart';
 
 import '../../services/payment/billplz_payment.dart';
 import '../../services/payment/cinetpay_payment.dart';
@@ -269,6 +271,28 @@ Future startPayment(
         builder: (BuildContext context) => MolliePayment(),
       ),
     );
+    return;
+  }
+
+  // abapayway
+  if (selectedGateaway.name.toLowerCase().contains('abapayway')) {
+    // 1. Get the HTML content from the response (stored in your CheckoutService after placeOrder)
+    // Most ABA implementations return a self-submitting HTML form
+    String? htmlForm = csProvider.paymentHtml; 
+    
+    if (htmlForm != null && htmlForm.isNotEmpty) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => AbaWebViewScreen(
+            htmlContent: htmlForm,
+            title: 'ABA PayWay',
+            orderId: csProvider.orderId.toString(),
+          ),
+        ),
+      );
+    } else {
+      showToast("Payment form could not be generated.", cc.red);
+    }
     return;
   }
 }

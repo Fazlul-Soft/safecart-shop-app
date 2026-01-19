@@ -17,8 +17,10 @@ class OrderDetailsView extends StatelessWidget {
   static const routeName = 'order_details_view';
   bool goHome;
   String tracker;
-  OrderDetailsView(this.tracker, {this.goHome = false, super.key});
-
+  final String displayTracking;
+  // OrderDetailsView(this.tracker, {this.goHome = false, super.key});
+  OrderDetailsView(this.tracker,
+      {required this.displayTracking, this.goHome = false, super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +67,7 @@ class OrderDetailsView extends StatelessWidget {
                         alignment: Alignment.topCenter,
                         child: Center(
                           child: Text(
-                            asProvider.getString('Order') + ' $tracker',
+                            asProvider.getString('Order') + ' $displayTracking',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!

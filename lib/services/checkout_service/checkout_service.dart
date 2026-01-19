@@ -37,6 +37,7 @@ class CheckoutService with ChangeNotifier {
   String? couponText;
   Map<String, ATVendor> advanceTaxData = {};
   CartDataService? cartDataService;
+  String? paymentHtml;
 
   VendorDetailListModel? vendorDetailsList;
 
@@ -405,7 +406,7 @@ class CheckoutService with ChangeNotifier {
         'note': shippingAddress.orderNote,
         'phone': shippingAddress.phone,
         'cart_items': jsonEncode(cartData.cartListWithoutAdmin),
-        'selected_payment_gateway':
+        'payment_gateway':
             paymentGateway.selectedGateway?.name ?? 'cash',
         'country_id': calculateTax.selectedCountry?.id.toString() ?? "",
         'state_id': calculateTax.selectedState?.id.toString() ?? "",
@@ -506,18 +507,28 @@ class CheckoutService with ChangeNotifier {
             if (redirectResponse.statusCode == 200) {
               final responseData = json.decode(redirectResponse.body);
 
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => AbaWebViewScreen(
+              //       htmlContent: responseData['html'],
+              //       // title: 'ABA PayWay Payment',
+              //       orderId: orderId.toString(),
+              //       // Pass your existing IPN URL
+              //       // ipnUrl: '$baseApi/aba-payway-ipn',
+              //     ),
+              //   ),
+              // );
               Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AbaWebViewScreen(
-                    htmlContent: responseData['html'],
-                    // title: 'ABA PayWay Payment',
-                    orderId: orderId.toString(),
-                    // Pass your existing IPN URL
-                    // ipnUrl: '$baseApi/aba-payway-ipn',
-                  ),
-                ),
-              );
+         context,
+         MaterialPageRoute(builder: (context) => AbaWebViewScreen(
+           htmlContent: responseData['html'],
+           title: 'ABA PayWay',
+           orderId: orderId.toString(),)),
+       );
+       
+       setLoadingPlaceOrder(false); // Make sure loading stops
+       return;
             } else {
               throw Exception('Failed to get payment page');
             }

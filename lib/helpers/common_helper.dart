@@ -227,7 +227,7 @@ Future showPaymentSuccessDialogue(BuildContext context) async {
                               .setIsLoading(false);
                           Navigator.of(context).push(MaterialPageRoute<void>(
                             builder: (BuildContext context) =>
-                                OrderDetailsView(cProvider.orderId.toString()),
+                                OrderDetailsView(cProvider.orderId.toString(),displayTracking: '#${cProvider.orderId}'),
                           ));
                         },
                       text: " \n${asProvider.getString("Your order ID  is")}",
@@ -241,7 +241,7 @@ Future showPaymentSuccessDialogue(BuildContext context) async {
                                 .setIsLoading(false);
                             Navigator.of(context).push(MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  OrderDetailsView(cProvider.orderId.toString(),
+                                  OrderDetailsView(cProvider.orderId.toString(),displayTracking: '#${cProvider.orderId}',
                                       goHome: true),
                             ));
                           },

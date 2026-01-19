@@ -323,6 +323,11 @@ class CheckoutView extends StatelessWidget {
                     final pgProvider = Provider.of<PaymentGatewayService>(
                         context,
                         listen: false);
+                    // DEBUG PRINT
+                    print(
+                        "DEBUG: Selected Gateway Name is: ${pgProvider.selectedGateway?.name}");
+                    print(
+                        "DEBUG: Gateway List Length: ${pgProvider.gatawayList.length}");
                     print(pgProvider.selectedGateway?.name);
 
                     if (pgProvider.selectedGateway?.name == 'authorizenet' &&

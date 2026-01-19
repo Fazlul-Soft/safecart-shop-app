@@ -13,12 +13,16 @@ class OrderTile extends StatelessWidget {
   final String trackingCode;
   final DateTime orderedDate;
   final String? order;
+  final String? orderId;
+  final String? orderNumber;
   final String? payment;
   const OrderTile(
     this.totalAmount,
     this.trackingCode,
     this.orderedDate,
     this.order,
+    this.orderId,
+    this.orderNumber,
     this.payment, {
     super.key,
   });
@@ -32,7 +36,9 @@ class OrderTile extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute<void>(
           builder: (BuildContext context) => OrderDetailsView(
-            trackingCode,
+            // trackingCode,
+            orderId!,      // Pass ID to fetch data
+            displayTracking: orderNumber ?? '',
             goHome: false,
           ),
         ));

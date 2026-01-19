@@ -61,6 +61,7 @@ class Datum {
     required this.transactionId,
     required this.orderStatus,
     required this.paymentStatus,
+    required this.orderNumber,
     required this.invoiceNumber,
     this.orderTrack,
     required this.createdAt,
@@ -76,6 +77,7 @@ class Datum {
   dynamic paymentGateway;
   dynamic transactionId;
   dynamic orderStatus;
+  dynamic orderNumber;
   dynamic paymentStatus;
   dynamic invoiceNumber;
   dynamic orderTrack;
@@ -83,6 +85,7 @@ class Datum {
   DateTime? updatedAt;
   dynamic userId;
   PaymentMeta? paymentMeta;
+
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
@@ -93,6 +96,7 @@ class Datum {
         transactionId: json["transaction_id"],
         orderStatus: json["order_status"],
         paymentStatus: json["payment_status"],
+        orderNumber: json["order_number"],
         invoiceNumber: json["invoice_number"],
         orderTrack: json["order_track"] is! List && json["order_track"].isEmpty
             ? "pending"
