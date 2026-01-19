@@ -52,7 +52,7 @@ class HomeView extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             const AutoSlider(),
-            const Categories(),
+            // const Categories(),
             const FeatureProducts(),
             // const ManualSlider(),
             // const CategoriesAndProducts(),
