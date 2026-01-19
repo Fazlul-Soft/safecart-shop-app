@@ -313,7 +313,6 @@ import '../profile_view.dart/profile_info.dart';
 //   }
 // }
 
-import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -321,7 +320,6 @@ import 'package:provider/provider.dart';
 
 import '../../helpers/common_helper.dart';
 import '../../services/home_categories_service.dart';
-import '../../services/rtl_service.dart';
 import '../../views/product_by_subcategory_view.dart';
 
 class HomeAppDrawer extends StatefulWidget {
@@ -335,18 +333,16 @@ class _HomeAppDrawerState extends State<HomeAppDrawer> {
   @override
   void initState() {
     super.initState();
-    // Trigger the category fetch as soon as the drawer is initialized
-    // We use WidgetsBinding to avoid "setstate during build" errors
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<HomeCategoriesService>(context, listen: false)
-          .fetchHomeCategories(context);
+          .fetchAllCategoriesForDrawer(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: cc.pureWhite,
+      backgroundColor: Colors.white,
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,20 +358,22 @@ class _HomeAppDrawerState extends State<HomeAppDrawer> {
             Expanded(
               child: Consumer<HomeCategoriesService>(
                 builder: (context, catProvider, child) {
-                  // 1. Show loader while the initial categories are being fetched
-                  if (catProvider.categoryLoading && (catProvider.categories == null || catProvider.categories!.isEmpty)) {
+                  final listToShow = catProvider.allDrawerCategories ?? [];
+
+                  // 1. Loading State
+                  if (catProvider.drawerLoading && listToShow.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  // 2. Check if data is actually missing after loading finishes
-                  if (catProvider.categories == null || catProvider.categories!.isEmpty) {
+                  // 2. Empty State
+                  if (listToShow.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(asProvider.getString("No categories found")),
                           TextButton(
-                            onPressed: () => catProvider.fetchHomeCategories(context),
+                            onPressed: () => catProvider.fetchAllCategoriesForDrawer(context),
                             child: const Text("Retry"),
                           )
                         ],
@@ -383,65 +381,65 @@ class _HomeAppDrawerState extends State<HomeAppDrawer> {
                     );
                   }
 
+                  // 3. Full List
                   return ListView.builder(
-                    itemCount: catProvider.categories!.length,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: listToShow.length,
                     itemBuilder: (context, index) {
-                      final category = catProvider.categories![index];
-                      if (category == null) return const SizedBox();
+                      final category = listToShow[index];
+                      
+                      // Since this comes from CategoryResource, we access as Map
+                      final String catName = category['name']?.toString() ?? '';
+                      final String catId = category['id']?.toString() ?? '';
 
                       return Theme(
                         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                         child: ExpansionTile(
                           leading: const Icon(Icons.grid_view_rounded, color: Colors.black54),
                           title: Text(
-                            category.name ?? '',
+                            catName,
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                           children: [
                             FutureBuilder(
-                              future: _getSubcategories(category.id.toString()),
+                              future: _getSubcategories(catId),
                               builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                   return const Padding(
                                     padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Center(child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))),
+                                    child: Center(
+                                      child: SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                      ),
+                                    ),
                                   );
                                 }
 
                                 final subList = snapshot.data ?? [];
 
+                                if (subList.isEmpty) {
+                                  return const ListTile(
+                                    title: Text("No items found",
+                                        style: TextStyle(color: Colors.grey, fontSize: 13)),
+                                  );
+                                }
+
                                 return Column(
-                                  children: [
-                                    ListTile(
+                                  children: subList.map((sub) {
+                                    return ListTile(
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 40),
-                                      title: Text(
-                                        asProvider.getString('See All'),
-                                        style: TextStyle(color: cc.primaryColor, fontWeight: FontWeight.bold),
-                                      ),
+                                      dense: true,
+                                      title: Text(sub['name'] ?? ''),
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AllSubCategoriesView(
-                                              categoryName: category.name ?? '',
-                                              subcategories: subList,
-                                            ),
-                                          ),
+                                        Navigator.of(context).pushNamed(
+                                          ProductBySubcategoryView.routeName,
+                                          arguments: [sub['id'], sub['name']],
                                         );
                                       },
-                                    ),
-                                    ...subList.map((sub) => ListTile(
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 40),
-                                          dense: true,
-                                          title: Text(sub['name'] ?? ''),
-                                          onTap: () {
-                                            Navigator.of(context).pushNamed(
-                                              ProductBySubcategoryView.routeName,
-                                              arguments: [sub['id'], sub['name']],
-                                            );
-                                          },
-                                        )),
-                                  ],
+                                    );
+                                  }).toList(),
                                 );
                               },
                             ),
@@ -467,7 +465,7 @@ class _HomeAppDrawerState extends State<HomeAppDrawer> {
         return data['subcategories'] as List<dynamic>? ?? [];
       }
     } catch (e) {
-      debugPrint("Error: $e");
+      debugPrint("Error fetching subcategories: $e");
     }
     return [];
   }

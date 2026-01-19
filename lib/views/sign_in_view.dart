@@ -522,15 +522,12 @@ class _SignInViewState extends State<SignInView> {
       return;
     }
 
-    final identifier = _isPhoneLogin 
-      ? '$_selectedCountryCode${_phoneController.text.trim()}'
-      : _emailController.text.trim();
+    final identifier = _isPhoneLogin
+        ? '$_selectedCountryCode${_phoneController.text.trim()}'
+        : _emailController.text.trim();
 
-    Provider.of<SignInService>(context, listen: false).signIn(
-      context, 
-      identifier, 
-      _passwordController.text
-    );
+    Provider.of<SignInService>(context, listen: false)
+        .signIn(context, identifier, _passwordController.text);
   }
 
   bool onceInit = false;
@@ -538,8 +535,9 @@ class _SignInViewState extends State<SignInView> {
   initMailPass(BuildContext context) {
     if (!onceInit) {
       onceInit = true;
-      final savedInfo = Provider.of<SaveSignInInfoService>(context, listen: false);
-      
+      final savedInfo =
+          Provider.of<SaveSignInInfoService>(context, listen: false);
+
       // Check if saved info is phone or email
       final savedIdentifier = savedInfo.emailUsername ?? '';
       if (savedIdentifier.contains('@')) {
@@ -552,7 +550,8 @@ class _SignInViewState extends State<SignInView> {
           final plusIndex = savedIdentifier.indexOf('+');
           final spaceIndex = savedIdentifier.indexOf(' ');
           if (spaceIndex != -1) {
-            _selectedCountryCode = savedIdentifier.substring(plusIndex, spaceIndex);
+            _selectedCountryCode =
+                savedIdentifier.substring(plusIndex, spaceIndex);
             _phoneController.text = savedIdentifier.substring(spaceIndex + 1);
           } else {
             // Handle case where there's no space after country code
@@ -562,7 +561,7 @@ class _SignInViewState extends State<SignInView> {
           _phoneController.text = savedIdentifier;
         }
       }
-      
+
       _passwordController.text = savedInfo.password ?? '';
     }
   }
@@ -646,16 +645,21 @@ class _SignInViewState extends State<SignInView> {
                                       children: [
                                         // Toggle between phone and email
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             ToggleButtons(
-                                              isSelected: [_isPhoneLogin, !_isPhoneLogin],
+                                              isSelected: [
+                                                _isPhoneLogin,
+                                                !_isPhoneLogin
+                                              ],
                                               onPressed: (int index) {
                                                 setState(() {
                                                   _isPhoneLogin = index == 0;
                                                 });
                                               },
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                               selectedColor: Colors.white,
                                               fillColor: cc.primaryColor,
                                               color: cc.primaryColor,
@@ -665,109 +669,166 @@ class _SignInViewState extends State<SignInView> {
                                               ),
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                                  child: Text(asProvider.getString('Phone')),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 16),
+                                                  child: Text(asProvider
+                                                      .getString('Phone')),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                                  child: Text(asProvider.getString('Email')),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 16),
+                                                  child: Text(asProvider
+                                                      .getString('Email')),
                                                 ),
                                               ],
                                             ),
                                           ],
                                         ),
                                         EmptySpaceHelper.emptyHight(15),
-                                        
+
                                         // Phone or Email field based on selection
                                         if (_isPhoneLogin) ...[
-                                          FieldTitle(asProvider.getString('Phone Number *')),
+                                          FieldTitle(asProvider
+                                              .getString('Phone Number *')),
                                           Row(
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start, // Ensures validation error doesn't break layout
                                             children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: DropdownButtonFormField<String>(
+                                              // 1. Give the dropdown a fixed width instead of Expanded
+                                              SizedBox(
+                                                width: 90, // Fixed size for country code
+                                                child: DropdownButtonFormField<
+                                                    String>(
+                                                  isExpanded:
+                                                      true, // Ensures the text inside stays within the 90px
                                                   value: _selectedCountryCode,
-                                                  onChanged: (String? newValue) {
+                                                  onChanged:
+                                                      (String? newValue) {
                                                     if (newValue != null) {
-                                                      setState(() {
-                                                        _selectedCountryCode = newValue;
-                                                      });
+                                                      setState(() =>
+                                                          _selectedCountryCode =
+                                                              newValue);
                                                     }
                                                   },
                                                   decoration: InputDecoration(
-                                                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                                                    border: OutlineInputBorder(),
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10, vertical: 10),
+                                                    isDense:
+                                                        true, // Makes it more compact
+                                                    border:
+                                                        OutlineInputBorder(),
                                                   ),
                                                   items: ['+1', '+880', '+855']
-                                                      .map<DropdownMenuItem<String>>((String value) {
-                                                    return DropdownMenuItem<String>(
+                                                      .map<
+                                                              DropdownMenuItem<
+                                                                  String>>(
+                                                          (String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
                                                       value: value,
-                                                      child: Text(value),
+                                                      child: Text(value,
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  14)), // Slightly smaller font
                                                     );
                                                   }).toList(),
                                                 ),
                                               ),
-                                              SizedBox(width: 10),
+
+                                              SizedBox(width: 8),
+
+                                              // 2. Let the text field take all REMAINING space
                                               Expanded(
-                                                flex: 5,
                                                 child: TextFormField(
                                                   controller: _phoneController,
-                                                  keyboardType: TextInputType.phone,
+                                                  keyboardType:
+                                                      TextInputType.phone,
+                                                  style:
+                                                      TextStyle(fontSize: 14),
                                                   decoration: InputDecoration(
-                                                    hintText: asProvider.getString('Enter your phone number'),
-                                                    border: OutlineInputBorder(),
+                                                    isDense:
+                                                        true, // Important to prevent vertical overflow
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                            vertical: 12),
+                                                    hintText: asProvider.getString(
+                                                        'Phone number'), // Shortened hint
+                                                    border:
+                                                        OutlineInputBorder(),
                                                   ),
                                                   validator: (value) {
-                                                    if (value == null || value.trim().isEmpty) {
-                                                      return asProvider.getString('Enter your phone number');
+                                                    if (value == null ||
+                                                        value.trim().isEmpty) {
+                                                      return asProvider
+                                                          .getString(
+                                                              'Required');
                                                     }
                                                     return null;
                                                   },
                                                 ),
                                               ),
                                             ],
-                                          ),
+                                          )
                                         ] else ...[
-                                          FieldTitle(asProvider.getString('Email')),
+                                          FieldTitle(
+                                              asProvider.getString('Email')),
                                           TextFormField(
                                             controller: _emailController,
-                                            textInputAction: TextInputAction.next,
-                                            keyboardType: TextInputType.emailAddress,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
                                             decoration: InputDecoration(
-                                              hintText: asProvider.getString('Enter your email'),
+                                              hintText: asProvider.getString(
+                                                  'Enter your email'),
                                               prefixIcon: Padding(
-                                                padding: const EdgeInsets.all(12),
-                                                child: SvgPicture.asset('assets/icons/email_prefix.svg'),
+                                                padding:
+                                                    const EdgeInsets.all(12),
+                                                child: SvgPicture.asset(
+                                                    'assets/icons/email_prefix.svg'),
                                               ),
                                             ),
                                             validator: (value) {
-                                              if (!EmailValidator.validate(value ?? '')) {
-                                                return asProvider.getString('Enter a valid email address');
+                                              if (!EmailValidator.validate(
+                                                  value ?? '')) {
+                                                return asProvider.getString(
+                                                    'Enter a valid email address');
                                               }
                                               return null;
                                             },
                                           ),
                                         ],
-                                        
+
                                         EmptySpaceHelper.emptyHight(10),
-                                        FieldTitle(asProvider.getString('Password')),
+                                        FieldTitle(
+                                            asProvider.getString('Password')),
                                         Consumer<SignInService>(builder:
                                             (context, siProvider, child) {
                                           return TextFormField(
                                             controller: _passwordController,
-                                            obscureText: siProvider.obscurePassword,
+                                            obscureText:
+                                                siProvider.obscurePassword,
                                             decoration: InputDecoration(
-                                              hintText: asProvider.getString('Enter your password'),
+                                              hintText: asProvider.getString(
+                                                  'Enter your password'),
                                               prefixIcon: Padding(
-                                                padding: const EdgeInsets.all(12),
-                                                child: SvgPicture.asset('assets/icons/pass_prefix.svg'),
+                                                padding:
+                                                    const EdgeInsets.all(12),
+                                                child: SvgPicture.asset(
+                                                    'assets/icons/pass_prefix.svg'),
                                               ),
                                               suffixIcon: GestureDetector(
                                                 onTap: () {
-                                                  siProvider.setObscurePassword(null);
+                                                  siProvider
+                                                      .setObscurePassword(null);
                                                 },
                                                 child: Padding(
-                                                  padding: const EdgeInsets.all(12),
+                                                  padding:
+                                                      const EdgeInsets.all(12),
                                                   child: SvgPicture.asset(
                                                     'assets/icons/${siProvider.obscurePassword ? 'obscure_on' : 'obscure_off'}.svg',
                                                   ),
@@ -779,7 +840,8 @@ class _SignInViewState extends State<SignInView> {
                                                   value.isEmpty ||
                                                   value.trim().isEmpty ||
                                                   value.length < 6) {
-                                                return asProvider.getString('Password must be more then 8 character');
+                                                return asProvider.getString(
+                                                    'Password must be more then 8 character');
                                               }
                                               return null;
                                             },
@@ -797,56 +859,81 @@ class _SignInViewState extends State<SignInView> {
                                               return Transform.scale(
                                                 scale: 1.3,
                                                 child: Checkbox(
-                                                  value: siProvider.rememberPassword,
+                                                  value: siProvider
+                                                      .rememberPassword,
                                                   onChanged: (value) {
-                                                    siProvider.setRememberPassword(value);
+                                                    siProvider
+                                                        .setRememberPassword(
+                                                            value);
                                                   },
                                                 ),
                                               );
                                             }),
                                             ConstrainedBox(
-                                              constraints: BoxConstraints(maxWidth: screenWidth / 4.5),
+                                              constraints: BoxConstraints(
+                                                  maxWidth: screenWidth / 4.5),
                                               child: FittedBox(
                                                 child: Text(
-                                                  asProvider.getString('Remember Me'),
+                                                  asProvider
+                                                      .getString('Remember Me'),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .titleSmall!
-                                                      .copyWith(fontWeight: FontWeight.normal),
+                                                      .copyWith(
+                                                          fontWeight: FontWeight
+                                                              .normal),
                                                 ),
                                               ),
                                             ),
                                             const Spacer(),
                                             ConstrainedBox(
-                                              constraints: BoxConstraints(maxWidth: screenWidth / 3.2),
+                                              constraints: BoxConstraints(
+                                                  maxWidth: screenWidth / 3.2),
                                               child: FittedBox(
                                                 child: TextButton(
                                                   onPressed: () {
-                                                    FocusScope.of(context).unfocus();
+                                                    FocusScope.of(context)
+                                                        .unfocus();
                                                     Navigator.of(context).push(
                                                         PageRouteBuilder(
-                                                            pageBuilder: (context, animation, anotherAnimation) {
+                                                            pageBuilder: (context,
+                                                                animation,
+                                                                anotherAnimation) {
                                                               return ResetPasswordView();
                                                             },
-                                                            reverseTransitionDuration: const Duration(microseconds: 10),
-                                                            transitionsBuilder: (context, animation, anotherAnimation, child) {
+                                                            reverseTransitionDuration:
+                                                                const Duration(
+                                                                    microseconds:
+                                                                        10),
+                                                            transitionsBuilder:
+                                                                (context,
+                                                                    animation,
+                                                                    anotherAnimation,
+                                                                    child) {
                                                               animation = CurvedAnimation(
-                                                                  curve: Curves.decelerate,
-                                                                  parent: animation);
+                                                                  curve: Curves
+                                                                      .decelerate,
+                                                                  parent:
+                                                                      animation);
                                                               return Align(
-                                                                child: FadeTransition(
-                                                                  opacity: animation,
+                                                                child:
+                                                                    FadeTransition(
+                                                                  opacity:
+                                                                      animation,
                                                                   child: child,
                                                                 ),
                                                               );
                                                             }));
                                                   },
                                                   child: Text(
-                                                    asProvider.getString('Forgot Password?'),
+                                                    asProvider.getString(
+                                                        'Forgot Password?'),
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .titleSmall!
-                                                        .copyWith(color: cc.secondaryColor),
+                                                        .copyWith(
+                                                            color: cc
+                                                                .secondaryColor),
                                                   ),
                                                 ),
                                               ),
@@ -857,10 +944,13 @@ class _SignInViewState extends State<SignInView> {
                                         Consumer<SignInService>(builder:
                                             (context, siProvider, child) {
                                           return CustomCommonButton(
-                                              btText: asProvider.getString('Sign In'),
-                                              isLoading: siProvider.loadingSignIn,
+                                              btText: asProvider
+                                                  .getString('Sign In'),
+                                              isLoading:
+                                                  siProvider.loadingSignIn,
                                               onPressed: () {
-                                                FocusScope.of(context).unfocus();
+                                                FocusScope.of(context)
+                                                    .unfocus();
                                                 trySignIn(context);
                                               });
                                         }),
@@ -869,7 +959,8 @@ class _SignInViewState extends State<SignInView> {
                                           child: RichText(
                                             softWrap: true,
                                             text: TextSpan(
-                                                text: asProvider.getString("Don't have an account?"),
+                                                text: asProvider.getString(
+                                                    "Don't have an account?"),
                                                 style: TextStyle(
                                                   color: cc.greyHint,
                                                   fontWeight: FontWeight.w600,
@@ -877,39 +968,67 @@ class _SignInViewState extends State<SignInView> {
                                                 children: [
                                                   TextSpan(
                                                       text: '   ',
-                                                      style: TextStyle(color: cc.greyHint)),
+                                                      style: TextStyle(
+                                                          color: cc.greyHint)),
                                                   TextSpan(
-                                                      recognizer: TapGestureRecognizer()
-                                                        ..onTap = () {
-                                                          FocusScope.of(context).unfocus();
-                                                          Provider.of<SignUpService>(context, listen: false)
-                                                              .setObscurePasswordOne(true);
-                                                          Provider.of<SignUpService>(context, listen: false)
-                                                              .setObscurePasswordTwo(true);
-                                                          Navigator.of(context)
-                                                              .push(PageRouteBuilder(
-                                                                  pageBuilder: (context, animation, anotherAnimation) {
-                                                                    return SignUpView();
-                                                                  },
-                                                                  transitionsBuilder: (context, animation, anotherAnimation, child) {
-                                                                    animation = CurvedAnimation(
-                                                                        curve: Curves.decelerate,
-                                                                        parent: animation);
-                                                                    return Align(
-                                                                      child: FadeTransition(
-                                                                        opacity: animation,
-                                                                        child: child,
-                                                                      ),
-                                                                    );
-                                                                  }))
-                                                              .then((value) {
-                                                            if (value != null) {
-                                                              Navigator.pop(context);
-                                                            }
-                                                          });
-                                                        },
-                                                      text: asProvider.getString('Sign Up'),
-                                                      style: TextStyle(color: cc.secondaryColor)),
+                                                      recognizer:
+                                                          TapGestureRecognizer()
+                                                            ..onTap = () {
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .unfocus();
+                                                              Provider.of<SignUpService>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .setObscurePasswordOne(
+                                                                      true);
+                                                              Provider.of<SignUpService>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .setObscurePasswordTwo(
+                                                                      true);
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(PageRouteBuilder(pageBuilder:
+                                                                      (context,
+                                                                          animation,
+                                                                          anotherAnimation) {
+                                                                return SignUpView();
+                                                              }, transitionsBuilder: (context,
+                                                                      animation,
+                                                                      anotherAnimation,
+                                                                      child) {
+                                                                animation = CurvedAnimation(
+                                                                    curve: Curves
+                                                                        .decelerate,
+                                                                    parent:
+                                                                        animation);
+                                                                return Align(
+                                                                  child:
+                                                                      FadeTransition(
+                                                                    opacity:
+                                                                        animation,
+                                                                    child:
+                                                                        child,
+                                                                  ),
+                                                                );
+                                                              }))
+                                                                  .then(
+                                                                      (value) {
+                                                                if (value !=
+                                                                    null) {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }
+                                                              });
+                                                            },
+                                                      text: asProvider
+                                                          .getString('Sign Up'),
+                                                      style: TextStyle(
+                                                          color: cc
+                                                              .secondaryColor)),
                                                 ]),
                                           ),
                                         ),
@@ -917,44 +1036,64 @@ class _SignInViewState extends State<SignInView> {
                                         const HorizontalOrDivider(),
                                         EmptySpaceHelper.emptyHight(20),
                                         Consumer<SocialSignInSignUpService>(
-                                            builder: (context, socialProvider, child) {
+                                            builder: (context, socialProvider,
+                                                child) {
                                           return SizedBox(
                                             width: double.infinity,
                                             height: 46,
                                             child: OutlinedButton.icon(
                                                 onPressed: () {
-                                                  FocusScope.of(context).unfocus();
-                                                  if (socialProvider.loadingGoogleSignInSignUp) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  if (socialProvider
+                                                      .loadingGoogleSignInSignUp) {
                                                     return;
                                                   }
-                                                  socialProvider.googleSignInSignUp(
-                                                      context, 'Sign In Failed');
+                                                  socialProvider
+                                                      .googleSignInSignUp(
+                                                          context,
+                                                          'Sign In Failed');
                                                 },
-                                                icon: SvgPicture.asset('assets/icons/google.svg'),
-                                                label: socialProvider.loadingGoogleSignInSignUp
-                                                    ? FittedBox(child: CustomPreloader())
-                                                    : Text(asProvider.getString('Sign In with Google'))),
+                                                icon: SvgPicture.asset(
+                                                    'assets/icons/google.svg'),
+                                                label: socialProvider
+                                                        .loadingGoogleSignInSignUp
+                                                    ? FittedBox(
+                                                        child:
+                                                            CustomPreloader())
+                                                    : Text(asProvider.getString(
+                                                        'Sign In with Google'))),
                                           );
                                         }),
                                         EmptySpaceHelper.emptyHight(10),
                                         Consumer<SocialSignInSignUpService>(
-                                            builder: (context, socialProvider, child) {
+                                            builder: (context, socialProvider,
+                                                child) {
                                           return SizedBox(
                                             width: double.infinity,
                                             height: 46,
                                             child: OutlinedButton.icon(
                                                 onPressed: () {
-                                                  FocusScope.of(context).unfocus();
-                                                  if (socialProvider.loadingFacebookSignInSignUp) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  if (socialProvider
+                                                      .loadingFacebookSignInSignUp) {
                                                     return;
                                                   }
-                                                  socialProvider.facebookSignInSignUp(
-                                                      context, 'Sign In Failed');
+                                                  socialProvider
+                                                      .facebookSignInSignUp(
+                                                          context,
+                                                          'Sign In Failed');
                                                 },
-                                                icon: SvgPicture.asset('assets/icons/facebook.svg'),
-                                                label: socialProvider.loadingFacebookSignInSignUp
-                                                    ? FittedBox(child: CustomPreloader())
-                                                    : Text(asProvider.getString('Sign In with Facebook'))),
+                                                icon: SvgPicture.asset(
+                                                    'assets/icons/facebook.svg'),
+                                                label: socialProvider
+                                                        .loadingFacebookSignInSignUp
+                                                    ? FittedBox(
+                                                        child:
+                                                            CustomPreloader())
+                                                    : Text(asProvider.getString(
+                                                        'Sign In with Facebook'))),
                                           );
                                         }),
                                         EmptySpaceHelper.emptyHight(20),

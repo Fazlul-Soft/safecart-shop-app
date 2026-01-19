@@ -49,7 +49,8 @@ class _SignUpViewState extends State<SignUpView> {
           cc.red);
       return;
     }
-      final fullPhoneNumber = '$_selectedCountryCode${_phoneController.text.trim()}';
+    final fullPhoneNumber =
+        '$_selectedCountryCode${_phoneController.text.trim()}';
     suProvider.signUp(
       context,
       _nameController.text,
@@ -145,26 +146,33 @@ class _SignUpViewState extends State<SignUpView> {
                                             FieldTitle(asProvider
                                                 .getString('Phone Number *')),
                                             Row(
+                                              crossAxisAlignment: CrossAxisAlignment
+                                                  .start, // Keeps alignment if error text appears
                                               children: [
-                                                Expanded(
-                                                  flex: 2,
+                                                // 1. Lock the country code to a specific pixel width
+                                                SizedBox(
+                                                  width: 85,
                                                   child:
                                                       DropdownButtonFormField<
                                                           String>(
+                                                    isExpanded:
+                                                        true, // Prevents internal icon from pushing width
                                                     value: _selectedCountryCode,
                                                     onChanged:
                                                         (String? newValue) {
                                                       if (newValue != null) {
-                                                        setState(() {
-                                                          _selectedCountryCode =
-                                                              newValue;
-                                                        });
+                                                        setState(() =>
+                                                            _selectedCountryCode =
+                                                                newValue);
                                                       }
                                                     },
                                                     decoration: InputDecoration(
+                                                      isDense:
+                                                          true, // Crucial: reduces internal height and padding
                                                       contentPadding:
                                                           EdgeInsets.symmetric(
-                                                              horizontal: 12),
+                                                              horizontal: 8,
+                                                              vertical: 12),
                                                       border:
                                                           OutlineInputBorder(),
                                                     ),
@@ -179,33 +187,49 @@ class _SignUpViewState extends State<SignUpView> {
                                                       return DropdownMenuItem<
                                                           String>(
                                                         value: value,
-                                                        child: Text(value),
+                                                        child: Text(value,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        14)),
                                                       );
                                                     }).toList(),
                                                   ),
                                                 ),
-                                                SizedBox(width: 10),
+
+                                                const SizedBox(width: 8),
+
+                                                // 2. Expanded now fills ONLY the remaining space
                                                 Expanded(
-                                                  flex: 5,
                                                   child: TextFormField(
                                                     controller:
                                                         _phoneController,
                                                     keyboardType:
                                                         TextInputType.phone,
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
                                                     decoration: InputDecoration(
+                                                      isDense:
+                                                          true, // Crucial: matches the dropdown height
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                              horizontal: 12,
+                                                              vertical: 12),
                                                       hintText:
                                                           asProvider.getString(
-                                                              'Enter your phone number'),
+                                                              'Enter phone'), // Slightly shorter hint
                                                       border:
-                                                          OutlineInputBorder(),
+                                                          const OutlineInputBorder(),
                                                     ),
                                                     validator: (value) {
                                                       if (value == null ||
                                                           value
                                                               .trim()
                                                               .isEmpty) {
-                                                        return asProvider.getString(
-                                                            'Enter your phone number');
+                                                        return asProvider
+                                                            .getString(
+                                                                'Required');
                                                       }
                                                       return null;
                                                     },
@@ -215,6 +239,83 @@ class _SignUpViewState extends State<SignUpView> {
                                             ),
                                           ],
                                         ),
+                                        // Column(
+                                        //   crossAxisAlignment:
+                                        //       CrossAxisAlignment.start,
+                                        //   children: [
+                                        //     FieldTitle(asProvider
+                                        //         .getString('Phone Number *')),
+                                        //     Row(
+                                        //       children: [
+                                        //         Expanded(
+                                        //           flex: 2,
+                                        //           child:
+                                        //               DropdownButtonFormField<
+                                        //                   String>(
+                                        //             value: _selectedCountryCode,
+                                        //             onChanged:
+                                        //                 (String? newValue) {
+                                        //               if (newValue != null) {
+                                        //                 setState(() {
+                                        //                   _selectedCountryCode =
+                                        //                       newValue;
+                                        //                 });
+                                        //               }
+                                        //             },
+                                        //             decoration: InputDecoration(
+                                        //               contentPadding:
+                                        //                   EdgeInsets.symmetric(
+                                        //                       horizontal: 12),
+                                        //               border:
+                                        //                   OutlineInputBorder(),
+                                        //             ),
+                                        //             items: [
+                                        //               '+1',
+                                        //               '+880',
+                                        //               '+855'
+                                        //             ].map<
+                                        //                     DropdownMenuItem<
+                                        //                         String>>(
+                                        //                 (String value) {
+                                        //               return DropdownMenuItem<
+                                        //                   String>(
+                                        //                 value: value,
+                                        //                 child: Text(value),
+                                        //               );
+                                        //             }).toList(),
+                                        //           ),
+                                        //         ),
+                                        //         SizedBox(width: 10),
+                                        //         Expanded(
+                                        //           flex: 5,
+                                        //           child: TextFormField(
+                                        //             controller:
+                                        //                 _phoneController,
+                                        //             keyboardType:
+                                        //                 TextInputType.phone,
+                                        //             decoration: InputDecoration(
+                                        //               hintText:
+                                        //                   asProvider.getString(
+                                        //                       'Enter your phone number'),
+                                        //               border:
+                                        //                   OutlineInputBorder(),
+                                        //             ),
+                                        //             validator: (value) {
+                                        //               if (value == null ||
+                                        //                   value
+                                        //                       .trim()
+                                        //                       .isEmpty) {
+                                        //                 return asProvider.getString(
+                                        //                     'Enter your phone number');
+                                        //               }
+                                        //               return null;
+                                        //             },
+                                        //           ),
+                                        //         ),
+                                        //       ],
+                                        //     ),
+                                        //   ],
+                                        // ),
                                         FieldTitle(
                                             asProvider.getString('Name')),
                                         TextFormField(
@@ -325,19 +426,23 @@ class _SignUpViewState extends State<SignUpView> {
                                               ),
                                             ),
                                             validator: (value) {
-                                               if (value == null || value.trim().isEmpty) {
+                                              if (value == null ||
+                                                  value.trim().isEmpty) {
                                                 return 'Password cannot be empty';
                                               }
                                               if (value.length < 8) {
                                                 return 'Password must be at least 8 characters';
                                               }
-                                              if (!value.contains(RegExp(r'[A-Z]'))) {
+                                              if (!value
+                                                  .contains(RegExp(r'[A-Z]'))) {
                                                 return 'Password must contain at least 1 uppercase letter';
                                               }
-                                              if (!value.contains(RegExp(r'[a-z]'))) {
+                                              if (!value
+                                                  .contains(RegExp(r'[a-z]'))) {
                                                 return 'Password must contain at least 1 lowercase letter';
                                               }
-                                              if (!value.contains(RegExp(r'[0-9]'))) {
+                                              if (!value
+                                                  .contains(RegExp(r'[0-9]'))) {
                                                 return 'Password must contain at least 1 number';
                                               }
                                               if (value.contains(' ')) {

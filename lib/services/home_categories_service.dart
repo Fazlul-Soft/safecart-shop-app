@@ -134,9 +134,38 @@ class HomeCategoriesService with ChangeNotifier {
   final Map<int, String> _subcategoryNames = {}; // Cache subcategory names
   final Map<int, String> _subcategoryImages = {};
 
+// New list to hold ALL categories specifically for the drawer
+  List<dynamic>? allDrawerCategories;
+  bool drawerLoading = false;
+
+  Future<void> fetchAllCategoriesForDrawer(BuildContext context) async {
+    final haveConnection = await checkConnection(context);
+    if (!haveConnection) return;
+
+    drawerLoading = true;
+    notifyListeners();
+
+    try {
+      // Calling the endpoint that returns everything
+      final response = await http.get(Uri.parse('$baseApi/all-categories'));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // If the response is wrapped in 'data' (common for Resources), use data['data']
+        // otherwise use data directly.
+        allDrawerCategories = data is List ? data : data['data'];
+      }
+    } catch (e) {
+      debugPrint("Error fetching drawer categories: $e");
+    } finally {
+      drawerLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> initializeSubcategories() async {
     if (categories == null)
-      // await fetchHomeCategories(category); // Fetch categories if not loaded
+    // await fetchHomeCategories(category); // Fetch categories if not loaded
     if (categories == null) return;
 
     for (var category in categories!) {
