@@ -530,12 +530,11 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:money_formatter/money_formatter.dart';
+// import 'package:money_formatter/money_formatter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/search_filter_data_service.dart';
 import 'package:safecart/services/search_product_service.dart';
@@ -555,7 +554,13 @@ class FilterBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rtl = Provider.of<RTLService>(context, listen: false);
-    final filterOption = Provider.of<SearchFilterDataService>(context, listen: false);
+    final filterOption =
+        Provider.of<SearchFilterDataService>(context, listen: false);
+
+    String formatPrice(double value) {
+      final formatter = NumberFormat('#,##0', 'en_US');
+      return formatter.format(value);
+    }
 
     return SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -594,8 +599,10 @@ class FilterBottomSheet extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: foProvider.filterOprions!.allCategory!.length,
                 itemBuilder: ((context, index) {
-                  final category = foProvider.filterOprions!.allCategory![index];
-                  final isSelected = category.name.toString() == foProvider.selectedCategory;
+                  final category =
+                      foProvider.filterOprions!.allCategory![index];
+                  final isSelected =
+                      category.name.toString() == foProvider.selectedCategory;
                   return GestureDetector(
                     onTap: () {
                       foProvider.setSelectedCategory(category.name);
@@ -637,12 +644,16 @@ class FilterBottomSheet extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: foProvider.selectedCategorySubList.length,
                         itemBuilder: ((context, index) {
-                          final subcategory = foProvider.selectedCategorySubList[index];
-                          final isSelected = subcategory.name.toString() == foProvider.selectedSubCategory;
+                          final subcategory =
+                              foProvider.selectedCategorySubList[index];
+                          final isSelected = subcategory.name.toString() ==
+                              foProvider.selectedSubCategory;
                           return GestureDetector(
                             onTap: () {
-                              foProvider.setSelectedSubCategory(subcategory.name);
-                              debugPrint('Selected subcategory: ${subcategory.name}');
+                              foProvider
+                                  .setSelectedSubCategory(subcategory.name);
+                              debugPrint(
+                                  'Selected subcategory: ${subcategory.name}');
                             },
                             child: filterOptions(subcategory.name, isSelected),
                           );
@@ -688,16 +699,22 @@ class FilterBottomSheet extends StatelessWidget {
                           right: rtl.langRtl ? 25 : 0,
                         ),
                         scrollDirection: Axis.horizontal,
-                        itemCount: foProvider.selectedSubcategoryChildList.length,
+                        itemCount:
+                            foProvider.selectedSubcategoryChildList.length,
                         itemBuilder: ((context, index) {
-                          final childCategory = foProvider.selectedSubcategoryChildList[index];
-                          final isSelected = childCategory.name.toString() == foProvider.selectedChildCats;
+                          final childCategory =
+                              foProvider.selectedSubcategoryChildList[index];
+                          final isSelected = childCategory.name.toString() ==
+                              foProvider.selectedChildCats;
                           return GestureDetector(
                             onTap: () {
-                              foProvider.setSelectedChildCats(childCategory.name);
-                              debugPrint('Selected child category: ${childCategory.name}');
+                              foProvider
+                                  .setSelectedChildCats(childCategory.name);
+                              debugPrint(
+                                  'Selected child category: ${childCategory.name}');
                             },
-                            child: filterOptions(childCategory.name, isSelected),
+                            child:
+                                filterOptions(childCategory.name, isSelected),
                           );
                         }),
                       ),
@@ -734,16 +751,21 @@ class FilterBottomSheet extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        filterOption.setSelectedColor(filterOption.filterOprions!.allColors![index].name);
-                        debugPrint('Selected color: ${filterOption.filterOprions!.allColors![index].name}');
+                        filterOption.setSelectedColor(
+                            filterOption.filterOprions!.allColors![index].name);
+                        debugPrint(
+                            'Selected color: ${filterOption.filterOprions!.allColors![index].name}');
                       },
                       child: filterColorOption(
-                        filterOption.filterOprions!.allColors![index].colorCode!,
-                        spProvider.selectedColor == filterOption.filterOprions!.allColors![index].name,
+                        filterOption
+                            .filterOprions!.allColors![index].colorCode!,
+                        spProvider.selectedColor ==
+                            filterOption.filterOprions!.allColors![index].name,
                       ),
                     );
                   },
-                  separatorBuilder: (context, index) => EmptySpaceHelper.emptywidth(5),
+                  separatorBuilder: (context, index) =>
+                      EmptySpaceHelper.emptywidth(5),
                   itemCount: filterOption.filterOprions!.allColors!.length,
                 ),
               ),
@@ -770,16 +792,20 @@ class FilterBottomSheet extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        filterOption.setSelectedSize(filterOption.filterOprions!.allSizes![index].name);
-                        debugPrint('Selected size: ${filterOption.filterOprions!.allSizes![index].name}');
+                        filterOption.setSelectedSize(
+                            filterOption.filterOprions!.allSizes![index].name);
+                        debugPrint(
+                            'Selected size: ${filterOption.filterOprions!.allSizes![index].name}');
                       },
                       child: filterOptions(
                         filterOption.filterOprions!.allSizes![index].name!,
-                        spProvider.selectedSize == filterOption.filterOprions!.allSizes![index].name,
+                        spProvider.selectedSize ==
+                            filterOption.filterOprions!.allSizes![index].name,
                       ),
                     );
                   },
-                  separatorBuilder: (context, index) => EmptySpaceHelper.emptywidth(5),
+                  separatorBuilder: (context, index) =>
+                      EmptySpaceHelper.emptywidth(5),
                   itemCount: filterOption.filterOprions!.allSizes!.length,
                 ),
               ),
@@ -806,16 +832,20 @@ class FilterBottomSheet extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        filterOption.setSelectedBrand(filterOption.filterOprions!.allBrands![index].name);
-                        debugPrint('Selected brand: ${filterOption.filterOprions!.allBrands![index].name}');
+                        filterOption.setSelectedBrand(
+                            filterOption.filterOprions!.allBrands![index].name);
+                        debugPrint(
+                            'Selected brand: ${filterOption.filterOprions!.allBrands![index].name}');
                       },
                       child: filterOptions(
                         filterOption.filterOprions!.allBrands![index].name,
-                        filterOption.selectedBrand == filterOption.filterOprions!.allBrands![index].name,
+                        filterOption.selectedBrand ==
+                            filterOption.filterOprions!.allBrands![index].name,
                       ),
                     );
                   },
-                  separatorBuilder: (context, index) => EmptySpaceHelper.emptywidth(5),
+                  separatorBuilder: (context, index) =>
+                      EmptySpaceHelper.emptywidth(5),
                   itemCount: filterOption.filterOprions!.allBrands!.length,
                 ),
               ),
@@ -833,8 +863,10 @@ class FilterBottomSheet extends StatelessWidget {
                     builder: (context, sfdProvider, child) {
                   return Text(
                     rtl.curRtl
-                        ? '${MoneyFormatter(amount: sfdProvider.selectedMinPrice ?? sfdProvider.minPrice).output.withoutFractionDigits}${rtl.currency}-${MoneyFormatter(amount: sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice).output.withoutFractionDigits}${rtl.currency}'
-                        : '${rtl.currency}${MoneyFormatter(amount: sfdProvider.selectedMinPrice ?? sfdProvider.minPrice).output.withoutFractionDigits}-${rtl.currency}${MoneyFormatter(amount: sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice).output.withoutFractionDigits}',
+                        ? '${formatPrice(sfdProvider.selectedMinPrice ?? sfdProvider.minPrice)}${rtl.currency}'
+                            '-${formatPrice(sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice)}${rtl.currency}'
+                        : '${rtl.currency}${formatPrice(sfdProvider.selectedMinPrice ?? sfdProvider.minPrice)}'
+                            '-${rtl.currency}${formatPrice(sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice)}',
                   );
                 }),
               ],
@@ -862,12 +894,15 @@ class FilterBottomSheet extends StatelessWidget {
                 min: filterOption.minPrice,
                 inactiveColor: cc.lightPrimary10,
                 labels: RangeLabels(
-                  (sfdProvider.selectedMinPrice ?? sfdProvider.minPrice).toStringAsFixed(0),
-                  (sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice).toStringAsFixed(0),
+                  (sfdProvider.selectedMinPrice ?? sfdProvider.minPrice)
+                      .toStringAsFixed(0),
+                  (sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice)
+                      .toStringAsFixed(0),
                 ),
                 onChanged: (RangeValues values) {
                   sfdProvider.setRangeValues(values);
-                  debugPrint('Selected price range: ${values.start} - ${values.end}');
+                  debugPrint(
+                      'Selected price range: ${values.start} - ${values.end}');
                 },
               ),
             );
@@ -931,8 +966,11 @@ class FilterBottomSheet extends StatelessWidget {
               bt2text: asProvider.getString('Apply Filter'),
               bt1func: () {
                 scaffoldKey.currentState!.closeEndDrawer();
-                final spProvider = Provider.of<SearchProductService>(context, listen: false);
-                final sfdProvider = Provider.of<SearchFilterDataService>(context, listen: false);
+                final spProvider =
+                    Provider.of<SearchProductService>(context, listen: false);
+                final sfdProvider = Provider.of<SearchFilterDataService>(
+                    context,
+                    listen: false);
                 spProvider.resetFilterOptions();
                 sfdProvider.resetSelectedSearchFilter();
                 spProvider.fetchProducts(context);
@@ -940,8 +978,11 @@ class FilterBottomSheet extends StatelessWidget {
               },
               bt2func: () {
                 scaffoldKey.currentState!.closeEndDrawer();
-                final spProvider = Provider.of<SearchProductService>(context, listen: false);
-                final sfdProvider = Provider.of<SearchFilterDataService>(context, listen: false);
+                final spProvider =
+                    Provider.of<SearchProductService>(context, listen: false);
+                final sfdProvider = Provider.of<SearchFilterDataService>(
+                    context,
+                    listen: false);
                 spProvider.setFilterOptions(
                   catVal: sfdProvider.selectedCategory,
                   subCatVal: sfdProvider.selectedSubCategory,

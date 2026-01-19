@@ -36,10 +36,10 @@ class AutoSlider extends StatelessWidget {
                       sProvider.sliderOneList != null
                   ? sliderProvider.sliderOneList!.isNotEmpty
                       ? SizedBox(
-                          height: 230,
+                          height: 420,
                           child: Swiper(
                             itemCount: sProvider.sliderOneList!.length,
-                            viewportFraction: .95,
+                            viewportFraction: .9,
                             scale: .95,
                             autoplay: true,
                             itemBuilder: (context, index) {
