@@ -286,7 +286,7 @@ class CheckoutView extends StatelessWidget {
                                         arguments: [
                                           asProvider.getString(
                                               'Terms and Conditions'),
-                                          '$baseApi/terms-and-condition-page'
+                                          '$baseApi/terms-and-conditions'
                                         ]);
                                   },
                                 text: asProvider.getString(
@@ -304,7 +304,7 @@ class CheckoutView extends StatelessWidget {
                                         arguments: [
                                           asProvider
                                               .getString('Privacy Policy'),
-                                          '$baseApi/privacy-policy-page'
+                                          '$baseApi/privacy-policy'
                                         ]);
                                   },
                                 text: asProvider.getString('privacy policy.'),

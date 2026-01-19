@@ -612,37 +612,7 @@ class CartTile extends StatelessWidget {
                       );
                     }),
                     // const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        confirmDialouge(
-                          context,
-                          onPressed: () {
-                            Provider.of<CartDataService>(context, listen: false)
-                                .deleteCartItem(id, rowId);
-                            showToast(
-                              asProvider.getString('Item removed from cart'),
-                              cc.blackColor,
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: cc.greyFive),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'Delete',
-                          style: TextStyle(
-                            color: cc.blackColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    )
+                    
 
                     // CustomIconButton(
                     //   SvgPicture.asset('assets/icons/trash.svg'),

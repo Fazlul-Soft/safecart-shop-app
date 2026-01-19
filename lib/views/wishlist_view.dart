@@ -38,7 +38,7 @@ class WishlistView extends StatelessWidget {
                                 fProvider.emptyWishlist();
                                 showToast(
                                     asProvider.getString(
-                                        'Items removed from wishlist'),
+                                        'Items removed from saved list'),
                                     cc.blackColor);
                               },
                             );
@@ -69,7 +69,7 @@ class WishlistView extends StatelessWidget {
                       ),
                       Center(
                         child: Text(
-                          asProvider.getString('Add items to wishlist'),
+                          asProvider.getString('Saved items for later'),
                           style: TextStyle(color: cc.greyHint),
                         ),
                       ),

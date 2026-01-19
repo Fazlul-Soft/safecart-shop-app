@@ -143,8 +143,8 @@ class ProductCard extends StatelessWidget {
                                       horizontal: 12, vertical: 2),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
-                                    color: cc.badgeColors[
-                                        index % cc.badgeColors.length],
+                                    // color: cc.badgeColors[index % cc.badgeColors.length],
+                                    color: cc.primaryColor,
                                   ),
                                   child: Text(
                                     badge!,
@@ -424,7 +424,7 @@ class ProductCard extends StatelessWidget {
             focusColor: Colors.transparent,
           ),
           icon: SvgPicture.asset(
-            'assets/icons/${isFavorite ? 'wishlist_fill' : 'wishlist'}.svg',
+            'assets/icons/${isFavorite ? 'mm_filled' : 'mm'}.svg',
             height: 20,
             color: cc.primaryColor,
           ),

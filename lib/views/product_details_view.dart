@@ -251,7 +251,7 @@ class ProductDetailsView extends StatelessWidget {
                                             color: cc.pureWhite,
                                           ),
                                           child: SvgPicture.asset(
-                                            'assets/icons/${wProvider.isWishlist(id.toString()) ? 'wishlist_fill' : 'wishlist'}.svg',
+                                            'assets/icons/${wProvider.isWishlist(id.toString()) ? 'mm_filled' : 'mm'}.svg',
                                             color: cc.primaryColor,
                                           ),
                                         ));
