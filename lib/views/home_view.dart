@@ -51,8 +51,8 @@ class HomeView extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const Categories(),
-            // const AutoSlider(),
+            const AutoSlider(),
+            // const Categories(),
             const FeatureProducts(),
             // const ManualSlider(),
             // const CategoriesAndProducts(),

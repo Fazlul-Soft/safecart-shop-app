@@ -1,232 +1,167 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:provider/provider.dart';
 import 'package:safecart/widgets/common/title_common.dart';
-import 'package:safecart/helpers/empty_space_helper.dart';
-import 'package:safecart/models/product_by_category_model.dart';
-import 'package:safecart/services/home_categories_service.dart';
 import 'package:safecart/services/search_product_service.dart';
 import 'package:safecart/views/product_by_category_view.dart';
 import 'package:safecart/views/product_by_subcategory_view.dart';
-import 'dart:math';
-import 'dart:async';
-import 'dart:convert';
 import 'package:safecart/utils/responsive.dart';
-import 'package:http/http.dart' as http;
 import '../../helpers/common_helper.dart';
 
 class CategoriesAndProductsTwo extends StatefulWidget {
   const CategoriesAndProductsTwo({super.key});
 
   @override
-  _CategoriesAndProductsTwoState createState() =>
+  State<CategoriesAndProductsTwo> createState() =>
       _CategoriesAndProductsTwoState();
 }
 
 class _CategoriesAndProductsTwoState extends State<CategoriesAndProductsTwo> {
-  late Timer _timer;
-  final Map<String, List<int>> _cachedSubcategories = {};
-  final Map<int, String> _subcategoryImages = {};
-  final Map<int, String> _subcategoryNames = {};
+  bool _loading = true;
+  List<dynamic> _categories = [];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _waitForCategoriesAndPreload();
-      _startTimer();
-    });
-    // _preloadSubcategories(); // Trigger preload
+    _fetchData();
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
+  Future<void> _fetchData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseApi/category/selected/with-subcategories'),
+      );
 
-  void _startTimer() {
-    int minSeconds = 10 * 60;
-    int maxSeconds = 15 * 60;
-    int randomSeconds =
-        minSeconds + Random().nextInt(maxSeconds - minSeconds + 1);
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
 
-    _timer = Timer(Duration(seconds: randomSeconds), () {
-      if (mounted) {
-        setState(() {});
-        _startTimer();
-      }
-    });
-  }
-
-  Future<void> _waitForCategoriesAndPreload() async {
-    final hcProvider =
-        Provider.of<HomeCategoriesService>(context, listen: false);
-    int tries = 0;
-    while ((hcProvider.categories == null || hcProvider.categories!.isEmpty) &&
-        tries < 10) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      tries++;
-    }
-    await _preloadSubcategories();
-  }
-
-  Future<void> _preloadSubcategories() async {
-    final hcProvider =
-        Provider.of<HomeCategoriesService>(context, listen: false);
-    if (hcProvider.categories == null) return;
-
-    for (var category in hcProvider.categories!) {
-      if (category != null) {
-        hcProvider.setSelectedCategory(category);
-        await hcProvider.fetchHomeCategoryProducts(category.name);
-        final categoryId = category.id?.toString() ?? '0';
-
-        try {
-          final response =
-              await http.get(Uri.parse('$baseApi/subcategory/$categoryId'));
-          print('Subcategory response for $categoryId: ${response.body}');
-          if (response.statusCode == 200) {
-            final data = jsonDecode(response.body);
-            final subcategories = data['subcategories'] as List<dynamic>? ?? [];
-            final subcatIds =
-                subcategories.map((subcat) => subcat['id'] as int).toList();
-            _cachedSubcategories[category.name!] =
-                subcatIds.isNotEmpty ? subcatIds : [];
-
-            for (var subcat in subcategories) {
-              final subcatId = subcat['id'] as int;
-              final imageUrl = subcat['image_url'] as String?;
-              final subcatName = subcat['name'] as String?;
-              _subcategoryImages[subcatId] = imageUrl ?? '';
-              _subcategoryNames[subcatId] =
-                  subcatName ?? 'Subcat $subcatId'; // Name is set here
-              print(
-                  'Cached subcatId $subcatId: name=$subcatName, image=$imageUrl');
-            }
-          } else {
-            _cachedSubcategories[category.name!] = [];
-            print(
-                'Subcategory fetch failed for $categoryId: ${response.statusCode}');
-          }
-        } catch (e) {
-          _cachedSubcategories[category.name!] = [];
-          print('Error fetching subcategories for $categoryId: $e');
+        if (json['selected_category'] != null &&
+            json['selected_category']['categories'] != null) {
+          _categories = json['selected_category']['categories'];
+        } else {
+          _categories = [];
         }
       }
+    } catch (_) {
+      _categories = [];
     }
-    if (mounted) setState(() {});
+
+    if (mounted) {
+      setState(() => _loading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_categories.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          'No selected categories found',
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Consumer<HomeCategoriesService>(builder: (context, hcProvider, child) {
-          if (hcProvider.categories == null || hcProvider.categories!.isEmpty) {
-            return Center(child: Text('No categories available'));
-          }
+      children: _categories.map((category) {
+        final List subcategories = category['subcategory'] ?? [];
 
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: hcProvider.categories!.length,
-            itemBuilder: (context, categoryIndex) {
-              final category = hcProvider.categories![categoryIndex];
-              if (category == null) return const SizedBox();
+        return Padding(
+          // ✅ SAME spacing style as FeatureProducts
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// CATEGORY TITLE (NO EXTRA GAP)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TitleCommon(
+                  category['name'] ?? '',
+                  () {
+                    Provider.of<SearchProductService>(context, listen: false)
+                        .setFilterOptions(catVal: category['name']);
 
-              List<int>? subcatIds = _cachedSubcategories[category.name!];
-              if (subcatIds == null) {
-                print('No subcatIds for ${category.name}');
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Text('Loading subcategories...'),
-                );
-              }
+                    Provider.of<SearchProductService>(context, listen: false)
+                        .fetchProducts(context);
 
-              final subcatList =
-                  subcatIds.isNotEmpty ? List.from(subcatIds.take(4)) : [];
-              print('SubcatList for ${category.name}: $subcatList');
+                    Navigator.of(context).pushNamed(
+                      ProductByCategoryView.routeName,
+                      arguments: [category['name']],
+                    );
+                  },
+                  seeAll: true,
+                ),
+              ),
 
-              final categoryId = category.id?.toString() ?? '0';
+              /// SUBCATEGORY GRID (DYNAMIC HEIGHT – NO BOTTOM GAP)
+              if (subcategories.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Builder(
+                    builder: (_) {
+                      final int itemCount = subcategories.length;
+                      final int rowCount = (itemCount / 2).ceil();
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TitleCommon(
-                      category.name ?? 'Unknown Category',
-                      () {
-                        Provider.of<SearchProductService>(context,
-                                listen: false)
-                            .setFilterOptions(catVal: category.name!);
-                        Provider.of<SearchProductService>(context,
-                                listen: false)
-                            .fetchProducts(context);
-                        Navigator.of(context).pushNamed(
-                          ProductByCategoryView.routeName,
-                          arguments: [category.name!],
-                        );
-                      },
-                      seeAll: true,
-                    ),
-                  ),
-                  EmptySpaceHelper.emptyHight(10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: SizedBox(
-                      height: 400,
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: List.generate(
-                          subcatList.length > 4 ? 4 : subcatList.length,
-                          (subcatIndex) {
-                            print(
-                                'Building item for subcatIndex: $subcatIndex, subcatId: ${subcatList[subcatIndex]}');
-                            final subcatId = subcatList[subcatIndex];
-                            final subcatName = _subcategoryNames[subcatId] ??
-                                'Subcat $subcatId';
-                            final subcatImage =
-                                _subcategoryImages[subcatId] ?? '';
+                      const double itemHeight = 160;
+                      const double rowSpacing = 10;
+
+                      final double gridHeight = (rowCount * itemHeight) +
+                          ((rowCount - 1) * rowSpacing);
+
+                      return SizedBox(
+                        height: gridHeight,
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: List.generate(itemCount, (index) {
+                            final subcat = subcategories[index];
 
                             return GestureDetector(
                               onTap: () {
-                                final hcProvider =
-                                    Provider.of<HomeCategoriesService>(context,
-                                        listen: false);
-                                hcProvider
-                                    .fetchHomeSubcategoryProductsById(subcatId);
                                 Navigator.of(context).pushNamed(
                                   ProductBySubcategoryView.routeName,
-                                  arguments: [subcatId, subcatName],
+                                  arguments: [subcat['id'], subcat['name']],
                                 );
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
+                                    height: itemHeight,
                                     width: screenWidth / 2 - 30,
-                                    height: 160,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(4),
                                       image: DecorationImage(
-                                        image: subcatImage.isNotEmpty
-                                            ? NetworkImage(subcatImage)
-                                            : const AssetImage(
-                                                'assets/images/defaultsub.jpg'),
                                         fit: BoxFit.cover,
+                                        image: (subcat['image_url'] != null &&
+                                                subcat['image_url']
+                                                    .toString()
+                                                    .isNotEmpty)
+                                            ? NetworkImage(subcat['image_url'])
+                                            : const AssetImage(
+                                                    'assets/images/defaultsub.jpg')
+                                                as ImageProvider,
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 3),
+                                  const SizedBox(height: 4),
                                   Text(
-                                    subcatName,
+                                    subcat['name'] ?? '',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
@@ -234,25 +169,28 @@ class _CategoriesAndProductsTwoState extends State<CategoriesAndProductsTwo> {
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),
-                                    textAlign: TextAlign.left,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
                             );
-                          },
+                          }),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                  EmptySpaceHelper.emptyHight(5),
-                ],
-              );
-            },
-          );
-        }),
-      ],
+                )
+              else
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'No subcategories found',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

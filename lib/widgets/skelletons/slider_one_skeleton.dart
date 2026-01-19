@@ -9,25 +9,16 @@ class SliderOneSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getScreenSize(context);
-
     return Shimmer.fromColors(
-      enabled: true,
       baseColor: cc.greyBorder,
       highlightColor: cc.pureWhite,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 20),
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        // height: 15,
-        width: screenWidth / 5,
-
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        height: 420,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: cc.sliderOneBackground,
+          color: Colors.white,
         ),
-        child: const Stack(
-            // crossAxisAlignment: CrossAxisAlignment.end,
-            children: []),
       ),
     );
   }
