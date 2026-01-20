@@ -16,14 +16,14 @@ class OrderTile extends StatelessWidget {
   final String? orderId;
   final String? orderNumber;
   final String? payment;
-  const OrderTile(
-    this.totalAmount,
-    this.trackingCode,
-    this.orderedDate,
+  const OrderTile({
+    required this.totalAmount,
+    required this.trackingCode,
+    required this.orderedDate,
     this.order,
     this.orderId,
     this.orderNumber,
-    this.payment, {
+    this.payment,
     super.key,
   });
 

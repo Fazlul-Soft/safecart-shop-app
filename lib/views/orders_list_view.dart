@@ -117,17 +117,22 @@ class OrdersListView extends StatelessWidget {
                                         // Update this section in your OrdersListView
                                         children: olProvider
                                             .orderListModel!.data
-                                            .map((e) => OrderTile(
-                                                  e.paymentMeta?.totalAmount ??
-                                                      0, // 1. Amount
-                                                  '#${e.orderNumber ?? ''}', // 2. Display Number
-                                                  e.createdAt ?? DateTime.now(), // 3. Date
-                                                  e.orderTrack ?? asProvider.getString('None'), // 4. Track
-                                                  '${e.id ?? ''}', // 6. ACTUAL ID
-                                                  e.orderNumber ?? asProvider.getString('None'), // 7. Order Number
-                                                  e.paymentStatus ?? asProvider.getString('None'), // 5. Payment
-                                                ))
-                                            .toList(),
+                                            .map((e) {
+                                          return OrderTile(
+                                            totalAmount:
+                                                e.paymentMeta?.totalAmount ?? 0,
+                                            trackingCode:
+                                                '#${e.orderNumber ?? e.id}', // This is for display
+                                            orderedDate:
+                                                e.createdAt ?? DateTime.now(),
+                                            order: e.orderStatus,
+                                            orderId: e.id
+                                                .toString(), // THIS MUST BE THE DATABASE ID
+                                            orderNumber: e.orderNumber
+                                                .toString(), // THIS IS THE REF NUMBER
+                                            payment: e.paymentStatus,
+                                          );
+                                        }).toList(),
                                         // children: olProvider
                                         //     .orderListModel!.data
                                         //     .map((e) => OrderTile(

@@ -86,7 +86,6 @@ class Datum {
   dynamic userId;
   PaymentMeta? paymentMeta;
 
-
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         coupon: json["coupon"],
@@ -98,9 +97,14 @@ class Datum {
         paymentStatus: json["payment_status"],
         orderNumber: json["order_number"],
         invoiceNumber: json["invoice_number"],
-        orderTrack: json["order_track"] is! List && json["order_track"].isEmpty
-            ? "pending"
-            : json["order_track"][0]["name"],
+        // orderTrack: json["order_track"] is! List && json["order_track"].isEmpty
+        //     ? "pending"
+        //     : json["order_track"][0]["name"],
+        // Update this inside your Datum.fromJson factory
+        orderTrack: (json["order_track"] is List &&
+                (json["order_track"] as List).isNotEmpty)
+            ? json["order_track"][0]["name"]
+            : "pending",
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
