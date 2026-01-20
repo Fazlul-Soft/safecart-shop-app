@@ -12,7 +12,8 @@ class AbaWebViewScreen extends StatefulWidget {
   const AbaWebViewScreen({
     required this.htmlContent,
     required this.orderId,
-    Key? key, required String title,
+    Key? key,
+    //  required String title,
   }) : super(key: key);
 
   @override
@@ -34,9 +35,8 @@ class _AbaWebViewScreenState extends State<AbaWebViewScreen> {
             setState(() => _isLoading = false);
             // Simply close when payment completes
             if (url.contains('success')) {
-              // Navigator.pop(context); // Return to previous screen
-              Navigator.pushNamedAndRemoveUntil(
-                  context, OrderConfirmationScreen.routeName, (route) => false);
+              Navigator.pop(context); // Return to previous screen
+              // Navigator.pushNamedAndRemoveUntil(context, OrderConfirmationScreen.routeName, (route) => false);
             }
           },
         ),

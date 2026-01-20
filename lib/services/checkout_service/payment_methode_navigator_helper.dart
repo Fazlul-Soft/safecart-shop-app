@@ -275,24 +275,24 @@ Future startPayment(
   }
 
   // abapayway
-  if (selectedGateaway.name.toLowerCase().contains('abapayway')) {
+  // if (selectedGateaway.name.toLowerCase().contains('abapayway')) {
     // 1. Get the HTML content from the response (stored in your CheckoutService after placeOrder)
     // Most ABA implementations return a self-submitting HTML form
-    String? htmlForm = csProvider.paymentHtml; 
+    // String? htmlForm = csProvider.paymentHtml; 
     
-    if (htmlForm != null && htmlForm.isNotEmpty) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) => AbaWebViewScreen(
-            htmlContent: htmlForm,
-            title: 'ABA PayWay',
-            orderId: csProvider.orderId.toString(),
-          ),
-        ),
-      );
-    } else {
-      showToast("Payment form could not be generated.", cc.red);
-    }
-    return;
-  }
+    // if (htmlForm != null && htmlForm.isNotEmpty) {
+  //     Navigator.of(context).push(
+  //       MaterialPageRoute(
+  //         builder: (BuildContext context) => AbaWebViewScreen(
+  //           htmlContent: htmlForm,
+  //           title: 'ABA PayWay',
+  //           orderId: csProvider.orderId.toString(),
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     showToast("Payment form could not be generated.", cc.red);
+  //   }
+  //   return;
+  // }
 }
