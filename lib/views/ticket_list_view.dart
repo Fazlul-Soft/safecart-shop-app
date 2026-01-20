@@ -102,11 +102,9 @@ class TicketListView extends StatelessWidget {
                                 // return LoadingSpinner();
                                 return Column(
                                   children: [
-                                    ...Iterable.generate(2)
-                                        .map(
-                                          (e) => const TicketTileSkeleton(),
-                                        )
-                                        ,
+                                    ...Iterable.generate(2).map(
+                                      (e) => const TicketTileSkeleton(),
+                                    ),
                                   ],
                                 );
                               }
@@ -176,16 +174,14 @@ class TicketListView extends StatelessWidget {
             )
           : Column(
               children: [
-                ...tlProvider.ticketsList
-                    .map(
-                      (e) => TicketTile(
-                        e.title,
-                        e.id,
-                        e.priority,
-                        e.status,
-                      ),
-                    )
-                    ,
+                ...tlProvider.ticketsList.map(
+                  (e) => TicketTile(
+                    e.title ?? 'No Title', // title (String)
+                    e.id ?? 0, // ticketId (int)
+                    e.priority?.toString() ?? 'Low', // priority (String)
+                    e.status?.toString() ?? 'Open',
+                  ),
+                ),
               ],
             );
     });
