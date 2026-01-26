@@ -284,7 +284,7 @@ class ProfileView extends StatelessWidget {
                                                         horizontal: 30),
                                                     child: Text(
                                                         asProvider.getString(
-                                                            "You'll have to Sign In/Sign Up to edit or see your profile info."),
+                                                            "Welcome Back!"),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: const TextStyle(
@@ -292,9 +292,8 @@ class ProfileView extends StatelessWidget {
                                                         ))),
                                                 const SizedBox(height: 20),
                                                 CustomCommonButton(
-                                                    btText:
-                                                        asProvider.getString(
-                                                            'Sign In/Sign Up'),
+                                                    btText: asProvider
+                                                        .getString('Sign In'),
                                                     isLoading: false,
                                                     onPressed: () async {
                                                       Provider.of<SignInService>(

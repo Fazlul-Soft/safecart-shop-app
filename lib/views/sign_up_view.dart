@@ -68,7 +68,7 @@ class _SignUpViewState extends State<SignUpView> {
       body: Stack(
         children: [
           Container(
-            height: screenHeight / 2.3,
+            height: screenHeight / 2.8,
             width: double.infinity,
             color: cc.primaryColor,
           ),
@@ -81,10 +81,10 @@ class _SignUpViewState extends State<SignUpView> {
                 foregroundColor: cc.greyHint,
                 backgroundColor: Colors.transparent,
                 pinned: true,
-                expandedHeight: screenHeight / 3.3,
+                expandedHeight: screenHeight / 4.2,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    height: screenHeight / 3.7,
+                    height: screenHeight / 4.6,
                     width: double.infinity,
                     // padding: EdgeInsets.only(top: screenHeight / 7),
                     color: cc.primaryColor,
@@ -640,6 +640,7 @@ class _SignUpViewState extends State<SignUpView> {
                                           ),
                                         ),
                                         EmptySpaceHelper.emptyHight(20),
+                                        /*
                                         const HorizontalOrDivider(),
                                         EmptySpaceHelper.emptyHight(20),
                                         Consumer<SocialSignInSignUpService>(
@@ -706,6 +707,7 @@ class _SignUpViewState extends State<SignUpView> {
                                           );
                                         }),
                                         EmptySpaceHelper.emptyHight(30),
+                                        */
                                       ]),
                                 ))
                           ],
