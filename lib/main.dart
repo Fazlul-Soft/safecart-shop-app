@@ -317,6 +317,7 @@ import '../views/all_categories_view.dart';
 import '../views/change_password_view.dart';
 import '../views/checkout_view.dart';
 import '../views/edit_profile_view.dart';
+import '../views/delete_account_view.dart';
 import '../views/feature_products_view.dart';
 import '../views/home_campaigns_view.dart';
 import '../views/home_front_view.dart';
@@ -490,6 +491,7 @@ class MyApp extends StatelessWidget {
             ProductDetailsView.routeName: (context) => ProductDetailsView(),
             SignInView.routeName: (context) => SignInView(),
             EditProfileView.routeName: (context) => EditProfileView(),
+            DeleteAccountView.routeName: (context) => const DeleteAccountView(),
             FeatureProductsView.routeName: (context) => FeatureProductsView(),
             TicketListView.routeName: (context) => TicketListView(),
             AllCategoriesView.routeName: (context) => AllCategoriesView(),

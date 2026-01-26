@@ -124,8 +124,8 @@ class WishlistDataService with ChangeNotifier {
     _wishListItems.removeWhere((key, value) {
       return value.id.toString() == id.toString();
     });
-    showToast(
-        asProvider.getString('Item removed from wishlist'), cc.blackColor);
+    showToast(asProvider.getString('Item removed from Save for Later'),
+        cc.blackColor);
     notifyListeners();
   }
 

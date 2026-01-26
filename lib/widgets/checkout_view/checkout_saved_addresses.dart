@@ -38,7 +38,7 @@ class CheckoutSavedAddresses extends StatelessWidget {
                       : saProvider.shippingAddressList!.isEmpty
                           ? CustomOutlinedButton(
                               onPressed: () {},
-                              btText: asProvider.getString('Add new address'),
+                              btText: asProvider.getString('Add New Address'),
                               isLoading: false)
                           : ListView.separated(
                               scrollDirection: Axis.horizontal,

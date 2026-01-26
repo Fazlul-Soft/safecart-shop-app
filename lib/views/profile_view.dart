@@ -11,7 +11,6 @@ import '../../services/auth_service/sign_in_service.dart';
 import '../../views/shipping_address_list_view.dart';
 import '../../views/sign_in_view.dart';
 import '../../views/ticket_list_view.dart';
-import '../helpers/account_delete_helper.dart';
 import '../helpers/common_helper.dart';
 import '../helpers/empty_space_helper.dart';
 import '../helpers/logout_helper.dart';
@@ -22,6 +21,7 @@ import '../utils/responsive.dart';
 import '../widgets/common/custom_common_button.dart';
 import '../widgets/profile_view.dart/profile_info.dart';
 import 'change_password_view.dart';
+import 'delete_account_view.dart';
 import 'edit_profile_view.dart';
 import 'orders_list_view.dart';
 
@@ -160,16 +160,9 @@ class ProfileView extends StatelessWidget {
                                         context,
                                         asProvider.getString('Delete Account'),
                                         'assets/icons/profile_delete.svg',
-                                        onTap: () async {
-                                          bool continueLogout = false;
-                                          continueLogout = await AccountDelete()
-                                              .delete(context);
-                                          if (continueLogout) {
-                                            Provider.of<ProfileInfoService>(
-                                                    context,
-                                                    listen: false)
-                                                .logout();
-                                          }
+                                        onTap: () {
+                                          Navigator.of(context).pushNamed(
+                                              DeleteAccountView.routeName);
                                         },
                                       ),
                                       EmptySpaceHelper.emptyHight(10),

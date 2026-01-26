@@ -127,7 +127,7 @@ class SippingAddressCheckout extends StatelessWidget {
                                       ));
                                     },
                                     btText:
-                                        asProvider.getString('Add new address'),
+                                        asProvider.getString('Add New Address'),
                                     isLoading: false)
                                 : ListView.separated(
                                     scrollDirection: Axis.horizontal,

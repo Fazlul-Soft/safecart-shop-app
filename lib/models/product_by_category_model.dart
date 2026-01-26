@@ -85,7 +85,7 @@ class Datum {
         discountPrice: json["discount_price"] is String
             ? double.tryParse(json["discount_price"])
             : json["discount_price"],
-        badge: json["badge"]["badge_name"],
+        badge: json["badge"]?["badge_name"] ?? json["badge"]?["name"],
         campaignProduct: json["campaign_product"],
         stockCount: json["stock_count"] is String
             ? int.tryParse(json["stock_count"]) ?? 0

@@ -112,6 +112,7 @@ class _CategoriesAndProductsTwoState extends State<CategoriesAndProductsTwo> {
                     // );
                   },
                   seeAll: true,
+                  compact: true,
                 ),
               ),
 

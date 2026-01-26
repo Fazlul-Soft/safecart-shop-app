@@ -60,7 +60,7 @@ class NewTicketView extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Center(
                       child: Text(
-                        asProvider.getString('Add new ticket'),
+                        asProvider.getString('Add New Support Ticket'),
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge!

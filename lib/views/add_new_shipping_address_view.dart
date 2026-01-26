@@ -151,7 +151,7 @@ class _AddNewShippingAddressViewState extends State<AddNewShippingAddressView> {
                     alignment: Alignment.topCenter,
                     child: Center(
                       child: Text(
-                        asProvider.getString('Add new address'),
+                        asProvider.getString('Add New Address'),
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge!
@@ -298,8 +298,8 @@ class _AddNewShippingAddressViewState extends State<AddNewShippingAddressView> {
                                             },
                                           );
                                         }),
-                                        FieldTitle(
-                                            asProvider.getString('Postal Code')),
+                                        FieldTitle(asProvider
+                                            .getString('Postal Code')),
                                         TextFormField(
                                           controller: _zipcodeController,
                                           style: getFieldStyle(context),
@@ -312,8 +312,8 @@ class _AddNewShippingAddressViewState extends State<AddNewShippingAddressView> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.trim().isEmpty) {
-                                              return asProvider
-                                                  .getString('Enter postal code');
+                                              return asProvider.getString(
+                                                  'Enter postal code');
                                             }
                                             if (value.trim().length <= 3) {
                                               return asProvider.getString(

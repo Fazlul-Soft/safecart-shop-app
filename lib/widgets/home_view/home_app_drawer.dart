@@ -320,6 +320,7 @@ import 'package:provider/provider.dart';
 
 import '../../helpers/common_helper.dart';
 import '../../services/home_categories_service.dart';
+import '../../views/product_by_category_view.dart';
 import '../../views/product_by_subcategory_view.dart';
 
 class HomeAppDrawer extends StatefulWidget {
@@ -396,9 +397,22 @@ class _HomeAppDrawerState extends State<HomeAppDrawer> {
                         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                         child: ExpansionTile(
                           leading: const Icon(Icons.grid_view_rounded, color: Colors.black54),
-                          title: Text(
-                            catName,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          title: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushNamed(
+                                ProductByCategoryView.routeName,
+                                arguments: [catName],
+                              );
+                            },
+                            child: Text(
+                              catName,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                           children: [
                             FutureBuilder(

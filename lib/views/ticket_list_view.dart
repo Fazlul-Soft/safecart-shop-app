@@ -52,7 +52,7 @@ class TicketListView extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   child: Center(
                     child: Text(
-                      asProvider.getString('My Tickets'),
+                      asProvider.getString('Support Tickets'),
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!
@@ -150,7 +150,7 @@ class TicketListView extends StatelessWidget {
                   .fetchDepartments(context);
               Navigator.pushNamed(context, NewTicketView.routeName);
             },
-            btText: asProvider.getString('Add new ticket'),
+            btText: asProvider.getString('Add New Support Ticket'),
             isLoading: false),
       ),
     );

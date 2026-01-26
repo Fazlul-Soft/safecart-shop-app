@@ -241,8 +241,8 @@ class WishlistTile extends StatelessWidget {
                                       listen: false)
                                   .deleteWishlistItem(id, context);
                               showToast(
-                                  asProvider
-                                      .getString('Item removed from wishlist'),
+                                  asProvider.getString(
+                                      'Item removed from Save for Later'),
                                   cc.blackColor);
                             },
                           );

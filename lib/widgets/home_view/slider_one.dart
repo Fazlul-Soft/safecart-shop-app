@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../helpers/common_helper.dart';
 import '../../services/product_by_campaigns_service.dart';
 import '../../services/search_product_service.dart';
 import '../../views/product_by_campaign_view.dart';
 import '../../views/product_by_category_view.dart';
+import '../../views/url_web_view_screen.dart';
 
 class SliderOne extends StatelessWidget {
   final String title;
@@ -122,16 +122,28 @@ class SliderOne extends StatelessWidget {
                           elevation: 4,
                         ),
                         onPressed: () async {
-                          /// Priority 1 → URL from DB
+                          /// Priority 1 → URL from DB (in-app webview)
                           if (buttonUrl != null && buttonUrl!.isNotEmpty) {
-                            final uri = Uri.parse(buttonUrl!);
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(
-                                uri,
-                                mode: LaunchMode.externalApplication,
-                              );
+                            final rawUrl = buttonUrl!.trim();
+                            final normalizedUrl = rawUrl.startsWith('http://') ||
+                                    rawUrl.startsWith('https://')
+                                ? rawUrl
+                                : 'https://$rawUrl';
+                            final uri = Uri.tryParse(normalizedUrl);
+                            if (uri == null || uri.host.isEmpty) {
+                              showToast(
+                                  asProvider.getString('Invalid link'), cc.red);
                               return;
                             }
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => UrlWebViewScreen(
+                                  url: normalizedUrl,
+                                  title: title,
+                                ),
+                              ),
+                            );
+                            return;
                           }
 
                           /// Priority 2 → Campaign
@@ -161,7 +173,11 @@ class SliderOne extends StatelessWidget {
                               ProductByCategoryView.routeName,
                               arguments: [cat],
                             );
+                            return;
                           }
+
+                          showToast(asProvider.getString('No action found'),
+                              cc.greyHint);
                         },
                         child: Text(
                           btText,

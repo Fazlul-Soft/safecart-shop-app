@@ -8,147 +8,53 @@ import 'package:http/http.dart' as http;
 import '../helpers/common_helper.dart';
 
 class SliderService with ChangeNotifier {
-  List<Datum>? sliderOneList;
-  bool sliderOneLoading = false;
-  List? sliderTwoList;
-  bool sliderTwoLoading = false;
-  List? sliderThreeList;
-  bool sliderThreeLoading = false;
+  final Map<int, List<Datum>> _sliderLists = {};
+  final Map<int, bool> _sliderLoading = {};
 
-  setSliderOneLoading({value}) {
-    sliderOneLoading = value ?? !sliderOneLoading;
+  List<Datum>? getSliderList(int type) => _sliderLists[type];
+  bool isSliderLoading(int type) => _sliderLoading[type] ?? false;
+
+  void _setSliderLoading(int type, {bool? value}) {
+    _sliderLoading[type] = value ?? !(_sliderLoading[type] ?? false);
     notifyListeners();
   }
 
-  setSliderTwoLoading({value}) {
-    sliderTwoLoading = value ?? !sliderTwoLoading;
-    notifyListeners();
-  }
-
-  setSliderThreeLoading({value}) {
-    sliderThreeLoading = value ?? !sliderThreeLoading;
-    notifyListeners();
-  }
-
-  fetchSliderOne(BuildContext context, {refreshing = false}) async {
-    print('fetching slider one');
+  Future<void> fetchSlider(BuildContext context, int type,
+      {bool refreshing = false}) async {
     final haveConnection = await checkConnection(context);
     if (!haveConnection) {
-      sliderOneList ??= [];
-      notifyListeners();
-      print('NO connection');
-      return;
-    }
-    // setSliderOneLoading(value: true);
-    // setSliderOneLoading(value: false);
-    // notifyListeners();
-
-    try {
-      var request =
-          http.MultipartRequest('GET', Uri.parse('$baseApi/mobile-slider/1'));
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(await response.stream.bytesToString());
-        sliderOneList = SliderModel.fromJson(data).data;
-        print(sliderOneList);
-        setSliderOneLoading(value: false);
-
-        // notifyListeners();
-      } else {
-        sliderOneList = [];
-        setSliderOneLoading(value: false);
-        print(response.reasonPhrase);
-      }
-    } on TimeoutException {
-      sliderOneList = [];
-      setSliderOneLoading(value: false);
-      showToast(asProvider.getString('Request timeout'), cc.red);
-    } catch (err) {
-      sliderOneList = [];
-      setSliderOneLoading(value: false);
-      print(err);
-    }
-  }
-
-  fetchSliderTwo(BuildContext context, {refreshing = false}) async {
-    print('fetching slider two');
-    final haveConnection = await checkConnection(context);
-    if (!haveConnection) {
-      sliderTwoList = [];
-      notifyListeners();
-      print('NO connection');
-      return;
-    }
-    if (!refreshing) {
-      setSliderTwoLoading(value: true);
-    }
-
-    try {
-      var request =
-          http.MultipartRequest('GET', Uri.parse('$baseApi/mobile-slider/2'));
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(await response.stream.bytesToString());
-        sliderTwoList = SliderModel.fromJson(data).data;
-        setSliderTwoLoading(value: false);
-
-        // notifyListeners();
-      } else {
-        sliderOneList = [];
-        setSliderTwoLoading(value: false);
-        print(response.reasonPhrase);
-      }
-    } on TimeoutException {
-      sliderOneList = [];
-      setSliderTwoLoading(value: false);
-      showToast(asProvider.getString('Request timeout'), cc.red);
-    } catch (err) {
-      sliderOneList = [];
-      setSliderTwoLoading(value: false);
-      print(err);
-    }
-  }
-
-  fetchSliderThree(BuildContext context, {refreshing = false}) async {
-    print('fetching slider three');
-    final haveConnection = await checkConnection(context);
-    if (!haveConnection) {
-      sliderThreeList = [];
+      _sliderLists[type] ??= [];
       notifyListeners();
       return;
     }
     if (!refreshing) {
-      setSliderThreeLoading(value: true);
+      _setSliderLoading(type, value: true);
     }
 
     try {
-      var request =
-          http.MultipartRequest('GET', Uri.parse('$baseApi/mobile-slider/3'));
+      final request = http.MultipartRequest(
+        'GET',
+        Uri.parse('$baseApi/mobile-slider/$type'),
+      );
 
-      http.StreamedResponse response = await request.send();
+      final response = await request.send();
 
       if (response.statusCode == 200) {
         final data = jsonDecode(await response.stream.bytesToString());
-        sliderThreeList = SliderModel.fromJson(data).data;
-        setSliderThreeLoading(value: false);
-
-        // notifyListeners();
+        _sliderLists[type] = SliderModel.fromJson(data).data;
+        _setSliderLoading(type, value: false);
       } else {
-        sliderOneList = [];
-        setSliderThreeLoading(value: false);
+        _sliderLists[type] = [];
+        _setSliderLoading(type, value: false);
         print(response.reasonPhrase);
       }
     } on TimeoutException {
-      sliderOneList = [];
-      setSliderThreeLoading(value: false);
+      _sliderLists[type] = [];
+      _setSliderLoading(type, value: false);
       showToast(asProvider.getString('Request timeout'), cc.red);
     } catch (err) {
-      sliderOneList = [];
-      setSliderThreeLoading(value: false);
+      _sliderLists[type] = [];
+      _setSliderLoading(type, value: false);
       print(err);
     }
   }

@@ -317,7 +317,7 @@ class _SignUpViewState extends State<SignUpView> {
                                         //   ],
                                         // ),
                                         FieldTitle(
-                                            asProvider.getString('Name')),
+                                            asProvider.getString('Name *')),
                                         TextFormField(
                                           controller: _nameController,
                                           textInputAction: TextInputAction.next,
@@ -341,7 +341,7 @@ class _SignUpViewState extends State<SignUpView> {
                                         ),
                                         EmptySpaceHelper.emptyHight(10),
                                         FieldTitle(
-                                            asProvider.getString('Username')),
+                                            asProvider.getString('Username *')),
                                         TextFormField(
                                           controller: _userNameController,
                                           textInputAction: TextInputAction.next,
@@ -392,7 +392,7 @@ class _SignUpViewState extends State<SignUpView> {
                                         ),
                                         EmptySpaceHelper.emptyHight(10),
                                         FieldTitle(
-                                            asProvider.getString('Password')),
+                                            asProvider.getString('Password *')),
                                         Consumer<SignUpService>(builder:
                                             (context, suProvider, child) {
                                           return TextFormField(
@@ -454,7 +454,7 @@ class _SignUpViewState extends State<SignUpView> {
                                         }),
                                         EmptySpaceHelper.emptyHight(10),
                                         FieldTitle(asProvider
-                                            .getString('Confirm Password')),
+                                            .getString('Confirm Password *')),
                                         Consumer<SignUpService>(builder:
                                             (context, suProvider, child) {
                                           return TextFormField(

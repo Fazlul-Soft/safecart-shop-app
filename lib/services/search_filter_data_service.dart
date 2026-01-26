@@ -18,8 +18,8 @@ class SearchFilterDataService with ChangeNotifier {
   bool lodingCategoryProducts = false;
   // dynamic selectedChildCats = '[]';
   dynamic selectedChildCats = '';
-  double minPrice = 0;
-  double maxPrice = 1000;
+  double minPrice = 1;
+  double maxPrice = 4000;
   double? selectedMinPrice;
   double? selectedMaxPrice;
   int selectedRating = 0;
@@ -30,7 +30,6 @@ class SearchFilterDataService with ChangeNotifier {
   dynamic selectedCategorieId = 1;
   bool loading = false;
   bool noSubcategory = false;
-
 
   setSelectedCategory(value) {
     if (selectedCategory == value || (value ?? '').isEmpty) {

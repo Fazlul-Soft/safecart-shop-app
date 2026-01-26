@@ -44,7 +44,7 @@ class StateDropdown extends StatelessWidget {
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FieldTitle(asProvider.getString("State")),
+              FieldTitle(asProvider.getString("Province")),
               InkWell(
                 onTap: () {
                   Provider.of<StatesDropdownService>(context, listen: false)
@@ -78,7 +78,7 @@ class StateDropdown extends StatelessWidget {
                                     decoration: InputDecoration(
                                         hintText: textFieldHint ??
                                             asProvider
-                                                .getString("Search State"),
+                                                .getString("Search Province"),
                                         prefixIcon: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 12),
@@ -191,7 +191,8 @@ class StateDropdown extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        selectedValue ?? asProvider.getString("Select state"),
+                        selectedValue ??
+                            asProvider.getString("Select Province"),
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             color: cc.blackColor.withOpacity(.40),
                             fontWeight: FontWeight.w600),

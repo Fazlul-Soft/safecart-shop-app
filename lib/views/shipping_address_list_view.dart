@@ -140,7 +140,7 @@ class ShippingAddressListView extends StatelessWidget {
         child: SizedBox(
           height: 46,
           child: CustomCommonButton(
-            btText: asProvider.getString('Add new Address'),
+            btText: asProvider.getString('Add New Address'),
             isLoading: false,
             onPressed: () {
               FocusScope.of(context).unfocus();

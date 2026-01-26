@@ -103,7 +103,7 @@ class CheckoutView extends StatelessWidget {
               const Divider(height: 2),
               EmptySpaceHelper.emptyHight(10),
               Text(
-                asProvider.getString('Order summery'),
+                asProvider.getString('Order Summery'),
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

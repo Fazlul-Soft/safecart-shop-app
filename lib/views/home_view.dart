@@ -1,25 +1,28 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/feature_products_service.dart';
 import 'package:safecart/services/home_campaign_products_service.dart';
 import 'package:safecart/utils/custom_refresh_indicator.dart';
 import 'package:safecart/utils/responsive.dart';
 import 'package:safecart/widgets/home_view/auto_slider.dart';
-import 'package:safecart/widgets/home_view/categories.dart';
-import 'package:safecart/widgets/home_view/categories_and_products.dart';
+// import 'package:safecart/widgets/home_view/categories.dart';
+// import 'package:safecart/widgets/home_view/categories_and_products.dart';
 import 'package:safecart/widgets/home_view/feature_products.dart';
 import 'package:safecart/widgets/home_view/home_campaign_products.dart';
 import 'package:safecart/widgets/home_view/home_campaigns.dart';
-import 'package:safecart/widgets/home_view/menual_slider.dart';
-import 'package:safecart/widgets/home_view/menual_slider_two.dart';
+// import 'package:safecart/widgets/home_view/menual_slider.dart';
+// import 'package:safecart/widgets/home_view/menual_slider_two.dart';
 
 import '../helpers/empty_space_helper.dart';
+import '../helpers/common_helper.dart';
 import '../services/home_campaigns_service.dart';
 import '../services/home_categories_service.dart';
 import '../services/slider_service.dart';
 import '../widgets/home_view/categories_and_products_two.dart';
+import 'url_web_view_screen.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});
@@ -28,42 +31,72 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: screenHeight - 130,
-      child: CustomRefreshIndicator(
-        onRefresh: () async {
-          await Provider.of<HomeCategoriesService>(context, listen: false)
-              .fetchHomeCategories(context, refreshing: true);
-          await Provider.of<SliderService>(context, listen: false)
-              .fetchSliderOne(context);
-          await Provider.of<FeatureProductsService>(context, listen: false)
-              .fetchFeatureProducts(context, refreshing: true);
-          await Provider.of<SliderService>(context, listen: false)
-              .fetchSliderTwo(context, refreshing: true);
-          await Provider.of<HomeCategoriesService>(context, listen: false)
-              .fetchHomeCategoryProducts(null, refreshing: true);
-          await Provider.of<SliderService>(context, listen: false)
-              .fetchSliderThree(context, refreshing: true);
-          await Provider.of<HomeCampaignProductsService>(context, listen: false)
-              .fetchHomeCampaignProducts(context, refreshing: true);
-          await Provider.of<HomeCampaignsService>(context, listen: false)
-              .fetchHomeCampaigns(context, refreshing: true);
-          return true;
-        },
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const AutoSlider(),
-            // const Categories(),
-            const FeatureProducts(),
-            // const ManualSlider(),
-            // const CategoriesAndProducts(),
-            // const ManualSliderTwo(),
-            // EmptySpaceHelper.emptyHight(15),
-            const CategoriesAndProductsTwo(),
-            const HomeCampaignProducts(),
-            const HomeCampaigns(),
-            EmptySpaceHelper.emptyHight(screenHeight / 13),
-          ],
-        ),
+      child: Stack(
+        children: [
+          CustomRefreshIndicator(
+            onRefresh: () async {
+              await Provider.of<HomeCategoriesService>(context, listen: false)
+                  .fetchHomeCategories(context, refreshing: true);
+              await Provider.of<SliderService>(context, listen: false)
+                  .fetchSlider(context, 1);
+              await Provider.of<FeatureProductsService>(context, listen: false)
+                  .fetchFeatureProducts(context, refreshing: true);
+              await Provider.of<SliderService>(context, listen: false)
+                  .fetchSlider(context, 2, refreshing: true);
+              await Provider.of<HomeCategoriesService>(context, listen: false)
+                  .fetchHomeCategoryProducts(null, refreshing: true);
+              await Provider.of<SliderService>(context, listen: false)
+                  .fetchSlider(context, 3, refreshing: true);
+              await Provider.of<HomeCampaignProductsService>(context,
+                      listen: false)
+                  .fetchHomeCampaignProducts(context, refreshing: true);
+              await Provider.of<HomeCampaignsService>(context, listen: false)
+                  .fetchHomeCampaigns(context, refreshing: true);
+              return true;
+            },
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                const AutoSlider(),
+                // const Categories(),
+                const FeatureProducts(),
+                // const ManualSlider(),
+                // const CategoriesAndProducts(),
+                // const ManualSliderTwo(),
+                // EmptySpaceHelper.emptyHight(15),
+                const CategoriesAndProductsTwo(),
+                const HomeCampaignProducts(),
+                const HomeCampaigns(),
+                EmptySpaceHelper.emptyHight(screenHeight / 13),
+              ],
+            ),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 24,
+            child: FloatingActionButton(
+              backgroundColor: cc.primaryColor,
+              shape: const CircleBorder(),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const UrlWebViewScreen(
+                      url:
+                          'https://tawk.to/chat/69290e5e177985195e6b4a52/1jb4608i1',
+                      title: 'Live Chat',
+                    ),
+                  ),
+                );
+              },
+              child: SvgPicture.asset(
+                'assets/icons/chat_bubble.svg',
+                color: Colors.white,
+                height: 24,
+                width: 24,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

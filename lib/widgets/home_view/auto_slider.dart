@@ -7,15 +7,17 @@ import 'package:safecart/widgets/skelletons/slider_one_skeleton.dart';
 import '../../services/slider_service.dart';
 
 class AutoSlider extends StatelessWidget {
-  const AutoSlider({super.key});
+  final int sliderType;
+
+  const AutoSlider({this.sliderType = 1, super.key});
 
   @override
   Widget build(BuildContext context) {
     final sliderProvider = Provider.of<SliderService>(context, listen: false);
     return FutureBuilder(
-        future: sliderProvider.sliderOneList == null &&
-                !sliderProvider.sliderOneLoading
-            ? sliderProvider.fetchSliderOne(context)
+        future: sliderProvider.getSliderList(sliderType) == null &&
+                !sliderProvider.isSliderLoading(sliderType)
+            ? sliderProvider.fetchSlider(context, sliderType)
             : null,
         builder: (context, snapshot) {
           // if (snapshot.connectionState == ConnectionState.waiting) {
@@ -32,23 +34,25 @@ class AutoSlider extends StatelessWidget {
           // }
           return Consumer<SliderService>(
             builder: (context, sProvider, child) {
-              return !sProvider.sliderOneLoading &&
-                      sProvider.sliderOneList != null
-                  ? sliderProvider.sliderOneList!.isNotEmpty
+              final sliderList = sProvider.getSliderList(sliderType);
+              return !sProvider.isSliderLoading(sliderType) &&
+                      sliderList != null
+                  ? sliderList.isNotEmpty
                       ? SizedBox(
                           height: 420,
                           child: Swiper(
-                            itemCount: sProvider.sliderOneList!.length,
+                            itemCount: sliderList.length,
                             viewportFraction: .9,
                             scale: .95,
                             autoplay: true,
                             itemBuilder: (context, index) {
-                              final element = sProvider.sliderOneList![index];
+                              final element = sliderList[index];
                               return SliderOne(
                                 element.title,
                                 element.description,
                                 element.buttonText,
                                 element.image,
+                                buttonUrl: element.buttonUrl?.toString(),
                                 capm: element.campaign,
                                 cat: element.category,
                               );

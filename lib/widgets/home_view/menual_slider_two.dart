@@ -7,21 +7,24 @@ import '../../services/slider_service.dart';
 import '../skelletons/slider_two_skeleton.dart';
 
 class ManualSliderTwo extends StatelessWidget {
-  const ManualSliderTwo({super.key});
+  final int sliderType;
+
+  const ManualSliderTwo({this.sliderType = 3, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SliderService>(builder: (context, sProvider, child) {
       return SizedBox(
         child: FutureBuilder(
-          future:
-              sProvider.sliderThreeList == null && !sProvider.sliderThreeLoading
-                  ? sProvider.fetchSliderThree(context)
+          future: sProvider.getSliderList(sliderType) == null &&
+                  !sProvider.isSliderLoading(sliderType)
+              ? sProvider.fetchSlider(context, sliderType)
                   : null,
           builder: (context, snapshot) {
-            return !sProvider.sliderThreeLoading &&
-                    sProvider.sliderThreeList != null
-                ? sProvider.sliderThreeList!.isNotEmpty
+            final sliderList = sProvider.getSliderList(sliderType);
+            return !sProvider.isSliderLoading(sliderType) &&
+                    sliderList != null
+                ? sliderList.isNotEmpty
                     ? SizedBox(
                         height: 180,
                         child: ListView.separated(
@@ -29,7 +32,7 @@ class ManualSliderTwo extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
                             itemBuilder: (context, index) {
-                              final element = sProvider.sliderThreeList![index];
+                              final element = sliderList[index];
                               return SliderThree(
                                 element.title,
                                 element.description,
@@ -42,7 +45,7 @@ class ManualSliderTwo extends StatelessWidget {
                             },
                             separatorBuilder: (context, index) =>
                                 EmptySpaceHelper.emptywidth(20),
-                            itemCount: sProvider.sliderThreeList!.length),
+                            itemCount: sliderList.length),
                       )
                     : const SizedBox()
                 : SizedBox(

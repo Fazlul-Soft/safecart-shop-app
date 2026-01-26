@@ -297,7 +297,7 @@ class _SignInViewState extends State<SignInView> {
                                           )
                                         ] else ...[
                                           FieldTitle(
-                                              asProvider.getString('Email')),
+                                              asProvider.getString('Email *')),
                                           TextFormField(
                                             controller: _emailController,
                                             textInputAction:
@@ -327,7 +327,7 @@ class _SignInViewState extends State<SignInView> {
 
                                         EmptySpaceHelper.emptyHight(10),
                                         FieldTitle(
-                                            asProvider.getString('Password')),
+                                            asProvider.getString('Password *')),
                                         Consumer<SignInService>(builder:
                                             (context, siProvider, child) {
                                           return TextFormField(

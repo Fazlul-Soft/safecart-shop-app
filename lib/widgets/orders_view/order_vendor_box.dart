@@ -29,7 +29,7 @@ class OrderVendorBox extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            order.vendor?.businessName ?? "Safecart",
+            order.vendor?.businessName ?? "Sombokchab",
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: cc.greyHint,
                   fontWeight: FontWeight.bold,
