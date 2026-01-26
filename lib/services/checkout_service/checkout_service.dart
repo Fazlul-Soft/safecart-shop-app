@@ -406,8 +406,7 @@ class CheckoutService with ChangeNotifier {
         'note': shippingAddress.orderNote,
         'phone': shippingAddress.phone,
         'cart_items': jsonEncode(cartData.cartListWithoutAdmin),
-        'payment_gateway':
-            paymentGateway.selectedGateway?.name ?? 'cash',
+        'payment_gateway': paymentGateway.selectedGateway?.name ?? 'cash',
         'country_id': calculateTax.selectedCountry?.id.toString() ?? "",
         'state_id': calculateTax.selectedState?.id.toString() ?? "",
         'zip_code': shippingAddress.zipcode,
@@ -501,7 +500,8 @@ class CheckoutService with ChangeNotifier {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer $getToken',
               },
-              body: json.encode({'order_id': orderId, 'amount': totalOrderAmount}),
+              body: json
+                  .encode({'order_id': orderId, 'amount': totalOrderAmount}),
             );
 
             if (redirectResponse.statusCode == 200) {
@@ -520,7 +520,7 @@ class CheckoutService with ChangeNotifier {
               //   ),
               // );
               Navigator.pushReplacement(
-                     context,
+                context,
                 MaterialPageRoute(
                   builder: (context) => AbaWebViewScreen(
                     htmlContent: responseData['html'],
@@ -531,15 +531,15 @@ class CheckoutService with ChangeNotifier {
                   ),
                 ),
               );
-      //    context,
-      //    MaterialPageRoute(builder: (context) => AbaWebViewScreen(
-      //      htmlContent: responseData['html'],
-      //      title: 'ABA PayWay',
-      //      orderId: orderId.toString(),)),
-      //  );
-       
-      //  setLoadingPlaceOrder(false); // Make sure loading stops
-      //  return;
+              //    context,
+              //    MaterialPageRoute(builder: (context) => AbaWebViewScreen(
+              //      htmlContent: responseData['html'],
+              //      title: 'ABA PayWay',
+              //      orderId: orderId.toString(),)),
+              //  );
+
+              //  setLoadingPlaceOrder(false); // Make sure loading stops
+              //  return;
             } else {
               throw Exception('Failed to get payment page');
             }

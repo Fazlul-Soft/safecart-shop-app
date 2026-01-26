@@ -45,7 +45,7 @@ class FiltersService with ChangeNotifier {
   String selectedSubCategory = '0';
   bool loadingCategoryProducts = false;
   double minPrice = 0;
-  double maxPrice = 1000;
+  double maxPrice = 4000;
   double? selectedMinPrice;
   double? selectedMaxPrice;
   int selectedCategoryId = 1;

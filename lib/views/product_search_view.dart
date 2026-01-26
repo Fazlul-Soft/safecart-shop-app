@@ -127,7 +127,7 @@ class ProductSearchView extends StatelessWidget {
           width: screenWidth / 1.2,
           height: screenHeight,
           color: Colors.white,
-          child: FilterBottomSheet(scaffoldKey)),
+          child: FilterBottomSheet(scaffoldKey, hideAdvancedFilters: true)),
       endDrawerEnableOpenDragGesture: false,
       body: WillPopScope(
         onWillPop: () async {

@@ -18,7 +18,7 @@ class CategoryService with ChangeNotifier {
   bool lodingCategoryProducts = false;
   var selectedChildCats = [];
   double minPrice = 0;
-  double maxPrice = 1000;
+  double maxPrice = 4000;
   dynamic selectedCategorieId = 1;
   var sizes = ['M', 'S', 'XL', 'L'];
   var colors = [

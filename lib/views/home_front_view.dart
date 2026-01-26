@@ -144,13 +144,15 @@ class HomeFrontView extends StatelessWidget {
           drawer: nProvider.currentIndex != 4 ? const HomeAppDrawer() : null,
           // MODIFICATION: Add the endDrawer here so the GlobalKey can find it
           endDrawer: nProvider.currentIndex == 1
-              ? Container(
+              ? Drawer(
                   width: screenWidth / 1.2,
-                  color: Colors.white,
-                  child: FilterBottomSheet(scaffoldKey),
+                  child: SafeArea(
+                    child: FilterBottomSheet(scaffoldKey),
+                  ),
                 )
               : null,
           drawerEnableOpenDragGesture: false,
+          endDrawerEnableOpenDragGesture: false,
           body: Stack(
             children: [
               if (nProvider.currentIndex == 4)

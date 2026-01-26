@@ -17,7 +17,12 @@ import 'filter_rtl_padding.dart';
 
 class FilterBottomSheet extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const FilterBottomSheet(this.scaffoldKey, {super.key});
+  final bool hideCategoryFilters;
+  final bool hideAdvancedFilters;
+  const FilterBottomSheet(this.scaffoldKey,
+      {this.hideCategoryFilters = false,
+      this.hideAdvancedFilters = false,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,103 +47,106 @@ class FilterBottomSheet extends StatelessWidget {
             ),
           ],
         ),
-        if (filterOption.filterOprions?.allCategory != null &&
-            filterOption.filterOprions!.allCategory!.isNotEmpty)
-          FilterRtlPadding(
-            child: Text(
-              asProvider.getString('Category'),
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: cc.greyParagraph),
+        if (!hideCategoryFilters) ...[
+          if (filterOption.filterOprions?.allCategory != null &&
+              filterOption.filterOprions!.allCategory!.isNotEmpty)
+            FilterRtlPadding(
+              child: Text(
+                asProvider.getString('Category'),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: cc.greyParagraph),
+              ),
             ),
-          ),
-        if (filterOption.filterOprions?.allCategory != null &&
-            filterOption.filterOprions!.allCategory!.isNotEmpty)
+          if (filterOption.filterOprions?.allCategory != null &&
+              filterOption.filterOprions!.allCategory!.isNotEmpty)
+            Consumer<SearchFilterDataService>(
+                builder: (context, foProvider, child) {
+              return SizedBox(
+                height: 44,
+                child: ListView.builder(
+                  padding: EdgeInsets.only(
+                    left: rtl.langRtl ? 0 : 25.0,
+                    right: rtl.langRtl ? 25 : 0,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: foProvider.filterOprions!.allCategory!.length,
+                  itemBuilder: ((context, index) {
+                    final category =
+                        foProvider.filterOprions!.allCategory![index];
+                    final isSelected =
+                        category.name.toString() == foProvider.selectedCategory;
+                    return GestureDetector(
+                      onTap: () {
+                        foProvider.setSelectedCategory(category.name);
+                        debugPrint('Selected category: ${category.name}');
+                      },
+                      child: filterOptions(category.name, isSelected),
+                    );
+                  }),
+                ),
+              );
+            }),
           Consumer<SearchFilterDataService>(
               builder: (context, foProvider, child) {
-            return SizedBox(
-              height: 44,
-              child: ListView.builder(
-                padding: EdgeInsets.only(
-                  left: rtl.langRtl ? 0 : 25.0,
-                  right: rtl.langRtl ? 25 : 0,
-                ),
-                scrollDirection: Axis.horizontal,
-                itemCount: foProvider.filterOprions!.allCategory!.length,
-                itemBuilder: ((context, index) {
-                  final category =
-                      foProvider.filterOprions!.allCategory![index];
-                  final isSelected =
-                      category.name.toString() == foProvider.selectedCategory;
-                  return GestureDetector(
-                    onTap: () {
-                      foProvider.setSelectedCategory(category.name);
-                      debugPrint('Selected category: ${category.name}');
-                    },
-                    child: filterOptions(category.name, isSelected),
-                  );
-                }),
-              ),
-            );
+            return foProvider.selectedCategory != null &&
+                    foProvider.selectedCategory != ''
+                ? FilterRtlPadding(
+                    child: Text(
+                      asProvider.getString('Sub-category'),
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: cc.greyParagraph),
+                    ),
+                  )
+                : const SizedBox();
           }),
-        Consumer<SearchFilterDataService>(
-            builder: (context, foProvider, child) {
-          return foProvider.selectedCategory != null &&
-                  foProvider.selectedCategory != ''
-              ? FilterRtlPadding(
-                  child: Text(
-                    asProvider.getString('Sub-category'),
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: cc.greyParagraph),
-                  ),
-                )
-              : const SizedBox();
-        }),
-        Consumer<SearchFilterDataService>(
-            builder: (context, foProvider, child) {
-          return foProvider.selectedCategory != null &&
-                  foProvider.selectedCategory != ''
-              ? foProvider.selectedCategorySubList.isNotEmpty
-                  ? SizedBox(
-                      height: 44,
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(
-                          left: rtl.langRtl ? 0 : 25.0,
-                          right: rtl.langRtl ? 25 : 0,
+          Consumer<SearchFilterDataService>(
+              builder: (context, foProvider, child) {
+            return foProvider.selectedCategory != null &&
+                    foProvider.selectedCategory != ''
+                ? foProvider.selectedCategorySubList.isNotEmpty
+                    ? SizedBox(
+                        height: 44,
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(
+                            left: rtl.langRtl ? 0 : 25.0,
+                            right: rtl.langRtl ? 25 : 0,
+                          ),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: foProvider.selectedCategorySubList.length,
+                          itemBuilder: ((context, index) {
+                            final subcategory =
+                                foProvider.selectedCategorySubList[index];
+                            final isSelected = subcategory.name.toString() ==
+                                foProvider.selectedSubCategory;
+                            return GestureDetector(
+                              onTap: () {
+                                foProvider
+                                    .setSelectedSubCategory(subcategory.name);
+                                debugPrint(
+                                    'Selected subcategory: ${subcategory.name}');
+                              },
+                              child:
+                                  filterOptions(subcategory.name, isSelected),
+                            );
+                          }),
                         ),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: foProvider.selectedCategorySubList.length,
-                        itemBuilder: ((context, index) {
-                          final subcategory =
-                              foProvider.selectedCategorySubList[index];
-                          final isSelected = subcategory.name.toString() ==
-                              foProvider.selectedSubCategory;
-                          return GestureDetector(
-                            onTap: () {
-                              foProvider
-                                  .setSelectedSubCategory(subcategory.name);
-                              debugPrint(
-                                  'Selected subcategory: ${subcategory.name}');
-                            },
-                            child: filterOptions(subcategory.name, isSelected),
-                          );
-                        }),
-                      ),
-                    )
-                  : FilterRtlPadding(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          asProvider.getString('No sub-category available'),
-                          style: TextStyle(color: cc.greyHint, fontSize: 14),
+                      )
+                    : FilterRtlPadding(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            asProvider.getString('No sub-category available'),
+                            style: TextStyle(color: cc.greyHint, fontSize: 14),
+                          ),
                         ),
-                      ),
-                    )
-              : const SizedBox();
-        }),
+                      )
+                : const SizedBox();
+          }),
+        ],
         /*
         Consumer<SearchFilterDataService>(
             builder: (context, foProvider, child) {
@@ -200,7 +208,8 @@ class FilterBottomSheet extends StatelessWidget {
               : const SizedBox();
         }),
         */
-        if (filterOption.filterOprions?.allColors?.isNotEmpty ?? false)
+        if (!hideAdvancedFilters &&
+            (filterOption.filterOprions?.allColors?.isNotEmpty ?? false))
           FilterRtlPadding(
             child: Text(
               asProvider.getString('Color'),
@@ -210,7 +219,8 @@ class FilterBottomSheet extends StatelessWidget {
                   color: cc.greyParagraph),
             ),
           ),
-        if (filterOption.filterOprions?.allColors?.isNotEmpty ?? false)
+        if (!hideAdvancedFilters &&
+            (filterOption.filterOprions?.allColors?.isNotEmpty ?? false))
           Consumer<SearchFilterDataService>(
               builder: (context, spProvider, child) {
             return FilterRtlPadding(
@@ -241,7 +251,8 @@ class FilterBottomSheet extends StatelessWidget {
               ),
             );
           }),
-        if (filterOption.filterOprions?.allSizes?.isNotEmpty ?? false)
+        if (!hideAdvancedFilters &&
+            (filterOption.filterOprions?.allSizes?.isNotEmpty ?? false))
           FilterRtlPadding(
             child: Text(
               asProvider.getString('Size'),
@@ -251,7 +262,8 @@ class FilterBottomSheet extends StatelessWidget {
                   color: cc.greyParagraph),
             ),
           ),
-        if (filterOption.filterOprions?.allSizes?.isNotEmpty ?? false)
+        if (!hideAdvancedFilters &&
+            (filterOption.filterOprions?.allSizes?.isNotEmpty ?? false))
           Consumer<SearchFilterDataService>(
               builder: (context, spProvider, child) {
             return FilterRtlPadding(
@@ -281,7 +293,8 @@ class FilterBottomSheet extends StatelessWidget {
               ),
             );
           }),
-        if (filterOption.filterOprions?.allBrands?.isNotEmpty ?? false)
+        if (!hideAdvancedFilters &&
+            (filterOption.filterOprions?.allBrands?.isNotEmpty ?? false))
           FilterRtlPadding(
             child: Text(
               asProvider.getString('Brands'),
@@ -291,7 +304,8 @@ class FilterBottomSheet extends StatelessWidget {
                   color: cc.greyParagraph),
             ),
           ),
-        if (filterOption.filterOprions?.allBrands?.isNotEmpty ?? false)
+        if (!hideAdvancedFilters &&
+            (filterOption.filterOprions?.allBrands?.isNotEmpty ?? false))
           Consumer<SearchFilterDataService>(
               builder: (context, spProvider, child) {
             return FilterRtlPadding(
@@ -321,6 +335,7 @@ class FilterBottomSheet extends StatelessWidget {
               ),
             );
           }),
+        if (!hideAdvancedFilters)
         Consumer<SearchFilterDataService>(
             builder: (context, sfdProvider, child) {
           return Padding(
@@ -343,6 +358,7 @@ class FilterBottomSheet extends StatelessWidget {
             ),
           );
         }),
+        if (!hideAdvancedFilters)
         Consumer<SearchFilterDataService>(
             builder: (context, sfdProvider, child) {
           return Consumer<CommonServices>(builder: (context, srData, child) {
@@ -378,55 +394,57 @@ class FilterBottomSheet extends StatelessWidget {
             );
           });
         }),
-        FilterRtlPadding(
-          child: FieldTitle(asProvider.getString('Average Rating')),
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: [
-              Consumer<SearchFilterDataService>(
-                  builder: (context, sfProvider, child) {
-                return RatingBar.builder(
-                  itemSize: 24,
-                  initialRating: sfProvider.selectedRating.toDouble(),
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: false,
-                  itemCount: 5,
-                  unratedColor: cc.lightPrimary,
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 3),
-                  itemBuilder: (context, _) => SvgPicture.asset(
-                    'assets/icons/star.svg',
-                    color: cc.orangeRating,
-                  ),
-                  onRatingUpdate: (rating) {
-                    sfProvider.setSelectedRating(rating.toInt());
-                    debugPrint('Selected rating: $rating');
-                  },
-                );
-              }),
-              const Spacer(),
-              Consumer<SearchFilterDataService>(
-                builder: (context, sfProvider, child) {
-                  return GestureDetector(
-                    onTap: () {
-                      sfProvider.setSelectedRating(0);
-                      debugPrint('Rating reset');
-                    },
-                    child: Icon(
-                      Icons.refresh_rounded,
-                      color: cc.primaryColor,
-                    ),
-                  );
-                },
-              ),
-            ],
+        if (!hideAdvancedFilters) ...[
+          FilterRtlPadding(
+            child: FieldTitle(asProvider.getString('Average Rating')),
           ),
-        ),
-        EmptySpaceHelper.emptyHight(20),
-        const SizedBox(height: 40),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Consumer<SearchFilterDataService>(
+                    builder: (context, sfProvider, child) {
+                  return RatingBar.builder(
+                    itemSize: 24,
+                    initialRating: sfProvider.selectedRating.toDouble(),
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: false,
+                    itemCount: 5,
+                    unratedColor: cc.lightPrimary,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 3),
+                    itemBuilder: (context, _) => SvgPicture.asset(
+                      'assets/icons/star.svg',
+                      color: cc.orangeRating,
+                    ),
+                    onRatingUpdate: (rating) {
+                      sfProvider.setSelectedRating(rating.toInt());
+                      debugPrint('Selected rating: $rating');
+                    },
+                  );
+                }),
+                const Spacer(),
+                Consumer<SearchFilterDataService>(
+                  builder: (context, sfProvider, child) {
+                    return GestureDetector(
+                      onTap: () {
+                        sfProvider.setSelectedRating(0);
+                        debugPrint('Rating reset');
+                      },
+                      child: Icon(
+                        Icons.refresh_rounded,
+                        color: cc.primaryColor,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          EmptySpaceHelper.emptyHight(20),
+          const SizedBox(height: 40),
+        ],
         Consumer<CommonServices>(builder: (context, srData, child) {
           return Padding(
             padding: const EdgeInsets.all(10),
