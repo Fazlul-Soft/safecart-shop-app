@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/cart_data_service.dart';
+import 'package:safecart/services/compare_data_service.dart';
 import 'package:safecart/services/wishlist_data_service.dart';
 import 'package:safecart/utils/responsive.dart';
 import 'package:slide_countdown/slide_countdown.dart';
@@ -187,30 +188,59 @@ class ProductCard extends StatelessWidget {
                         ),
                         Consumer<WishlistDataService>(
                             builder: (context, wProvider, child) {
-                          return Positioned(
-                            right: 4,
-                            child: favoriteIcon(
-                              wProvider.isWishlist(id.toString()),
-                              size: 15,
-                              onPressed: () {
-                                print(stock);
-                                wProvider.toggleWishlist(
-                                    context,
-                                    id,
-                                    title,
-                                    salePrice.toDouble(),
-                                    originalPrice?.toDouble(),
-                                    imageUrl ?? imageLoadingAppIcon,
-                                    cartable,
-                                    prodCatData == true,
-                                    vendorId ?? 'admin',
-                                    rating ?? 0,
-                                    randomKey: randomKey,
-                                    randomSecret: randomSecret,
-                                    stock: stock);
-                              },
-                            ),
-                          );
+                          return Consumer<CompareDataService>(
+                              builder: (context, cProvider, child) {
+                            return Positioned(
+                              right: 4,
+                              top: 4,
+                              child: Column(
+                                children: [
+                                  favoriteIcon(
+                                    wProvider.isWishlist(id.toString()),
+                                    size: 15,
+                                    onPressed: () {
+                                      print(stock);
+                                      wProvider.toggleWishlist(
+                                          context,
+                                          id,
+                                          title,
+                                          salePrice.toDouble(),
+                                          originalPrice?.toDouble(),
+                                          imageUrl ?? imageLoadingAppIcon,
+                                          cartable,
+                                          prodCatData == true,
+                                          vendorId ?? 'admin',
+                                          rating ?? 0,
+                                          randomKey: randomKey,
+                                          randomSecret: randomSecret,
+                                          stock: stock);
+                                    },
+                                  ),
+                                  const SizedBox(height: 6),
+                                  compareIcon(
+                                    cProvider.isCompare(id.toString()),
+                                    size: 15,
+                                    onPressed: () {
+                                      cProvider.toggleCompare(
+                                        context,
+                                        id,
+                                        title,
+                                        salePrice.toDouble(),
+                                        originalPrice?.toDouble(),
+                                        imageUrl ?? imageLoadingAppIcon,
+                                        cartable,
+                                        prodCatData == true,
+                                        vendorId ?? 'admin',
+                                        rating ?? 0,
+                                        randomKey: randomKey,
+                                        randomSecret: randomSecret,
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
                         }),
                       ],
                     ),
@@ -427,6 +457,34 @@ class ProductCard extends StatelessWidget {
             'assets/icons/${isFavorite ? 'mm_filled' : 'mm'}.svg',
             height: 20,
             color: cc.primaryColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget compareIcon(bool isCompare,
+      {double size = 8, required void Function()? onPressed}) {
+    return Container(
+      margin: const EdgeInsets.only(top: 5, right: 5, left: 5),
+      child: CircleAvatar(
+        radius: size,
+        backgroundColor: cc.pureWhite,
+        child: IconButton(
+          onPressed: onPressed,
+          splashColor: Colors.transparent,
+          style: IconButton.styleFrom(
+            highlightColor: Colors.transparent,
+            splashFactory: NoSplash.splashFactory,
+            shadowColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            elevation: 0,
+            focusColor: Colors.transparent,
+          ),
+          icon: SvgPicture.asset(
+            'assets/icons/compare.svg',
+            height: 18,
+            color: isCompare ? cc.primaryColor : cc.greyHint,
           ),
         ),
       ),

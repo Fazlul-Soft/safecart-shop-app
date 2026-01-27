@@ -316,8 +316,8 @@ import '../../helpers/common_helper.dart';
 import '../../helpers/empty_space_helper.dart';
 import '../../services/cart_data_service.dart';
 import '../../services/rtl_service.dart';
+import '../../services/wishlist_data_service.dart';
 import '../../utils/responsive.dart';
-import '../common/custom_icon_button.dart';
 
 class CartTile extends StatelessWidget {
   final id;
@@ -332,6 +332,8 @@ class CartTile extends StatelessWidget {
   String rowId;
   final bool isSelected;
   final Function(bool?) onSelectedChange;
+  final dynamic prodCatData;
+  final dynamic stock;
 
   CartTile(
     this.vendorId,
@@ -346,6 +348,8 @@ class CartTile extends StatelessWidget {
     this.rowId, {
     required this.isSelected,
     required this.onSelectedChange,
+    required this.prodCatData,
+    required this.stock,
     super.key,
   });
 
@@ -472,29 +476,17 @@ class CartTile extends StatelessWidget {
                   children: [
                     Consumer<CartDataService>(
                         builder: (context, cProvider, child) {
+                      final canDecrement = quantity > 1;
                       return SizedBox(
                         height: 35,
-                        width: screenWidth / 3,
+                        width: screenWidth / 1.6,
                         child: FittedBox(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  if (quantity == 1) {
-                                    confirmDialouge(
-                                      context,
-                                      onPressed: () {
-                                        Provider.of<CartDataService>(context,
-                                                listen: false)
-                                            .deleteCartItem(id, rowId);
-                                        showToast(
-                                            asProvider.getString(
-                                                'Item removed from cart'),
-                                            cc.blackColor);
-                                      },
-                                    );
-                                  } else {
+                                onTap: canDecrement
+                                    ? () {
                                     quantity--;
                                     cProvider.removeItem(
                                       vendorId,
@@ -504,7 +496,7 @@ class CartTile extends StatelessWidget {
                                       rowId: rowId,
                                     );
                                   }
-                                },
+                                    : null,
                                 child: Container(
                                   height: 40,
                                   padding: const EdgeInsets.symmetric(
@@ -513,15 +505,15 @@ class CartTile extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
                                         color: cc.greyFive, width: 1.5),
-                                    color: cc.pureWhite,
+                                    color: canDecrement
+                                        ? cc.pureWhite
+                                        : cc.greyBorder2,
                                   ),
                                   child: Icon(
-                                    quantity == 1
-                                        ? Icons.delete_outline
-                                        : Icons.remove,
-                                    color: quantity == 1
-                                        ? cc.blackColor
-                                        : cc.blackColor.withOpacity(.5),
+                                    Icons.remove,
+                                    color: canDecrement
+                                        ? cc.blackColor.withOpacity(.5)
+                                        : cc.greyHint,
                                   ),
                                 ),
                               ),
@@ -603,6 +595,88 @@ class CartTile extends StatelessWidget {
                                   child: Icon(
                                     Icons.add,
                                     color: cc.blackColor,
+                                  ),
+                                ),
+                              ),
+                              EmptySpaceHelper.emptywidth(5),
+                              Consumer<WishlistDataService>(
+                                  builder: (context, wProvider, child) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (!wProvider.isWishlist(id.toString())) {
+                                      wProvider.toggleWishlist(
+                                        context,
+                                        id,
+                                        title,
+                                        salePrice,
+                                        originalPrice?.toDouble(),
+                                        image,
+                                        true,
+                                        prodCatData ?? inventorySet,
+                                        vendorId,
+                                        0,
+                                        randomKey: '',
+                                        randomSecret: '',
+                                        stock: stock ?? 0,
+                                      );
+                                    } else {
+                                      showToast(
+                                          asProvider.getString(
+                                              'Item Saved for Later'),
+                                          cc.blackColor);
+                                    }
+                                    Provider.of<CartDataService>(context,
+                                            listen: false)
+                                        .deleteCartItem(id, rowId);
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                          color: cc.greyFive, width: 1.5),
+                                      color: cc.pureWhite,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/mm.svg',
+                                      height: 18,
+                                      color: cc.primaryColor,
+                                    ),
+                                  ),
+                                );
+                              }),
+                              EmptySpaceHelper.emptywidth(5),
+                              GestureDetector(
+                                onTap: () {
+                                  confirmDialouge(
+                                    context,
+                                    onPressed: () {
+                                      Provider.of<CartDataService>(context,
+                                              listen: false)
+                                          .deleteCartItem(id, rowId);
+                                      showToast(
+                                          asProvider.getString(
+                                              'Item removed from cart'),
+                                          cc.blackColor);
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  height: 40,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                        color: cc.greyFive, width: 1.5),
+                                    color: cc.pureWhite,
+                                  ),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/trash.svg',
+                                    height: 18,
+                                    color: cc.red,
                                   ),
                                 ),
                               ),

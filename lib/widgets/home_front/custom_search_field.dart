@@ -35,7 +35,7 @@ class CustomSearchField extends StatelessWidget {
           duration: const Duration(milliseconds: 500),
           // width: width ?? (screenWidth - 40),
           width: showField
-              ? screenWidth - (nhProvider.currentIndex == 4 ? 20 : 72)
+              ? screenWidth - (nhProvider.currentIndex == 5 ? 20 : 72)
               : 45,
           margin: const EdgeInsets.only(bottom: 10),
           decoration: BoxDecoration(
@@ -62,7 +62,7 @@ class CustomSearchField extends StatelessWidget {
               AnimatedContainer(
                   duration: const Duration(milliseconds: 500),
                   width:
-                      screenWidth - (nhProvider.currentIndex == 4 ? 100 : 152),
+                      screenWidth - (nhProvider.currentIndex == 5 ? 100 : 152),
                   // width: showField ? screenWidth - 120 : 0,
                   child: TextField(
                     controller: textEditingController,

@@ -27,6 +27,7 @@ class AppStringsHelper {
     'Home': '',
     'Cart': '',
     'Wishlist': '',
+    'Saved': '',
     'profile': '',
     'Search your need here': '',
     'Press again to exit': '',
@@ -80,6 +81,8 @@ class AppStringsHelper {
     'Item subtracted from cart': '',
     'Item Saved for Later': '',
     'Item removed from Save for Later': '',
+    'Item added to compare list': '',
+    'Item removed from compare list': '',
     'Add New Address': '',
     'Title': '',
     'Enter a title': '',
@@ -327,5 +330,6 @@ class AppStringsHelper {
     "No result found": '',
     "Product stock is insufficient": '',
     "Brand": '',
+    "Remove All": '',
   };
 }

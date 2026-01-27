@@ -10,6 +10,8 @@ import '../../widgets/common/custom_common_button.dart';
 import '../../widgets/product_details_view/product_attributes.dart';
 import '../../services/cart_data_service.dart';
 import '../../services/product_details_service.dart';
+import '../../helpers/login_helper.dart';
+import '../../services/wishlist_data_service.dart';
 
 class WishlistToCart extends StatelessWidget {
   final dynamic id;
@@ -127,6 +129,10 @@ class WishlistToCart extends StatelessWidget {
                               isLoading: false,
                               width: double.infinity,
                               onPressed: () {
+                                if (getToken.isEmpty) {
+                                  LogInHelper().loginPopup(context);
+                                  return;
+                                }
                                 if (!pdService.cartAble) {
                                   showToast(
                                       asProvider.getString(
@@ -192,6 +198,9 @@ class WishlistToCart extends StatelessWidget {
                                         randomSecret: product.randomSecret,
                                         stock: stock,
                                         prodCatData: {});
+                                Provider.of<WishlistDataService>(context,
+                                        listen: false)
+                                    .deleteWishlistItem(id, context);
                                 Navigator.of(context).pop();
                               },
                             ),

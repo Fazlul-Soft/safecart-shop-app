@@ -16,6 +16,7 @@ import '../helpers/db_helper.dart';
 import '../helpers/network_connectivity.dart';
 import '../services/cart_data_service.dart';
 import '../services/common_services.dart';
+import '../services/compare_data_service.dart';
 import '../services/payment_gateway_service.dart';
 import '../services/wishlist_data_service.dart';
 import '../utils/responsive.dart';
@@ -79,11 +80,13 @@ class SplashView extends StatelessWidget {
   }
 
   dbInit(BuildContext context) {
-    List databases = ['cart', 'wishlist'];
+    List databases = ['cart', 'wishlist', 'compare'];
     databases.map((e) => DbHelper.database(e));
     Provider.of<CartDataService>(context, listen: false).fetchCarts();
     Provider.of<WishlistDataService>(context, listen: false)
         .fetchWishlistItem();
+    Provider.of<CompareDataService>(context, listen: false)
+        .fetchCompareItems();
   }
 
   initiateStartingSequence(BuildContext context) async {

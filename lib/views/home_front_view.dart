@@ -90,6 +90,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safecart/views/compare_product_view.dart';
 import 'package:safecart/views/products_view.dart';
 import 'package:safecart/views/wishlist_view.dart';
 import 'package:safecart/widgets/home_front/hf_app_bar.dart';
@@ -113,6 +114,7 @@ class HomeFrontView extends StatelessWidget {
     const ProductsView(), // Ensure this is const if possible
     const CartView(),
     const WishlistView(),
+    const CompareProductView(),
     const ProfileView(),
   ];
 
@@ -141,7 +143,7 @@ class HomeFrontView extends StatelessWidget {
         },
         child: Scaffold(
           key: scaffoldKey,
-          drawer: nProvider.currentIndex != 4 ? const HomeAppDrawer() : null,
+          drawer: nProvider.currentIndex != 5 ? const HomeAppDrawer() : null,
           // MODIFICATION: Add the endDrawer here so the GlobalKey can find it
           endDrawer: nProvider.currentIndex == 1
               ? Drawer(
@@ -155,7 +157,7 @@ class HomeFrontView extends StatelessWidget {
           endDrawerEnableOpenDragGesture: false,
           body: Stack(
             children: [
-              if (nProvider.currentIndex == 4)
+              if (nProvider.currentIndex == 5)
                 Container(
                   height: screenHeight / 2.5 >= 300 ? screenHeight / 2.5 : 300,
                   width: double.infinity,

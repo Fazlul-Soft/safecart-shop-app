@@ -186,8 +186,8 @@ class HFAppBar extends StatelessWidget {
     return Consumer<NavigationHelper>(builder: (_, nh, __) {
       debugPrint('HFAppBar: currentIndex=${nh.currentIndex}, scaffoldKey=$scaffoldKey');
       return SliverAppBar(
-        backgroundColor: nh.currentIndex == 4 ? cc.primaryColor : Colors.white,
-        foregroundColor: nh.currentIndex == 4 ? cc.primaryColor : cc.blackColor,
+        backgroundColor: nh.currentIndex == 5 ? cc.primaryColor : Colors.white,
+        foregroundColor: nh.currentIndex == 5 ? cc.primaryColor : cc.blackColor,
         toolbarHeight: 65,
         pinned: true,
         elevation: 0,
@@ -195,7 +195,7 @@ class HFAppBar extends StatelessWidget {
         title: Consumer<ProfileInfoService>(
           builder: (_, p, __) => _buildTitle(p, nh.currentIndex, context),
         ),
-        leading: nh.currentIndex == 4
+        leading: nh.currentIndex == 5
             ? const SizedBox()
             : GestureDetector(
                 onTap: () {
@@ -260,6 +260,8 @@ class HFAppBar extends StatelessWidget {
       return Text("My Cart", style: Theme.of(ctx).textTheme.titleLarge!.copyWith(color: cc.blackColor));
     } else if (idx == 3) {
       return Text("Save for Later", style: Theme.of(ctx).textTheme.titleLarge!.copyWith(color: cc.blackColor));
+    } else if (idx == 4) {
+      return Text("Compare", style: Theme.of(ctx).textTheme.titleLarge!.copyWith(color: cc.blackColor));
     }
     return const SizedBox();
   }

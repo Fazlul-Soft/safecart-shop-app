@@ -160,6 +160,7 @@ import 'package:provider/provider.dart';
 import 'package:safecart/helpers/navigation_helper.dart';
 import 'package:safecart/services/all_product_service.dart';
 import 'package:safecart/services/app_strings_service.dart';
+import 'package:safecart/services/search_filter_data_service.dart';
 import 'package:safecart/services/search_product_service.dart';
 import '../helpers/common_helper.dart';
 import '../helpers/empty_space_helper.dart';
@@ -524,6 +525,9 @@ class _ProductsViewState extends State<ProductsView> {
 
           return Column(
             children: [
+              _AppliedFiltersBar(
+                onApply: () => spProvider.fetchProducts(context),
+              ),
               Expanded(child: _buildGrid(spProvider, constraints)),
               if (spProvider.nextLoading)
                  SizedBox(height: 60, child: CustomPreloader()),
@@ -628,5 +632,188 @@ class _ProductsViewState extends State<ProductsView> {
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+}
+
+class _AppliedFiltersBar extends StatelessWidget {
+  final VoidCallback onApply;
+  const _AppliedFiltersBar({required this.onApply});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<SearchProductService, SearchFilterDataService>(
+        builder: (context, spProvider, sfProvider, child) {
+      final chips = <_FilterChipData>[];
+
+      void addChip(String label, void Function() onRemove) {
+        chips.add(_FilterChipData(label: label, onRemove: onRemove));
+      }
+
+      if (spProvider.selectedCategory != null &&
+          spProvider.selectedCategory.toString().isNotEmpty) {
+        addChip('Category: ${spProvider.selectedCategory}', () {
+          spProvider.setFilterOptions(catVal: '');
+          sfProvider.setSelectedCategory('');
+          onApply();
+        });
+      }
+      if (spProvider.selectedSubCategory != null &&
+          spProvider.selectedSubCategory.toString().isNotEmpty) {
+        addChip('Subcategory: ${spProvider.selectedSubCategory}', () {
+          spProvider.setFilterOptions(subCatVal: '');
+          sfProvider.setSelectedSubCategory('');
+          onApply();
+        });
+      }
+      if (spProvider.selectedChildCats.isNotEmpty) {
+        addChip('Child: ${spProvider.selectedChildCats}', () {
+          spProvider.setFilterOptions(childCatVal: '');
+          sfProvider.setSelectedChildCats('');
+          onApply();
+        });
+      }
+      if (spProvider.selectedBrand != null &&
+          spProvider.selectedBrand.toString().isNotEmpty) {
+        addChip('Brand: ${spProvider.selectedBrand}', () {
+          spProvider.setFilterOptions(brandVal: '');
+          sfProvider.setSelectedBrand('');
+          onApply();
+        });
+      }
+      if (spProvider.selectedColor != null &&
+          spProvider.selectedColor.toString().isNotEmpty) {
+        addChip('Color: ${spProvider.selectedColor}', () {
+          spProvider.setFilterOptions(colorVal: '');
+          sfProvider.setSelectedColor('');
+          onApply();
+        });
+      }
+      if (spProvider.selectedSize != null &&
+          spProvider.selectedSize.toString().isNotEmpty) {
+        addChip('Size: ${spProvider.selectedSize}', () {
+          spProvider.setFilterOptions(sizeVal: '');
+          sfProvider.setSelectedSize('');
+          onApply();
+        });
+      }
+      if (spProvider.selectedMinPrice != null &&
+          spProvider.selectedMinPrice.toString().isNotEmpty) {
+        addChip('Min: ${spProvider.selectedMinPrice}', () {
+          spProvider.setFilterOptions(minPrice: '');
+          sfProvider.setSelectedMinPrice(null);
+          onApply();
+        });
+      }
+      if (spProvider.selectedMaxPrice != null &&
+          spProvider.selectedMaxPrice.toString().isNotEmpty) {
+        addChip('Max: ${spProvider.selectedMaxPrice}', () {
+          spProvider.setFilterOptions(maxPrice: '');
+          sfProvider.setSelectedMaxPrice(null);
+          onApply();
+        });
+      }
+      if (spProvider.selectedRating > 0) {
+        addChip('Rating: ${spProvider.selectedRating}+', () {
+          spProvider.setFilterOptions(rating: 0);
+          sfProvider.setSelectedRating(0);
+          onApply();
+        });
+      }
+
+      if (chips.isEmpty) {
+        return const SizedBox.shrink();
+      }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              asProvider.getString('Filter'),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 6,
+              children: [
+                for (final chip in chips)
+                  _FilterChip(
+                    label: chip.label,
+                    onRemove: chip.onRemove,
+                  ),
+                GestureDetector(
+                  onTap: () {
+                    spProvider.resetFilterOptions();
+                    sfProvider.resetSelectedSearchFilter();
+                    onApply();
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: cc.red,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      asProvider.getString('Remove All'),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class _FilterChipData {
+  final String label;
+  final VoidCallback onRemove;
+  _FilterChipData({required this.label, required this.onRemove});
+}
+
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final VoidCallback onRemove;
+  const _FilterChip({required this.label, required this.onRemove});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: cc.primaryColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: onRemove,
+            child: Icon(
+              Icons.close,
+              size: 16,
+              color: cc.pureWhite,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

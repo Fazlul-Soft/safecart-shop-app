@@ -286,6 +286,7 @@ import '../services/auth_service/social_signin_signup_service.dart';
 import '../services/cart_data_service.dart';
 import '../services/category_service.dart';
 import '../services/chat_service.dart';
+import '../services/compare_data_service.dart';
 import '../services/checkout_service/calculate_tax_service.dart';
 import '../services/checkout_service/checkout_service.dart';
 import '../services/checkout_service/shipping_address_service.dart';
@@ -407,6 +408,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProductDetailsService()),
         ChangeNotifierProvider(create: (context) => ProfileInfoService()),
         ChangeNotifierProvider(create: (context) => WishlistDataService()),
+        ChangeNotifierProvider(create: (context) => CompareDataService()),
         ChangeNotifierProvider(create: (context) => CartDataService()),
         ChangeNotifierProvider(create: (context) => SearchProductService()),
         ChangeNotifierProvider(create: (context) => TicketListService()),

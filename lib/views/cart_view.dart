@@ -31,16 +31,15 @@ class CartView extends StatelessWidget {
         return SizedBox(
           height: screenHeight - 140,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (cProvider.cartList.isNotEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
                           Text(
                             asProvider.getString('Subtotal:'),
@@ -50,6 +49,7 @@ class CartView extends StatelessWidget {
                               color: cc.blackColor,
                             ),
                           ),
+                          const Spacer(),
                           Text(
                             rtlProvider.curRtl
                                 ? '${subtotal.toStringAsFixed(2)}${rtlProvider.currency}'
@@ -62,53 +62,60 @@ class CartView extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                    EmptySpaceHelper.emptyHight(10),
-                    TextButton.icon(
-                      onPressed: cProvider.cartList.isEmpty
-                          ? () {
-                              showToast(asProvider.getString('No item found'),
-                                  cc.blackColor);
-                            }
-                          : () {
-                              confirmDialouge(
-                                context,
-                                onPressed: () {
-                                  cProvider.emptyCart();
-                                },
-                              );
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 6,
+                        children: [
+                          TextButton.icon(
+                            onPressed: cProvider.cartList.isEmpty
+                                ? () {
+                                    showToast(
+                                        asProvider.getString('No item found'),
+                                        cc.blackColor);
+                                  }
+                                : () {
+                                    confirmDialouge(
+                                      context,
+                                      onPressed: () {
+                                        cProvider.emptyCart();
+                                      },
+                                    );
+                                  },
+                            icon: const Icon(Icons.cancel_outlined),
+                            label: Text(
+                              asProvider.getString('Clear cart'),
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor: cc.blackColor,
+                                decorationThickness: 2,
+                              ),
+                            ),
+                            style: TextButton.styleFrom(
+                              foregroundColor: cc.blackColor,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              cProvider.toggleSelectAll(
+                                  !cProvider.allItemsSelected());
                             },
-                      icon: const Icon(Icons.cancel_outlined),
-                      label: Text(
-                        asProvider.getString('Clear cart'),
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          decorationColor: cc.blackColor,
-                          decorationThickness: 2,
-                        ),
+                            child: Text(
+                              cProvider.allItemsSelected()
+                                  ? asProvider.getString('Deselect All')
+                                  : asProvider.getString('Select All'),
+                              style: TextStyle(
+                                color: cc.blackColor,
+                                decoration: TextDecoration.underline,
+                                decorationColor: cc.blackColor,
+                                decorationThickness: 2,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      style: TextButton.styleFrom(
-                        foregroundColor: cc.blackColor,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        cProvider
-                            .toggleSelectAll(!cProvider.allItemsSelected());
-                      },
-                      child: Text(
-                        cProvider.allItemsSelected()
-                            ? asProvider.getString('Deselect All')
-                            : asProvider.getString('Select All'),
-                        style: TextStyle(
-                          color: cc.blackColor,
-                          decoration: TextDecoration.underline,
-                          decorationColor: cc.blackColor,
-                          decorationThickness: 2,
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
 
               if (cProvider.cartList.isEmpty)
@@ -258,6 +265,8 @@ class CartView extends StatelessWidget {
           onSelectedChange: (val) {
             cService.updateItemSelection(e['rowId'], val ?? true);
           },
+          prodCatData: e['options']?['used_categories'],
+          stock: e['stock'],
         ),
       ));
 

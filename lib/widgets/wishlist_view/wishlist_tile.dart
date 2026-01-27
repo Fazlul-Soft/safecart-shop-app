@@ -8,11 +8,11 @@ import 'package:safecart/widgets/wishlist_view/wishlist_to_cart.dart';
 
 import '../../helpers/common_helper.dart';
 import '../../helpers/empty_space_helper.dart';
+import '../../helpers/login_helper.dart';
 import '../../services/product_details_service.dart';
 import '../../services/rtl_service.dart';
 import '../../services/wishlist_data_service.dart';
 import 'package:safecart/utils/responsive.dart';
-import '../common/custom_icon_button.dart';
 import '../common/image_loading_failed.dart';
 
 class WishlistTile extends StatelessWidget {
@@ -77,7 +77,6 @@ class WishlistTile extends StatelessWidget {
           ),
           EmptySpaceHelper.emptywidth(10),
           SizedBox(
-            // height: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +84,7 @@ class WishlistTile extends StatelessWidget {
                 SizedBox(
                   width: screenWidth - (screenWidth / 4 + 50),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (rating > 0)
                         Row(children: [
@@ -103,97 +103,73 @@ class WishlistTile extends StatelessWidget {
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
                         ]),
-                      EmptySpaceHelper.emptyHight(8),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: screenWidth - (screenWidth / 4 + 50),
-                            child: Text(
-                              title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                      EmptySpaceHelper.emptyHight(6),
+                      Text(
+                        title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: cc.blackColor,
                             ),
-                          ),
-                          const Spacer(),
-
-                          // Consumer<WishlistDataService>(
-                          //     builder: (context, wProvider, child) {
-                          //   return wishListIcon(
-                          //     wProvider.isfavorite(id.toString()),
-                          //     onPressed: () {
-                          //       wProvider.toggleFavorite(
-                          //           context, id, title, salePrice, image, true);
-                          //     },
-                          //   );
-                          // }),
-                        ],
                       ),
                     ],
                   ),
                 ),
-                EmptySpaceHelper.emptyHight(8),
+                EmptySpaceHelper.emptyHight(6),
                 SizedBox(
-                  // height: 70,
                   width: screenWidth - (screenWidth / 4 + 50),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: screenWidth - ((screenWidth / 4) + 92 + 50),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            rtlProvider.curRtl
+                                ? '${salePrice.toStringAsFixed(2)}${rtlProvider.currency}'
+                                : '${rtlProvider.currency}${salePrice.toStringAsFixed(2)}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    color: cc.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
+                          ),
+                          EmptySpaceHelper.emptywidth(5),
+                          if (originalPrice != null)
                             Text(
                               rtlProvider.curRtl
-                                  ? '${salePrice.toStringAsFixed(2)}${rtlProvider.currency}'
-                                  : '${rtlProvider.currency}${salePrice.toStringAsFixed(2)}',
+                                  ? '${originalPrice!.toStringAsFixed(2)}${rtlProvider.currency}'
+                                  : '${rtlProvider.currency}${originalPrice!.toStringAsFixed(2)}',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall!
                                   .copyWith(
-                                      color: cc.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                    color: cc.red,
+                                    fontSize: 14,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: cc.cardGreyHint,
+                                    decorationStyle: TextDecorationStyle.solid,
+                                  ),
                             ),
-                            EmptySpaceHelper.emptywidth(5),
-                            if (originalPrice != null)
-                              Text(
-                                rtlProvider.curRtl
-                                    ? '${originalPrice!.toStringAsFixed((screenWidth / 4 + 50) < 152 ? 0 : 2)}${rtlProvider.currency}'
-                                    : '${rtlProvider.currency}${originalPrice!.toStringAsFixed((screenWidth / 4 + 50) < 152 ? 0 : 2)}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .copyWith(
-                                      color: cc.red,
-                                      fontSize: 14,
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationColor: cc.cardGreyHint,
-                                      decorationStyle:
-                                          TextDecorationStyle.solid,
-                                    ),
-                              ),
-                          ],
-                        ),
+                        ],
                       ),
                       const Spacer(),
-                      CustomIconButton(
-                        SvgPicture.asset('assets/icons/bag.svg'),
-                        onPressed: () async {
-                          print(inventorySet);
+                      GestureDetector(
+                        onTap: () async {
+                          if (getToken.isEmpty) {
+                            await LogInHelper().loginPopup(context);
+                            return;
+                          }
                           if (inventorySet == false) {
-                            print('fetching product details');
                             Provider.of<ProductDetailsService>(context,
                                     listen: false)
                                 .clearProductDetails();
-                            print(inventorySet);
                             await showModalBottomSheet(
                                 context: context,
                                 enableDrag: false,
@@ -203,16 +179,11 @@ class WishlistTile extends StatelessWidget {
                                   topRight: Radius.circular(25),
                                 )),
                                 builder: (context) {
-                                  bool fetchAttribute = true;
                                   return SingleChildScrollView(
                                     child: WishlistToCart(id),
                                   );
                                 });
-
                             return;
-                            // Provider.of<CommonServices>(context, listen: false)
-                            //     .addCartItem(
-                            //         context, id, title, salePrice, 1, imageUrl);
                           }
                           Provider.of<CartDataService>(context, listen: false)
                               .addCartItem(context, vendorId, id, title,
@@ -222,18 +193,30 @@ class WishlistTile extends StatelessWidget {
                                   randomKey: randomKey,
                                   randomSecret: randomSecret,
                                   stock: stock);
-
-                          // Provider.of<ProductDetailsService>(context, listen: false)
-                          //     .clearProductDetails();
-                          // Navigator.of(context).pushNamed(
-                          //     ProductDetailsView.routeName,
-                          //     arguments: [title,id]);
+                          Provider.of<WishlistDataService>(context,
+                                  listen: false)
+                              .deleteWishlistItem(id, context);
                         },
+                        child: Container(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                                Border.all(color: cc.greyFive, width: 1.5),
+                            color: cc.pureWhite,
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/icons/bag.svg',
+                            height: 18,
+                            color: cc.blackColor,
+                          ),
+                        ),
                       ),
-                      EmptySpaceHelper.emptywidth(12),
-                      CustomIconButton(
-                        SvgPicture.asset('assets/icons/trash.svg'),
-                        onPressed: () {
+                      EmptySpaceHelper.emptywidth(8),
+                      GestureDetector(
+                        onTap: () {
                           confirmDialouge(
                             context,
                             onPressed: () {
@@ -247,7 +230,22 @@ class WishlistTile extends StatelessWidget {
                             },
                           );
                         },
-                        color: cc.red,
+                        child: Container(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                                Border.all(color: cc.greyFive, width: 1.5),
+                            color: cc.pureWhite,
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/icons/trash.svg',
+                            height: 18,
+                            color: cc.red,
+                          ),
+                        ),
                       ),
                     ],
                   ),
