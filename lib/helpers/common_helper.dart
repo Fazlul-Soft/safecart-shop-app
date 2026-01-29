@@ -33,6 +33,29 @@ late AppStringService asProvider;
 late RTLService rtlProvider;
 late SharedPreferences sPref;
 
+String formatAmount(num? value) {
+  if (value == null) {
+    return '0';
+  }
+  final raw = value.toString();
+  if (raw.contains('e') || raw.contains('E')) {
+    return raw;
+  }
+  if (!raw.contains('.')) {
+    return '$raw.00';
+  }
+  final parts = raw.split('.');
+  final whole = parts[0];
+  final fraction = parts.length > 1 ? parts[1] : '';
+  if (fraction.isEmpty) {
+    return '$whole.00';
+  }
+  if (fraction.length == 1) {
+    return '$whole.${fraction}0';
+  }
+  return '$whole.$fraction';
+}
+
 String get getToken {
   return _globalToken;
 }

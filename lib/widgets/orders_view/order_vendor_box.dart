@@ -66,8 +66,8 @@ class OrderVendorBox extends StatelessWidget {
           ),
           Text(
             rtlProvider.curRtl
-                ? amount.toStringAsFixed(2) + rtlProvider.currency
-                : rtlProvider.currency + amount.toStringAsFixed(2),
+                ? formatAmount(amount) + rtlProvider.currency
+                : rtlProvider.currency + formatAmount(amount),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!

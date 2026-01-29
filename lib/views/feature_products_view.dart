@@ -55,8 +55,15 @@ class FeatureProductsView extends StatelessWidget {
                       element.discountPrice != null ? element.price : null,
                       index,
                       badge: element.badge,
-                      discPercentage:
-                          element.campaignPercentage?.toStringAsFixed(2),
+                      salePriceText:
+                          element.discountPriceRaw ?? element.priceRaw,
+                      originalPriceText: element.discountPrice != null
+                          ? element.priceRaw
+                          : null,
+                      discPercentage: element.campaignPercentage != null &&
+                              element.campaignPercentage != 0
+                          ? formatAmount(element.campaignPercentage)
+                          : null,
                       cartable: element.isCartAble ?? false,
                       prodCatData: {
                         "category": element.categoryId,

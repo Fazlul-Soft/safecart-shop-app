@@ -5,7 +5,7 @@ class ConstantColors {
   final Color primaryColor = const Color(0xFF41695A);
 
   // final Color secondaryColor = const Color(0xffFF805D);
-  final Color secondaryColor = const Color(0xFFDFBA1F);
+  final Color secondaryColor = const Color(0xFFE0BB20);
   
   final Color red = Colors.red;
   final Color blue = const Color(0xff7286D3);

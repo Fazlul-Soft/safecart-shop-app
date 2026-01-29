@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/wishlist_data_service.dart';
+import 'package:safecart/services/compare_data_service.dart';
 import 'package:safecart/widgets/common/internet_checker_widget.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -24,6 +25,8 @@ import '../widgets/product_details_view/product_details_cart_button.dart';
 import '../widgets/product_details_view/related_products.dart';
 import '../widgets/product_details_view/product_title_row.dart';
 import '../widgets/skelletons/product_details_skeleton.dart';
+import 'product_by_category_view.dart';
+import 'product_by_subcategory_view.dart';
 
 class ProductDetailsView extends StatelessWidget {
   static const routeName = 'product_details_view';
@@ -258,6 +261,73 @@ class ProductDetailsView extends StatelessWidget {
                                   }),
                                 ],
                               ),
+                              EmptySpaceHelper.emptywidth(10),
+                              Column(
+                                children: [
+                                  Consumer<CompareDataService>(
+                                      builder: (context, cProvider, child) {
+                                    return GestureDetector(
+                                        onTap: () {
+                                          final pdProvider = Provider.of<
+                                                  ProductDetailsService>(
+                                              context,
+                                              listen: false);
+                                          cProvider.toggleCompare(
+                                            context,
+                                            pdProvider.productDetails!.id,
+                                            pdProvider.productDetails!.name ??
+                                                '',
+                                            (pdProvider.productDetails!
+                                                        .salePrice ??
+                                                    pdProvider
+                                                        .productDetails!.price)
+                                                .toDouble(),
+                                            pdProvider.productDetails!.price
+                                                ?.toDouble(),
+                                            pdProvider.productDetails!.image ??
+                                                imageLoadingAppIcon,
+                                            pdProvider.additionalInfoStore ==
+                                                null,
+                                            {},
+                                            (pdProvider.productDetails!
+                                                        .vendorId ??
+                                                    'admin')
+                                                .toString(),
+                                            pdProvider.productDetails
+                                                    ?.reviewsAvgRating ??
+                                                0.0,
+                                            randomKey: pdProvider
+                                                .productDetails?.randomKey,
+                                            randomSecret: pdProvider
+                                                .productDetails?.randomSecret,
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 40,
+                                          width: 40,
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                              color: cc.greyFive,
+                                              width: 1.5,
+                                            ),
+                                            color: cc.pureWhite,
+                                          ),
+                                          child: SvgPicture.asset(
+                                            'assets/icons/compare.svg',
+                                            color: cProvider
+                                                    .isCompare(id.toString())
+                                                ? cc.primaryColor
+                                                : cc.blackColor,
+                                          ),
+                                        ));
+                                  }),
+                                ],
+                              ),
                               EmptySpaceHelper.emptywidth(10)
                             ],
                           ),
@@ -268,7 +338,6 @@ class ProductDetailsView extends StatelessWidget {
                                 const ProductRatingScore(),
                                 EmptySpaceHelper.emptyHight(12),
                                 const ProductTitleRow(),
-                                const ShippingMethods(),
                                 Container(
                                   width: screenWidth / 1.3,
                                   padding: const EdgeInsets.symmetric(
@@ -306,69 +375,109 @@ class ProductDetailsView extends StatelessWidget {
 
                                 //sub info
                                 subInfo(
-                                    context,
-                                    asProvider.getString('Category'),
-                                    Provider.of<ProductDetailsService>(context,
-                                                    listen: false)
-                                                .productDetails!
-                                                .category !=
-                                            null
-                                        ? Provider.of<ProductDetailsService>(
-                                                context,
-                                                listen: false)
-                                            .productDetails!
-                                            .category!
-                                            .name
-                                        : asProvider.getString('None')),
+                                  context,
+                                  asProvider.getString('Category'),
+                                  Provider.of<ProductDetailsService>(context,
+                                                  listen: false)
+                                              .productDetails!
+                                              .category !=
+                                          null
+                                      ? Provider.of<ProductDetailsService>(
+                                              context,
+                                              listen: false)
+                                          .productDetails!
+                                          .category!
+                                          .name
+                                      : asProvider.getString('None'),
+                                  onTap: Provider.of<ProductDetailsService>(
+                                                  context,
+                                                  listen: false)
+                                              .productDetails!
+                                              .category !=
+                                          null
+                                      ? () {
+                                          final category = Provider.of<
+                                                  ProductDetailsService>(
+                                              context,
+                                              listen: false)
+                                              .productDetails!
+                                              .category;
+                                          if (category == null) {
+                                            return;
+                                          }
+                                          Navigator.of(context).pushNamed(
+                                            ProductByCategoryView.routeName,
+                                            arguments: [category.name],
+                                          );
+                                        }
+                                      : null,
+                                ),
                                 EmptySpaceHelper.emptyHight(8),
                                 subInfo(
-                                    context,
-                                    asProvider.getString('Sub Category'),
-                                    Provider.of<ProductDetailsService>(context,
-                                                    listen: false)
-                                                .productDetails!
-                                                .subCategory !=
-                                            null
-                                        ? Provider.of<ProductDetailsService>(
-                                                context,
-                                                listen: false)
-                                            .productDetails!
-                                            .subCategory!
-                                            .name
-                                        : asProvider.getString('None')),
+                                  context,
+                                  asProvider.getString('Sub Category'),
+                                  Provider.of<ProductDetailsService>(context,
+                                                  listen: false)
+                                              .productDetails!
+                                              .subCategory !=
+                                          null
+                                      ? Provider.of<ProductDetailsService>(
+                                              context,
+                                              listen: false)
+                                          .productDetails!
+                                          .subCategory!
+                                          .name
+                                      : asProvider.getString('None'),
+                                  onTap: Provider.of<ProductDetailsService>(
+                                                  context,
+                                                  listen: false)
+                                              .productDetails!
+                                              .subCategory !=
+                                          null
+                                      ? () {
+                                          final subCategory = Provider.of<
+                                                  ProductDetailsService>(
+                                              context,
+                                              listen: false)
+                                              .productDetails!
+                                              .subCategory;
+                                          if (subCategory == null) {
+                                            return;
+                                          }
+                                          Navigator.of(context).pushNamed(
+                                            ProductBySubcategoryView.routeName,
+                                            arguments: [
+                                              subCategory.id,
+                                              subCategory.name
+                                            ],
+                                          );
+                                        }
+                                      : null,
+                                ),
                                 EmptySpaceHelper.emptyHight(8),
-                                subInfo(
-                                    context,
-                                    asProvider.getString('Child Category'),
-                                    Provider.of<ProductDetailsService>(context,
-                                                        listen: false)
-                                                    .productDetails!
-                                                    .childCategory !=
-                                                null &&
-                                            Provider.of<ProductDetailsService>(
-                                                    context,
-                                                    listen: false)
-                                                .productDetails!
-                                                .childCategory!
-                                                .isNotEmpty
-                                        ? Provider.of<ProductDetailsService>(
-                                                context,
-                                                listen: false)
-                                            .productDetails!
-                                            .childCategory!
-                                            .first
-                                            .name
-                                        : asProvider.getString('None')),
-                                EmptySpaceHelper.emptyHight(8),
-                                subInfo(
-                                    context,
-                                    asProvider.getString('Brand'),
-                                    Provider.of<ProductDetailsService>(context,
+                                if ((Provider.of<ProductDetailsService>(context,
                                                 listen: false)
                                             .productDetails!
                                             .brand ??
-                                        asProvider.getString('None')),
-                                EmptySpaceHelper.emptyHight(8),
+                                        '')
+                                    .toString()
+                                    .isNotEmpty)
+                                  subInfo(
+                                      context,
+                                      asProvider.getString('Brand'),
+                                      Provider.of<ProductDetailsService>(context,
+                                                  listen: false)
+                                              .productDetails!
+                                              .brand
+                                              .toString()),
+                                if ((Provider.of<ProductDetailsService>(context,
+                                                listen: false)
+                                            .productDetails!
+                                            .brand ??
+                                        '')
+                                    .toString()
+                                    .isNotEmpty)
+                                  EmptySpaceHelper.emptyHight(8),
                                 subInfo(
                                     context,
                                     asProvider.getString('SKU'),
@@ -386,6 +495,7 @@ class ProductDetailsView extends StatelessWidget {
                                             .productDetails
                                             ?.uom?['unit']?['name'] ??
                                         asProvider.getString('None')),
+                                EmptySpaceHelper.emptyHight(12),
                                 if ((Provider.of<ProductDetailsService>(context,
                                                 listen: false)
                                             .productDetails!
@@ -486,9 +596,9 @@ class ProductDetailsView extends StatelessWidget {
                                 //       )),
                                 // EmptySpaceHelper.emptyHight(15),
 
-                                //Description
-
                                 ProductInfoPages(),
+                                EmptySpaceHelper.emptyHight(12),
+                                const ShippingMethods(),
 
                                 EmptySpaceHelper.emptyHight(10),
                                 if (Provider.of<ProductDetailsService>(context,
@@ -582,7 +692,8 @@ class ProductDetailsView extends StatelessWidget {
     );
   }
 
-  subInfo(BuildContext context, String title, String value) {
+  subInfo(BuildContext context, String title, String value,
+      {VoidCallback? onTap}) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
@@ -594,10 +705,15 @@ class ProductDetailsView extends StatelessWidget {
                   ),
             ),
             EmptySpaceHelper.emptywidth(5),
-            Text(value,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: cc.greyHint,
-                    )),
+            GestureDetector(
+              onTap: onTap,
+              child: Text(value,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: onTap != null ? cc.primaryColor : cc.greyHint,
+                        decoration:
+                            onTap != null ? TextDecoration.underline : null,
+                      )),
+            ),
           ],
         ));
   }

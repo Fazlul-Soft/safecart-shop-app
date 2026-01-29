@@ -44,8 +44,8 @@ class ProductTitleRow extends StatelessWidget {
                       children: [
                         Text(
                           rtlProvider.curRtl
-                              ? '${pdProvider.productSalePrice}${rtlProvider.currency}'
-                              : '${rtlProvider.currency}${(pdProvider.productSalePrice).toStringAsFixed(2)}',
+                              ? '${formatAmount(pdProvider.productSalePrice)}${rtlProvider.currency}'
+                              : '${rtlProvider.currency}${formatAmount(pdProvider.productSalePrice)}',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
@@ -55,11 +55,12 @@ class ProductTitleRow extends StatelessWidget {
                                   fontSize: 16),
                         ),
                         EmptySpaceHelper.emptywidth(5),
-                        if (pdProvider.productDetails!.campaignProduct != null)
+                        if ((pdProvider.productDetails!.price ?? 0) >
+                            (pdProvider.productSalePrice))
                           Text(
                             rtlProvider.curRtl
-                                ? '${pdProvider.productDetails!.salePrice.toStringAsFixed(2)}${rtlProvider.currency}'
-                                : '${rtlProvider.currency}${pdProvider.productDetails!.salePrice.toStringAsFixed(2)}',
+                                ? '${formatAmount(pdProvider.productDetails!.price)}${rtlProvider.currency}'
+                                : '${rtlProvider.currency}${formatAmount(pdProvider.productDetails!.price)}',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
@@ -79,7 +80,7 @@ class ProductTitleRow extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          asProvider.getString('Sold count') + ' :',
+                          asProvider.getString('Available') + ' :',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
@@ -87,7 +88,14 @@ class ProductTitleRow extends StatelessWidget {
                         ),
                         EmptySpaceHelper.emptywidth(5),
                         Text(
-                          (pdProvider.productDetails!.soldCount ?? '0')
+                          (pdProvider.productDetails?.inventory?['stock_count'] ??
+                                  pdProvider.productDetails?.inventory
+                                      ?['stockCount'] ??
+                                  pdProvider.productDetails?.inventory
+                                      ?['available_quantity'] ??
+                                  pdProvider.productDetails?.inventory
+                                      ?['quantity'] ??
+                                  0)
                               .toString(),
                           style: Theme.of(context)
                               .textTheme

@@ -105,13 +105,18 @@ import 'cart_view.dart';
 import 'home_view.dart';
 import 'profile_view.dart';
 
-class HomeFrontView extends StatelessWidget {
+class HomeFrontView extends StatefulWidget {
   static const routeName = 'home front';
-  HomeFrontView({super.key});
+  const HomeFrontView({super.key});
 
+  @override
+  State<HomeFrontView> createState() => _HomeFrontViewState();
+}
+
+class _HomeFrontViewState extends State<HomeFrontView> {
   final homeFrontPages = [
     HomeView(),
-    const ProductsView(), // Ensure this is const if possible
+    const ProductsView(),
     const CartView(),
     const WishlistView(),
     const CompareProductView(),
@@ -119,11 +124,11 @@ class HomeFrontView extends StatelessWidget {
   ];
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  DateTime? currentBackPressTime;
 
   @override
   Widget build(BuildContext context) {
     screenSizeAndPlatform(context);
-    DateTime? currentBackPressTime;
 
     return Consumer<NavigationHelper>(builder: (context, nProvider, child) {
       return WillPopScope(
@@ -132,9 +137,10 @@ class HomeFrontView extends StatelessWidget {
             nProvider.setNavIndex(0);
             return false;
           }
-          DateTime now = DateTime.now();
+          final now = DateTime.now();
           if (currentBackPressTime == null ||
-              now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+              now.difference(currentBackPressTime!) >
+                  const Duration(seconds: 2)) {
             currentBackPressTime = now;
             showToast(asProvider.getString('Press again to exit'), cc.blackColor);
             return false;
@@ -144,7 +150,6 @@ class HomeFrontView extends StatelessWidget {
         child: Scaffold(
           key: scaffoldKey,
           drawer: nProvider.currentIndex != 5 ? const HomeAppDrawer() : null,
-          // MODIFICATION: Add the endDrawer here so the GlobalKey can find it
           endDrawer: nProvider.currentIndex == 1
               ? Drawer(
                   width: screenWidth / 1.2,

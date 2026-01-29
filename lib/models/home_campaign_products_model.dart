@@ -109,7 +109,9 @@ class Product {
       this.imgUrl,
       this.campaignPercentage,
       this.price,
+      this.priceRaw,
       this.discountPrice,
+      this.discountPriceRaw,
       this.badge,
       this.campaignProduct,
       this.stockCount,
@@ -130,7 +132,9 @@ class Product {
   String? imgUrl;
   double? campaignPercentage;
   dynamic price;
+  String? priceRaw;
   dynamic discountPrice;
+  String? discountPriceRaw;
   String? badge;
   bool? campaignProduct;
   dynamic stockCount;
@@ -153,6 +157,9 @@ class Product {
         campaignPercentage: json["campaign_percentage"] is String
             ? double.tryParse(json["campaign_percentage"])
             : json["campaign_percentage"]?.toDouble(),
+        priceRaw: json["price"]?.toString(),
+        discountPriceRaw:
+            (json["discount_price"] ?? json["sale_price"])?.toString(),
         price: json["price"] is String
             ? double.tryParse(json["price"])
             : json["price"]?.toDouble(),

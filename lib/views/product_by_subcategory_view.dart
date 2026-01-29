@@ -148,7 +148,12 @@ class ProductBySubcategoryView extends StatelessWidget {
                                     if (element.campaignPercentage is num) {
                                       discPercentage = element
                                           .campaignPercentage
-                                          ?.toStringAsFixed(2);
+                                          != null &&
+                                                  element.campaignPercentage !=
+                                                      0
+                                              ? formatAmount(
+                                                  element.campaignPercentage)
+                                              : null;
                                     }
                                     return GestureDetector(
                                       onTap: () {
@@ -174,6 +179,13 @@ class ProductBySubcategoryView extends StatelessWidget {
                                             : null,
                                         index,
                                         badge: element.badge,
+                                        salePriceText:
+                                            element.discountPriceRaw ??
+                                                element.priceRaw,
+                                        originalPriceText:
+                                            element.discountPrice != null
+                                                ? element.priceRaw
+                                                : null,
                                         discPercentage: discPercentage,
                                         cartable: element.isCartAble!,
                                         prodCatData: {

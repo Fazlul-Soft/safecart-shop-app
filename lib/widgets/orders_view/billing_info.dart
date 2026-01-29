@@ -67,19 +67,27 @@ class BillingInfo extends StatelessWidget {
               // infoRow(context, 'Items', '5'),
               EmptySpaceHelper.emptyHight(10),
               infoRow(context, 'Items total',
-                  '${odProvider.orderDetailsModel?.paymentDetails.paymentMeta?.subTotal.toStringAsFixed(2) ?? 0.00}',
+                  formatAmount(odProvider
+                          .orderDetailsModel?.paymentDetails.paymentMeta?.subTotal ??
+                      0),
                   isPrice: true),
               EmptySpaceHelper.emptyHight(10),
               infoRow(context, 'Shipping cost',
-                  '${odProvider.orderDetailsModel?.paymentDetails.paymentMeta?.shippingCost.toStringAsFixed(2) ?? 0.00}',
+                  formatAmount(odProvider
+                          .orderDetailsModel?.paymentDetails.paymentMeta?.shippingCost ??
+                      0),
                   isPrice: true),
               EmptySpaceHelper.emptyHight(10),
               infoRow(context, 'Tax',
-                  '${odProvider.orderDetailsModel?.paymentDetails.paymentMeta?.taxAmount.toStringAsFixed(2) ?? 0.00}',
+                  formatAmount(odProvider
+                          .orderDetailsModel?.paymentDetails.paymentMeta?.taxAmount ??
+                      0),
                   isPrice: true),
               EmptySpaceHelper.emptyHight(10),
               infoRow(context, 'Total',
-                  '${odProvider.orderDetailsModel?.paymentDetails.paymentMeta?.totalAmount.toStringAsFixed(2) ?? 0.00}',
+                  formatAmount(odProvider
+                          .orderDetailsModel?.paymentDetails.paymentMeta?.totalAmount ??
+                      0),
                   isPrice: true),
             ],
           ))

@@ -206,7 +206,7 @@ class OrderDetailsView extends StatelessWidget {
     return list;
   }
 
-  Widget moneyRow(BuildContext context, String title, int amount) {
+  Widget moneyRow(BuildContext context, String title, num amount) {
     final rtlProvider = Provider.of<RTLService>(context, listen: false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -217,8 +217,8 @@ class OrderDetailsView extends StatelessWidget {
         ),
         Text(
           rtlProvider.curRtl
-              ? amount.toString() + rtlProvider.currency
-              : rtlProvider.currency + amount.toString(),
+              ? formatAmount(amount) + rtlProvider.currency
+              : rtlProvider.currency + formatAmount(amount),
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ],

@@ -25,6 +25,8 @@ class ProductCard extends StatelessWidget {
   int index;
   String? badge;
   String? discPercentage;
+  String? salePriceText;
+  String? originalPriceText;
   bool shouldPop;
   dynamic vendorId;
   dynamic prodCatData;
@@ -44,6 +46,8 @@ class ProductCard extends StatelessWidget {
     this.index, {
     this.badge,
     this.discPercentage,
+    this.salePriceText,
+    this.originalPriceText,
     this.cartable = true,
     this.shouldPop = false,
     this.vendorId,
@@ -60,6 +64,17 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rtlProvider = Provider.of<RTLService>(context, listen: false);
+    final ratingValue = rating is num
+        ? (rating as num).toDouble()
+        : double.tryParse(rating?.toString() ?? '') ?? 0.0;
+    final salePriceLabel =
+        (salePriceText != null && salePriceText!.isNotEmpty)
+            ? salePriceText!
+            : formatAmount(salePrice);
+    final originalPriceLabel =
+        (originalPriceText != null && originalPriceText!.isNotEmpty)
+            ? originalPriceText!
+            : (originalPrice != null ? formatAmount(originalPrice) : null);
     return GestureDetector(
       onTap: () {
         if (shouldPop) {
@@ -161,15 +176,15 @@ class ProductCard extends StatelessWidget {
                                 ),
                               if (badge != null) EmptySpaceHelper.emptyHight(8),
                               if (discPercentage != null &&
-                                  discPercentage != '0.00')
+                                  discPercentage != '0.00' &&
+                                  discPercentage != '0')
                                 Container(
                                   margin: const EdgeInsets.only(left: 5),
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 2),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
-                                    color: cc.badgeColors[
-                                        index % cc.badgeColors.length],
+                                    color: cc.secondaryColor,
                                   ),
                                   child: Text(
                                     '${discPercentage!}%',
@@ -245,29 +260,6 @@ class ProductCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (rating != null && rating != '0.00')
-                    EmptySpaceHelper.emptyHight(10),
-                  if (rating > 0) EmptySpaceHelper.emptyHight(8),
-                  if (rating > 0)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(children: [
-                        SvgPicture.asset(
-                          'assets/icons/star.svg',
-                          color: rating <= 0 ? cc.cardGreyHint : null,
-                        ),
-                        EmptySpaceHelper.emptywidth(4),
-                        Text(
-                          '(${rating.toStringAsFixed(1)})',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ]),
-                    ),
                   EmptySpaceHelper.emptyHight(8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -285,6 +277,37 @@ class ProductCard extends StatelessWidget {
                   ),
                   EmptySpaceHelper.emptyHight(6),
                   Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        Row(
+                          children: List.generate(5, (index) {
+                            final isFilled =
+                                ratingValue >= (index + 1).toDouble();
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 2),
+                              child: SvgPicture.asset(
+                                'assets/icons/star.svg',
+                                color:
+                                    isFilled ? cc.orangeRating : cc.greyDots,
+                                height: 12,
+                              ),
+                            );
+                          }),
+                        ),
+                        EmptySpaceHelper.emptywidth(4),
+                        Text(
+                          '(${ratingValue.toStringAsFixed(1)})',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: cc.greyHint),
+                        ),
+                      ],
+                    ),
+                  ),
+                  EmptySpaceHelper.emptyHight(6),
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -292,14 +315,16 @@ class ProductCard extends StatelessWidget {
                         SizedBox(
                           width: (screenWidth / 4.2),
                           child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
                                   rtlProvider.curRtl
-                                      ? '${salePrice.toStringAsFixed(2)}${rtlProvider.currency}'
-                                      : '${rtlProvider.currency}${salePrice.toStringAsFixed(2)}',
+                                      ? '$salePriceLabel${rtlProvider.currency}'
+                                      : '${rtlProvider.currency}$salePriceLabel',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!
@@ -312,8 +337,8 @@ class ProductCard extends StatelessWidget {
                                 if (originalPrice != null)
                                   Text(
                                     rtlProvider.curRtl
-                                        ? '${originalPrice!.toStringAsFixed(2)}${rtlProvider.currency}'
-                                        : '${rtlProvider.currency}${originalPrice!.toStringAsFixed(2)}',
+                                        ? '${originalPriceLabel ?? ''}${rtlProvider.currency}'
+                                        : '${rtlProvider.currency}${originalPriceLabel ?? ''}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!

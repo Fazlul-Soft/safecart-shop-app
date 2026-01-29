@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:money_formatter/money_formatter.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/search_filter_data_service.dart';
 import 'package:safecart/services/search_product_service.dart';
@@ -31,8 +30,7 @@ class FilterBottomSheet extends StatelessWidget {
         Provider.of<SearchFilterDataService>(context, listen: false);
 
     String formatPrice(double value) {
-      final formatter = NumberFormat('#,##0', 'en_US');
-      return formatter.format(value);
+      return formatAmount(value);
     }
 
     return SingleChildScrollView(
@@ -380,10 +378,10 @@ class FilterBottomSheet extends StatelessWidget {
                 min: filterOption.minPrice,
                 inactiveColor: cc.lightPrimary10,
                 labels: RangeLabels(
-                  (sfdProvider.selectedMinPrice ?? sfdProvider.minPrice)
-                      .toStringAsFixed(0),
-                  (sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice)
-                      .toStringAsFixed(0),
+                  formatAmount(
+                      sfdProvider.selectedMinPrice ?? sfdProvider.minPrice),
+                  formatAmount(
+                      sfdProvider.selectedMaxPrice ?? sfdProvider.maxPrice),
                 ),
                 onChanged: (RangeValues values) {
                   sfdProvider.setRangeValues(values);

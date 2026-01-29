@@ -130,8 +130,8 @@ class WishlistTile extends StatelessWidget {
                         children: [
                           Text(
                             rtlProvider.curRtl
-                                ? '${salePrice.toStringAsFixed(2)}${rtlProvider.currency}'
-                                : '${rtlProvider.currency}${salePrice.toStringAsFixed(2)}',
+                                ? '${formatAmount(salePrice)}${rtlProvider.currency}'
+                                : '${rtlProvider.currency}${formatAmount(salePrice)}',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
@@ -144,8 +144,8 @@ class WishlistTile extends StatelessWidget {
                           if (originalPrice != null)
                             Text(
                               rtlProvider.curRtl
-                                  ? '${originalPrice!.toStringAsFixed(2)}${rtlProvider.currency}'
-                                  : '${rtlProvider.currency}${originalPrice!.toStringAsFixed(2)}',
+                                  ? '${formatAmount(originalPrice)}${rtlProvider.currency}'
+                                  : '${rtlProvider.currency}${formatAmount(originalPrice)}',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall!

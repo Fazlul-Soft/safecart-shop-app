@@ -105,8 +105,8 @@ class _ProductDetailsCartButtonState extends State<ProductDetailsCartButton> {
             return CustomCommonButton(
               btText: asProvider.getString('Add to cart') +
                   (rtlProvider.curRtl
-                      ? ' ${(pdProvider.productSalePrice * widget.itemCount).toStringAsFixed(2)}${rtlProvider.currency}'
-                      : ' ${rtlProvider.currency}${(pdProvider.productSalePrice * widget.itemCount).toStringAsFixed(2)}'),
+                      ? ' ${formatAmount(pdProvider.productSalePrice * widget.itemCount)}${rtlProvider.currency}'
+                      : ' ${rtlProvider.currency}${formatAmount(pdProvider.productSalePrice * widget.itemCount)}'),
               onPressed: () {
                 if (!pdProvider.cartAble) {
                   showToast(

@@ -52,8 +52,8 @@ class CartView extends StatelessWidget {
                           const Spacer(),
                           Text(
                             rtlProvider.curRtl
-                                ? '${subtotal.toStringAsFixed(2)}${rtlProvider.currency}'
-                                : '${rtlProvider.currency}${subtotal.toStringAsFixed(2)}',
+                                ? '${formatAmount(subtotal)}${rtlProvider.currency}'
+                                : '${rtlProvider.currency}${formatAmount(subtotal)}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -278,7 +278,7 @@ class CartView extends StatelessWidget {
     return list;
   }
 
-  Widget moneyRow(BuildContext context, String title, int amount) {
+  Widget moneyRow(BuildContext context, String title, num amount) {
     final rtlProvider = Provider.of<RTLService>(context, listen: false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -289,8 +289,8 @@ class CartView extends StatelessWidget {
         ),
         Text(
           rtlProvider.curRtl
-              ? amount.toString() + rtlProvider.currency
-              : rtlProvider.currency + amount.toString(),
+              ? formatAmount(amount) + rtlProvider.currency
+              : rtlProvider.currency + formatAmount(amount),
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ],

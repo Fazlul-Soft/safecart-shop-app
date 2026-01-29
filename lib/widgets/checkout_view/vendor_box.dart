@@ -122,8 +122,8 @@ class VendorBox extends StatelessWidget {
                             Consumer<RTLService>(
                                 builder: (context, lService, child) {
                               return Text(lService.curRtl
-                                  ? '${(value.cost ?? 0.0).toStringAsFixed(2)}${lService.currency}'
-                                  : '${lService.currency}${(value.cost ?? 0.0).toStringAsFixed(2)}');
+                                  ? '${formatAmount(value.cost ?? 0.0)}${lService.currency}'
+                                  : '${lService.currency}${formatAmount(value.cost ?? 0.0)}');
                             }),
                           ],
                         ),
@@ -194,10 +194,10 @@ class VendorBox extends StatelessWidget {
           ),
           Text(
             isTax
-                ? '${amount.toStringAsFixed(2)}%'
+                ? '${formatAmount(amount)}%'
                 : rtlProvider.curRtl
-                    ? amount.toStringAsFixed(2) + rtlProvider.currency
-                    : rtlProvider.currency + amount.toStringAsFixed(2),
+                    ? formatAmount(amount) + rtlProvider.currency
+                    : rtlProvider.currency + formatAmount(amount),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!
@@ -253,8 +253,8 @@ class VendorBox extends StatelessWidget {
             Consumer<RTLService>(
                 builder: (context, lService, child) => Text(
                       lService.curRtl
-                          ? '${((rtlProvider.taxSystem != "advance_tax_system" ? (e['price'] as double) : (prods[e["id"].toString()] ?? 1)) * (e['qty'] as int)).toStringAsFixed(2)}${lService.currency}'
-                          : '${lService.currency}${((rtlProvider.taxSystem != "advance_tax_system" ? (e['price'] as double) : (prods[e["id"].toString()] ?? 1)) * (e['qty'] as int)).toStringAsFixed(2)}',
+                          ? '${formatAmount((rtlProvider.taxSystem != "advance_tax_system" ? (e['price'] as double) : (prods[e["id"].toString()] ?? 1)) * (e['qty'] as int))}${lService.currency}'
+                          : '${lService.currency}${formatAmount((rtlProvider.taxSystem != "advance_tax_system" ? (e['price'] as double) : (prods[e["id"].toString()] ?? 1)) * (e['qty'] as int))}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!

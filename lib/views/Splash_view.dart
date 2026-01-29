@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safecart/services/auth_service/save_sign_in_info_service.dart';
-import 'package:safecart/services/intro_service.dart';
 import 'package:safecart/services/profile_info_service.dart';
 import 'package:safecart/services/rtl_service.dart';
 import 'package:safecart/services/search_filter_data_service.dart';
@@ -21,15 +21,30 @@ import '../services/payment_gateway_service.dart';
 import '../services/wishlist_data_service.dart';
 import '../utils/responsive.dart';
 import 'home_front_view.dart';
-import 'intro_view.dart';
 
-class SplashView extends StatelessWidget {
+class SplashView extends StatefulWidget {
   const SplashView({super.key});
+
+  @override
+  State<SplashView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashView> {
+  bool _starting = false;
+  bool _navigated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      dbInit(context);
+      initiateStartingSequence(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     screenSizeAndPlatform(context);
-    dbInit(context);
-    initiateStartingSequence(context);
     return Material(
       child: Stack(
         alignment: Alignment.center,
@@ -79,7 +94,7 @@ class SplashView extends StatelessWidget {
     );
   }
 
-  dbInit(BuildContext context) {
+  void dbInit(BuildContext context) {
     List databases = ['cart', 'wishlist', 'compare'];
     databases.map((e) => DbHelper.database(e));
     Provider.of<CartDataService>(context, listen: false).fetchCarts();
@@ -89,7 +104,28 @@ class SplashView extends StatelessWidget {
         .fetchCompareItems();
   }
 
-  initiateStartingSequence(BuildContext context) async {
+  Future<void> initiateStartingSequence(BuildContext context) async {
+    if (_starting) {
+      return;
+    }
+    _starting = true;
+    rtlProvider.setNoConnection(false);
+    try {
+      await _runStartup(context).timeout(const Duration(seconds: 25));
+    } on TimeoutException catch (err, st) {
+      log('Splash startup timed out', error: err, stackTrace: st);
+      rtlProvider.setNoConnection(true);
+    } catch (err, st) {
+      log('Splash startup failed: $err', stackTrace: st);
+      rtlProvider.setNoConnection(true);
+    } finally {
+      if (mounted && !_navigated) {
+        _starting = false;
+      }
+    }
+  }
+
+  Future<void> _runStartup(BuildContext context) async {
     final hasConnection = await checkConnection(context);
     if (!hasConnection) {
       rtlProvider.setNoConnection(true);
@@ -107,23 +143,24 @@ class SplashView extends StatelessWidget {
     log("fetching filter options");
     Provider.of<SearchFilterDataService>(context, listen: false)
         .fetchSearchfilterData(context);
-    final gotoIntro =
-        await Provider.of<CommonServices>(context, listen: false).checkIntro();
+    await Provider.of<CommonServices>(context, listen: false).introSubmitted();
 
     Provider.of<PaymentGatewayService>(context, listen: false)
         .fetchGateways(context);
 
     final pi = Provider.of<ProfileInfoService>(context, listen: false);
-    if (!gotoIntro) {
-      await Provider.of<IntroService>(context, listen: false)
-          .fetchIntro(context);
-      Navigator.of(context).popAndPushNamed(IntroView.routeName);
-    } else {
-      await pi.fetchProfileInfo(context);
-      Navigator.of(context).popAndPushNamed(HomeFrontView.routeName);
-    }
+    await pi.fetchProfileInfo(context);
+    _navigateTo(HomeFrontView.routeName);
     if (pi.profileInfo == null) {
       setToken('');
     }
+  }
+
+  void _navigateTo(String routeName) {
+    if (_navigated || !mounted) {
+      return;
+    }
+    _navigated = true;
+    Navigator.of(context).popAndPushNamed(routeName);
   }
 }

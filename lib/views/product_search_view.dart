@@ -256,9 +256,21 @@ class ProductSearchView extends StatelessWidget {
                                               : null,
                                           index,
                                           badge: element.badge,
+                                          salePriceText: element
+                                                  .discountPriceRaw ??
+                                              element.priceRaw,
+                                          originalPriceText:
+                                              element.discountPrice != null
+                                                  ? element.priceRaw
+                                                  : null,
                                           discPercentage: element
                                               .campaignPercentage
-                                              ?.toStringAsFixed(2),
+                                              != null &&
+                                                      element.campaignPercentage !=
+                                                          0
+                                                  ? formatAmount(
+                                                      element.campaignPercentage)
+                                                  : null,
                                           cartable: element.isCartAble!,
                                           prodCatData: {
                                             "category": element.categoryId,

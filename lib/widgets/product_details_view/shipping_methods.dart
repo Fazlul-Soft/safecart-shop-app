@@ -10,50 +10,51 @@ class ShippingMethods extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    dynamic sfjkllods = 'home';
     return Consumer<ProductDetailsService>(
         builder: (context, pdProvider, child) {
       return pdProvider.productDetails!.productDeliveryOption == null
           ? const SizedBox()
           : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Wrap(
-                spacing: 8.0, // gap between adjacent chips
-                runSpacing: 4.0, // gap between lines
-
+                spacing: 6,
+                runSpacing: 6,
                 children: [
                   ...pdProvider.productDetails!.productDeliveryOption!
                       .map((e) => Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 6),
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: cc.greyBorder,
-                                )),
+                              borderRadius: BorderRadius.circular(8),
+                              color: cc.whiteGrey,
+                              border: Border.all(
+                                color: cc.greyBorder2,
+                              ),
+                            ),
                             child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    e.title,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14),
-                                  ),
-                                  EmptySpaceHelper.emptyHight(4),
-                                  Text(
-                                    e.subTitle,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                            color: cc.greyHint, fontSize: 12),
-                                  ),
-                                ]),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  e.title,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12),
+                                ),
+                                EmptySpaceHelper.emptyHight(2),
+                                Text(
+                                  e.subTitle,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                          color: cc.greyHint, fontSize: 10),
+                                ),
+                              ],
+                            ),
                           ))
-                      
                 ],
               ),
             );

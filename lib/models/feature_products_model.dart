@@ -34,7 +34,9 @@ class Datum {
     this.imgUrl,
     this.campaignPercentage,
     this.price,
+    this.priceRaw,
     this.discountPrice,
+    this.discountPriceRaw,
     this.badge,
     this.campaignProduct,
     required this.stockCount,
@@ -56,7 +58,9 @@ class Datum {
   String? imgUrl;
   dynamic campaignPercentage;
   dynamic price;
+  String? priceRaw;
   dynamic discountPrice;
+  String? discountPriceRaw;
   String? badge;
   bool? campaignProduct;
   int stockCount;
@@ -79,6 +83,9 @@ class Datum {
         campaignPercentage: json["campaign_percentage"] is String
             ? double.tryParse(json["campaign_percentage"])
             : json["campaign_percentage"],
+        priceRaw: json["price"]?.toString(),
+        discountPriceRaw:
+            (json["discount_price"] ?? json["sale_price"])?.toString(),
         price: json["price"] is String
             ? num.tryParse(json["price"])
             : json["price"],

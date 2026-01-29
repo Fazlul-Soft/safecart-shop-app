@@ -9,6 +9,10 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final priceLabel =
+        (product.priceRaw != null && product.priceRaw!.isNotEmpty)
+            ? product.priceRaw!
+            : formatAmount(product.price);
     return Container(
       width: 170,
       height: 230,
@@ -40,7 +44,7 @@ class ProductCard extends StatelessWidget {
             ),
           ),
           Text(
-            '\$${product.price ?? 0.0}',
+            '\$$priceLabel',
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

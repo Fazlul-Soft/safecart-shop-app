@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import '../../helpers/common_helper.dart';
 
 class CuponDiscountService with ChangeNotifier {
   String? couponText;
@@ -18,7 +19,7 @@ class CuponDiscountService with ChangeNotifier {
   }
 
   setTotalAmount(double value) {
-    totalAmount = value.toStringAsFixed(0);
+    totalAmount = formatAmount(value);
     notifyListeners();
   }
 

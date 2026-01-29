@@ -15,6 +15,17 @@ class ProductDetailsImages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ProductDetailsService>(
         builder: (context, pdProvider, child) {
+      final images = <String>[];
+      final mainImage = pdProvider.productDetails?.image;
+      if (mainImage != null && mainImage.isNotEmpty) {
+        images.add(mainImage);
+      }
+      final galleryImages = pdProvider.productDetails?.galleryImages ?? [];
+      for (final img in galleryImages) {
+        if (img.isNotEmpty && img != mainImage) {
+          images.add(img);
+        }
+      }
       return SizedBox(
         height: 300,
         // margin: EdgeInsets.only(top: topPadding),
@@ -76,26 +87,21 @@ class ProductDetailsImages extends StatelessWidget {
             : Stack(
                 children: [
                   Swiper(
-                    itemCount: pdProvider.productDetails!.galleryImages != null
-                        ? pdProvider.productDetails!.galleryImages!.length
-                        : 1,
+                    itemCount: images.isNotEmpty ? images.length : 1,
                     viewportFraction: 1,
                     scale: 1,
-                    autoplay:
-                        (pdProvider.productDetails?.galleryImages?.length ??
-                                1) >
-                            1,
+                    autoplay: images.length > 1,
                     onIndexChanged: (value) => pdProvider.changeIndex(value),
                     itemBuilder: (context, index) {
+                      final imageUrl = images.isNotEmpty
+                          ? images[index]
+                          : pdProvider.productDetails!.image ?? '';
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) => ImageView(
-                                pdProvider.productDetails?.galleryImages != null
-                                    ? pdProvider
-                                        .productDetails!.galleryImages![index]
-                                    : pdProvider.productDetails!.image ?? '',
+                                imageUrl,
                               ),
                             ),
                           );
@@ -104,14 +110,9 @@ class ProductDetailsImages extends StatelessWidget {
                           height: 300,
                           child: ClipRRect(
                             child: CachedNetworkImage(
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                               // color: Colors.red,
-                              imageUrl:
-                                  pdProvider.productDetails?.galleryImages !=
-                                          null
-                                      ? pdProvider
-                                          .productDetails!.galleryImages![index]
-                                      : pdProvider.productDetails!.image ?? '',
+                              imageUrl: imageUrl,
                               placeholder: (context, url) {
                                 return Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -156,18 +157,13 @@ class ProductDetailsImages extends StatelessWidget {
                     child: FittedBox(
                       child: Row(
                         children: [
-                          ...(pdProvider.productDetails!.galleryImages != null
-                                  ? pdProvider.productDetails!.galleryImages!
-                                  : [])
-                              .map((e) => ProductDetailsIndicator(e ==
-                                  (pdProvider.productDetails!.galleryImages !=
-                                              null &&
-                                          pdProvider.productDetails!
-                                              .galleryImages!.isNotEmpty
-                                      ? pdProvider
-                                              .productDetails!.galleryImages![
-                                          pdProvider.currentIndex]
-                                      : 1))),
+                          ...images.map((e) => ProductDetailsIndicator(
+                              e ==
+                                  (images.isNotEmpty &&
+                                          pdProvider.currentIndex <
+                                              images.length
+                                      ? images[pdProvider.currentIndex]
+                                      : ''))),
                         ],
                       ),
                     ),

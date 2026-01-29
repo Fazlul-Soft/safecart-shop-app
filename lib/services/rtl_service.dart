@@ -55,7 +55,7 @@ class RTLService with ChangeNotifier {
           taxType = jsonDecode(response.body)['tax_type'];
           taxSystem = jsonDecode(response.body)['tax_system'];
           print(currency);
-          alreadyLoaded == true;
+          alreadyLoaded = true;
           notifyListeners();
         } else {
           print('failed loading currency');
@@ -70,7 +70,7 @@ class RTLService with ChangeNotifier {
   }
 
   fetchLang(BuildContext context) async {
-    if (alreadyLoaded == false) {
+    if (alreadyRtlLoaded == false) {
       try {
         var response = await http.get(Uri.parse('$baseApi/language'));
         if (response.statusCode == 200) {
@@ -96,7 +96,7 @@ class RTLService with ChangeNotifier {
                 .fetchTranslatedStrings(context, doNotLoad: true);
           }
           initiateAppStringProvider(context);
-          alreadyLoaded == true;
+          alreadyRtlLoaded = true;
           notifyListeners();
         } else {
           initiateAppStringProvider(context);

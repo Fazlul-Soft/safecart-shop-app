@@ -94,7 +94,7 @@ class CompareProductCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 if (item.price != null)
                   Text(
-                    '${item.price!.toStringAsFixed(2)}${rtlProvider.currency}',
+                    '${formatAmount(item.price)}${rtlProvider.currency}',
                     style: TextStyle(
                       fontSize: 15,
                       color: cc.primaryColor,
@@ -103,7 +103,7 @@ class CompareProductCard extends StatelessWidget {
                   ),
                 if (item.originalPrice != null)
                   Text(
-                    '${item.originalPrice!.toStringAsFixed(2)}${rtlProvider.currency}',
+                    '${formatAmount(item.originalPrice)}${rtlProvider.currency}',
                     style: TextStyle(
                       fontSize: 12,
                       color: cc.greyHint,

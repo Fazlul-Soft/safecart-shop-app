@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_countdown/slide_countdown.dart';
@@ -20,41 +19,35 @@ class ProductRatingScore extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            if (pdProvider.productDetails!.reviewsCount != null &&
-                pdProvider.productDetails!.reviewsCount != 0.0)
-              RatingBar.builder(
-                ignoreGestures: true,
-                itemSize: 17,
-                initialRating:
-                    pdProvider.productDetails!.reviewsAvgRating != null
-                        ? pdProvider.productDetails!.reviewsAvgRating ?? 0.0
-                        : 0,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 1),
-                itemBuilder: (context, _) => SvgPicture.asset(
-                  'assets/icons/star.svg',
-                  color: cc.orangeRating,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
-              ),
-            if (pdProvider.productDetails!.reviewsCount != null &&
-                pdProvider.productDetails!.reviewsCount != 0.0)
-              EmptySpaceHelper.emptywidth(10),
-            if (pdProvider.productDetails!.reviewsCount != null &&
-                pdProvider.productDetails!.reviewsCount != 0.0)
-              Text(
-                  "( ${(pdProvider.productDetails!.reviewsCount ?? 0).toString()} )"),
-            if (pdProvider.productDetails!.reviewsCount != null &&
-                pdProvider.productDetails!.reviewsCount != 0.0)
-              const Spacer(),
-            if (pdProvider.productDetails!.campaignProduct != null)
+            Row(
+              children: List.generate(5, (index) {
+                final ratingValue =
+                    pdProvider.productDetails?.reviewsAvgRating ?? 0.0;
+                final isFilled = ratingValue >= (index + 1).toDouble();
+                return Padding(
+                  padding: const EdgeInsets.only(right: 2),
+                  child: SvgPicture.asset(
+                    'assets/icons/star.svg',
+                    color: isFilled ? cc.orangeRating : cc.greyDots,
+                    height: 16,
+                  ),
+                );
+              }),
+            ),
+            EmptySpaceHelper.emptywidth(6),
+            Text(
+              '(${(pdProvider.productDetails?.reviewsAvgRating ?? 0.0).toStringAsFixed(1)})',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(color: cc.greyHint),
+            ),
+            const Spacer(),
+            if (pdProvider.productDetails!.campaignProduct?.endDate != null &&
+                pdProvider.productDetails!.campaignProduct!.endDate!
+                    .isAfter(now))
               SlideCountdownSeparated(
-                showZeroValue: true,
+                showZeroValue: false,
                 separator: '',
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
@@ -66,12 +59,8 @@ class ProductRatingScore extends StatelessWidget {
                 style: TextStyle(
                     color: cc.blackColor.withOpacity(.8),
                     fontWeight: FontWeight.bold),
-                duration: (pdProvider.productDetails!.campaignProduct!.endDate
-                            ?.isAfter(now) ??
-                        false)
-                    ? pdProvider.productDetails!.campaignProduct!.endDate!
-                        .difference(now)
-                    : const Duration(seconds: 1),
+                duration: pdProvider.productDetails!.campaignProduct!.endDate!
+                    .difference(now),
               ),
           ],
         ),

@@ -60,8 +60,8 @@ class OrderTile extends StatelessWidget {
             EmptySpaceHelper.emptyHight(4),
             Text(
               rtlProvider.curRtl
-                  ? totalAmount.toStringAsFixed(2) + rtlProvider.currency
-                  : rtlProvider.currency + totalAmount.toStringAsFixed(2),
+                  ? formatAmount(totalAmount) + rtlProvider.currency
+                  : rtlProvider.currency + formatAmount(totalAmount),
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

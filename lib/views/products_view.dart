@@ -592,7 +592,13 @@ class _ProductsViewState extends State<ProductsView> {
                 e.discountPrice != null ? e.price : null,
                 index,
                 badge: e.badge,
-                discPercentage: e.campaignPercentage?.toStringAsFixed(2),
+                salePriceText: e.discountPriceRaw ?? e.priceRaw,
+                originalPriceText:
+                    e.discountPrice != null ? e.priceRaw : null,
+                discPercentage: e.campaignPercentage != null &&
+                        e.campaignPercentage != 0
+                    ? formatAmount(e.campaignPercentage)
+                    : null,
                 cartable: e.isCartAble!,
                 prodCatData: {
                   'category': e.categoryId,

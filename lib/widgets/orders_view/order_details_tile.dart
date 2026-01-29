@@ -94,7 +94,7 @@ class OrderDetailsTile extends StatelessWidget {
                 FittedBox(
                     child: moneyRow(
                   context,
-                  salePrice.toStringAsFixed(2),
+                  formatAmount(salePrice),
                   asProvider.getString('Unit Price'),
                 )),
                 EmptySpaceHelper.emptyHight(5),
@@ -106,7 +106,7 @@ class OrderDetailsTile extends StatelessWidget {
                 FittedBox(
                     child: moneyRow(
                   context,
-                  (salePrice * quantity).toDouble().toStringAsFixed(2),
+                  formatAmount((salePrice * quantity).toDouble()),
                   asProvider.getString('Subtotal'),
                 )),
                 EmptySpaceHelper.emptyHight(5),

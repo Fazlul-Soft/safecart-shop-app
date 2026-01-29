@@ -396,7 +396,6 @@ class _HomeAppDrawerState extends State<HomeAppDrawer> {
                       return Theme(
                         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                         child: ExpansionTile(
-                          leading: const Icon(Icons.grid_view_rounded, color: Colors.black54),
                           title: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
